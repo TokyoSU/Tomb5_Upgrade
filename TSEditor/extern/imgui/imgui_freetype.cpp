@@ -40,10 +40,10 @@
 #include "imgui_internal.h"     // ImMin,ImMax,ImFontAtlasBuild*,
 #include <stdint.h>
 #include <ft2build.h>
-#include FT_FREETYPE_H          // <freetype/freetype.h>
-#include FT_MODULE_H            // <freetype/ftmodapi.h>
-#include FT_GLYPH_H             // <freetype/ftglyph.h>
-#include FT_SYNTHESIS_H         // <freetype/ftsynth.h>
+#include <freetype/freetype.h>        // <freetype/freetype.h>
+#include <freetype/ftmodapi.h>        // <freetype/ftmodapi.h>
+#include <freetype/ftglyph.h>         // <freetype/ftglyph.h>
+#include <freetype/ftsynth.h>         // <freetype/ftsynth.h>
 
 #ifdef IMGUI_ENABLE_FREETYPE_LUNASVG
 #include FT_OTSVG_H             // <freetype/otsvg.h>

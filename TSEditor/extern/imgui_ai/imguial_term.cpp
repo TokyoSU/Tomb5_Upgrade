@@ -121,7 +121,7 @@ void ImGuiAl::Crt::vprintf(char const* const format, va_list args) {
 
     Info header;  
     header.foregroundColor = _foregroundColor;
-    header.length = length;
+    header.length = static_cast<unsigned int>(length);
     header.metaData = _metaData;
     
     _fifo.write(&header, sizeof(header));
