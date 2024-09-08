@@ -54,10 +54,16 @@
     <ClCompile Include="extern\imgui\imgui_freetype.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="extern\imgui\imgui_impl_glfw.cpp">
+    <ClCompile Include="extern\imgui\imgui_impl_sdl2.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="extern\imgui\imgui_impl_opengl3.cpp">
+    <ClCompile Include="logger.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_impl_dx9.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\render.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,10 +113,19 @@
     <ClInclude Include="extern\imgui\imgui_freetype.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="extern\imgui\imgui_impl_glfw.h">
+    <ClInclude Include="extern\imgui\imgui_impl_sdl2.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="extern\imgui\imgui_impl_opengl3.h">
+    <ClInclude Include="extern\pl_mpeg.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui_impl_dx9.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\render.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
