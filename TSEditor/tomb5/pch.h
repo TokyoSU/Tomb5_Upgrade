@@ -11,6 +11,8 @@
 #define WIN32_LEAN_AND_MEAN 
 #define _USE_MATH_DEFINES
 #define DIRECTINPUT_VERSION 0x0800
+#define DO_LOG
+
 #include <windows.h>
 #include <windowsx.h>
 #include <stdint.h>
@@ -26,6 +28,9 @@
 #include <mmreg.h>
 #include <mmiscapi.h>
 #include <msacm.h>
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 
 #include "resource.h"
 

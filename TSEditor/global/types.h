@@ -1799,7 +1799,7 @@ struct WINAPP
 {
 	HINSTANCE hInstance;
 	HWND hWnd;
-	WNDCLASS WindowClass;
+	SDL_Window* hWindow;
 	DXINFO DXInfo;
 	DXPTR dx;
 	HANDLE mutex;

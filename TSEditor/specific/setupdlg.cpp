@@ -190,6 +190,8 @@ static INT_PTR CALLBACK SetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPAR
 				InitResolution(dlg, GetDlgItem(dlg, IDC_RESOLUTION), 1);
 			}
 
+			break;
+
 		case IDC_BILINEAR:
 
 			if (HIWORD(wParam) == BN_CLICKED)
