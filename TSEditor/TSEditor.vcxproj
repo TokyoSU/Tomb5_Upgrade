@@ -92,16 +92,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)extern;$(ProjectDir)extern\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>framework.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>../tomb5/pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>6031</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dxguid.lib;dsound.lib;msacm32.lib;ddraw.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -112,18 +113,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)extern;$(ProjectDir)extern\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>framework.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>../tomb5/pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>6031</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dxguid.lib;dsound.lib;msacm32.lib;ddraw.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,16 +134,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)extern;$(ProjectDir)extern\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>framework.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>../tomb5/pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>6031</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dxguid.lib;dsound.lib;msacm32.lib;ddraw.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,18 +155,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)extern;$(ProjectDir)extern\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>framework.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>../tomb5/pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>6031</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dxguid.lib;dsound.lib;msacm32.lib;ddraw.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -191,7 +195,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="extern\imgui\imgui_impl_dx9.cpp">
+    <ClCompile Include="extern\imgui\imgui_impl_dx11.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -245,21 +249,126 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="framework.cpp">
+    <ClCompile Include="game\andrea.cpp" />
+    <ClCompile Include="game\andy.cpp" />
+    <ClCompile Include="game\autogun.cpp" />
+    <ClCompile Include="game\bat.cpp" />
+    <ClCompile Include="game\box.cpp" />
+    <ClCompile Include="game\camera.cpp" />
+    <ClCompile Include="game\chef.cpp" />
+    <ClCompile Include="game\collide.cpp" />
+    <ClCompile Include="game\control.cpp" />
+    <ClCompile Include="game\crow.cpp" />
+    <ClCompile Include="game\cutseq.cpp" />
+    <ClCompile Include="game\deathsld.cpp" />
+    <ClCompile Include="game\debris.cpp" />
+    <ClCompile Include="game\delstuff.cpp" />
+    <ClCompile Include="game\deltapak.cpp" />
+    <ClCompile Include="game\dog.cpp" />
+    <ClCompile Include="game\door.cpp" />
+    <ClCompile Include="game\draw.cpp" />
+    <ClCompile Include="game\effect2.cpp" />
+    <ClCompile Include="game\effects.cpp" />
+    <ClCompile Include="game\flmtorch.cpp" />
+    <ClCompile Include="game\footprnt.cpp" />
+    <ClCompile Include="game\gameflow.cpp" />
+    <ClCompile Include="game\gladiatr.cpp" />
+    <ClCompile Include="game\guardian.cpp" />
+    <ClCompile Include="game\hair.cpp" />
+    <ClCompile Include="game\health.cpp" />
+    <ClCompile Include="game\hitman.cpp" />
+    <ClCompile Include="game\huskie.cpp" />
+    <ClCompile Include="game\hydra.cpp" />
+    <ClCompile Include="game\imp.cpp" />
+    <ClCompile Include="game\init.cpp" />
+    <ClCompile Include="game\items.cpp" />
+    <ClCompile Include="game\joby.cpp" />
+    <ClCompile Include="game\lara.cpp" />
+    <ClCompile Include="game\lara1gun.cpp" />
+    <ClCompile Include="game\lara2gun.cpp" />
+    <ClCompile Include="game\laraclmb.cpp" />
+    <ClCompile Include="game\larafire.cpp" />
+    <ClCompile Include="game\laraflar.cpp" />
+    <ClCompile Include="game\laramisc.cpp" />
+    <ClCompile Include="game\laraskin.cpp" />
+    <ClCompile Include="game\larasurf.cpp" />
+    <ClCompile Include="game\laraswim.cpp" />
+    <ClCompile Include="game\lasers.cpp" />
+    <ClCompile Include="game\lifts.cpp" />
+    <ClCompile Include="game\lion.cpp" />
+    <ClCompile Include="game\lot.cpp" />
+    <ClCompile Include="game\mafia2.cpp" />
+    <ClCompile Include="game\minisub.cpp" />
+    <ClCompile Include="game\mirror.cpp" />
+    <ClCompile Include="game\missile.cpp" />
+    <ClCompile Include="game\moveblok.cpp" />
+    <ClCompile Include="game\newinv2.cpp" />
+    <ClCompile Include="game\objects.cpp" />
+    <ClCompile Include="game\objlight.cpp" />
+    <ClCompile Include="game\people.cpp" />
+    <ClCompile Include="game\pickup.cpp" />
+    <ClCompile Include="game\pierre.cpp" />
+    <ClCompile Include="game\rat.cpp" />
+    <ClCompile Include="game\romangod.cpp" />
+    <ClCompile Include="game\rope.cpp" />
+    <ClCompile Include="game\sas.cpp" />
+    <ClCompile Include="game\savegame.cpp" />
+    <ClCompile Include="game\setup.cpp" />
+    <ClCompile Include="game\skeleton.cpp" />
+    <ClCompile Include="game\sniper.cpp" />
+    <ClCompile Include="game\sound.cpp" />
+    <ClCompile Include="game\sphere.cpp" />
+    <ClCompile Include="game\spider.cpp" />
+    <ClCompile Include="game\spotcam.cpp" />
+    <ClCompile Include="game\subsuit.cpp" />
+    <ClCompile Include="game\swampy.cpp" />
+    <ClCompile Include="game\switch.cpp" />
+    <ClCompile Include="game\text.cpp" />
+    <ClCompile Include="game\tomb4fx.cpp" />
+    <ClCompile Include="game\tower.cpp" />
+    <ClCompile Include="game\traps.cpp" />
+    <ClCompile Include="game\twogun.cpp" />
+    <ClCompile Include="game\willwisp.cpp" />
+    <ClCompile Include="specific\3dmath.cpp" />
+    <ClCompile Include="specific\alexstuff.cpp" />
+    <ClCompile Include="specific\audio.cpp" />
+    <ClCompile Include="specific\clipping.cpp" />
+    <ClCompile Include="specific\d3dmatrix.cpp" />
+    <ClCompile Include="specific\drawbars.cpp" />
+    <ClCompile Include="specific\drawlara.cpp" />
+    <ClCompile Include="specific\drawroom.cpp" />
+    <ClCompile Include="specific\dxshell.cpp" />
+    <ClCompile Include="specific\dxsound.cpp" />
+    <ClCompile Include="specific\file.cpp" />
+    <ClCompile Include="specific\fmv.cpp" />
+    <ClCompile Include="specific\function_stubs.cpp" />
+    <ClCompile Include="specific\function_table.cpp" />
+    <ClCompile Include="specific\gamemain.cpp" />
+    <ClCompile Include="specific\input.cpp" />
+    <ClCompile Include="specific\lighting.cpp" />
+    <ClCompile Include="specific\LoadSave.cpp" />
+    <ClCompile Include="specific\output.cpp" />
+    <ClCompile Include="specific\polyinsert.cpp" />
+    <ClCompile Include="specific\registry.cpp" />
+    <ClCompile Include="specific\setupdlg.cpp" />
+    <ClCompile Include="specific\specificfx.cpp" />
+    <ClCompile Include="specific\texture.cpp" />
+    <ClCompile Include="specific\time.cpp" />
+    <ClCompile Include="specific\winmain.cpp" />
+    <ClCompile Include="tomb5\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="logger.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="renderer\render.cpp" />
+    <ClCompile Include="tomb5\tomb5.cpp" />
+    <ClCompile Include="tomb5\troyestuff.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\imgui\imconfig.h" />
     <ClInclude Include="extern\imgui\imgui.h" />
     <ClInclude Include="extern\imgui\imgui_freetype.h" />
-    <ClInclude Include="extern\imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="extern\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="extern\imgui\imgui_impl_sdl2.h" />
     <ClInclude Include="extern\imgui\imgui_internal.h" />
     <ClInclude Include="extern\imgui\imstb_rectpack.h" />
@@ -273,9 +382,129 @@
     <ClInclude Include="extern\imgui_nodes\imnodes_internal.h" />
     <ClInclude Include="extern\imgui_tabs\imgui_tabs.h" />
     <ClInclude Include="extern\pl_mpeg.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="logger.h" />
-    <ClInclude Include="renderer\render.h" />
+    <ClInclude Include="game\andrea.h" />
+    <ClInclude Include="game\andy.h" />
+    <ClInclude Include="game\autogun.h" />
+    <ClInclude Include="game\bat.h" />
+    <ClInclude Include="game\box.h" />
+    <ClInclude Include="game\camera.h" />
+    <ClInclude Include="game\chef.h" />
+    <ClInclude Include="game\collide.h" />
+    <ClInclude Include="game\control.h" />
+    <ClInclude Include="game\crow.h" />
+    <ClInclude Include="game\cutseq.h" />
+    <ClInclude Include="game\deathsld.h" />
+    <ClInclude Include="game\debris.h" />
+    <ClInclude Include="game\delstuff.h" />
+    <ClInclude Include="game\deltapak.h" />
+    <ClInclude Include="game\dog.h" />
+    <ClInclude Include="game\door.h" />
+    <ClInclude Include="game\draw.h" />
+    <ClInclude Include="game\effect2.h" />
+    <ClInclude Include="game\effects.h" />
+    <ClInclude Include="game\flmtorch.h" />
+    <ClInclude Include="game\footprnt.h" />
+    <ClInclude Include="game\gameflow.h" />
+    <ClInclude Include="game\gladiatr.h" />
+    <ClInclude Include="game\guardian.h" />
+    <ClInclude Include="game\hair.h" />
+    <ClInclude Include="game\health.h" />
+    <ClInclude Include="game\hitman.h" />
+    <ClInclude Include="game\huskie.h" />
+    <ClInclude Include="game\hydra.h" />
+    <ClInclude Include="game\imp.h" />
+    <ClInclude Include="game\init.h" />
+    <ClInclude Include="game\items.h" />
+    <ClInclude Include="game\joby.h" />
+    <ClInclude Include="game\lara.h" />
+    <ClInclude Include="game\lara1gun.h" />
+    <ClInclude Include="game\lara2gun.h" />
+    <ClInclude Include="game\laraclmb.h" />
+    <ClInclude Include="game\larafire.h" />
+    <ClInclude Include="game\laraflar.h" />
+    <ClInclude Include="game\laramisc.h" />
+    <ClInclude Include="game\laraskin.h" />
+    <ClInclude Include="game\larasurf.h" />
+    <ClInclude Include="game\laraswim.h" />
+    <ClInclude Include="game\lara_states.h" />
+    <ClInclude Include="game\lasers.h" />
+    <ClInclude Include="game\lifts.h" />
+    <ClInclude Include="game\lion.h" />
+    <ClInclude Include="game\lot.h" />
+    <ClInclude Include="game\mafia2.h" />
+    <ClInclude Include="game\math.h" />
+    <ClInclude Include="game\minisub.h" />
+    <ClInclude Include="game\mirror.h" />
+    <ClInclude Include="game\missile.h" />
+    <ClInclude Include="game\moveblok.h" />
+    <ClInclude Include="game\newinv2.h" />
+    <ClInclude Include="game\objects.h" />
+    <ClInclude Include="game\objlight.h" />
+    <ClInclude Include="game\people.h" />
+    <ClInclude Include="game\pickup.h" />
+    <ClInclude Include="game\pierre.h" />
+    <ClInclude Include="game\rat.h" />
+    <ClInclude Include="game\romangod.h" />
+    <ClInclude Include="game\rooms.h" />
+    <ClInclude Include="game\rope.h" />
+    <ClInclude Include="game\sas.h" />
+    <ClInclude Include="game\savegame.h" />
+    <ClInclude Include="game\setup.h" />
+    <ClInclude Include="game\skeleton.h" />
+    <ClInclude Include="game\sniper.h" />
+    <ClInclude Include="game\sound.h" />
+    <ClInclude Include="game\sphere.h" />
+    <ClInclude Include="game\spider.h" />
+    <ClInclude Include="game\spotcam.h" />
+    <ClInclude Include="game\subsuit.h" />
+    <ClInclude Include="game\swampy.h" />
+    <ClInclude Include="game\switch.h" />
+    <ClInclude Include="game\text.h" />
+    <ClInclude Include="game\timer.h" />
+    <ClInclude Include="game\tomb4fx.h" />
+    <ClInclude Include="game\tower.h" />
+    <ClInclude Include="game\traps.h" />
+    <ClInclude Include="game\twogun.h" />
+    <ClInclude Include="game\willwisp.h" />
+    <ClInclude Include="global\math_tbls.h" />
+    <ClInclude Include="global\types.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="specific\3dmath.h" />
+    <ClInclude Include="specific\alexstuff.h" />
+    <ClInclude Include="specific\audio.h" />
+    <ClInclude Include="specific\clipping.h" />
+    <ClInclude Include="specific\d3dmatrix.h" />
+    <ClInclude Include="specific\drawbars.h" />
+    <ClInclude Include="specific\drawlara.h" />
+    <ClInclude Include="specific\drawroom.h" />
+    <ClInclude Include="specific\dxshell.h" />
+    <ClInclude Include="specific\dxsound.h" />
+    <ClInclude Include="specific\file.h" />
+    <ClInclude Include="specific\fmv.h" />
+    <ClInclude Include="specific\function_stubs.h" />
+    <ClInclude Include="specific\function_table.h" />
+    <ClInclude Include="specific\gamemain.h" />
+    <ClInclude Include="specific\input.h" />
+    <ClInclude Include="specific\lighting.h" />
+    <ClInclude Include="specific\LoadSave.h" />
+    <ClInclude Include="specific\output.h" />
+    <ClInclude Include="specific\polyinsert.h" />
+    <ClInclude Include="specific\registry.h" />
+    <ClInclude Include="specific\setupdlg.h" />
+    <ClInclude Include="specific\specificfx.h" />
+    <ClInclude Include="specific\texture.h" />
+    <ClInclude Include="specific\time.h" />
+    <ClInclude Include="specific\winmain.h" />
+    <ClInclude Include="tomb5\pch.h" />
+    <ClInclude Include="tomb5\tomb5.h" />
+    <ClInclude Include="tomb5\troyestuff.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+    <Image Include="setup.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="tomb5.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
