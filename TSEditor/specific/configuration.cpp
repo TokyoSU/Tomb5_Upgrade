@@ -54,9 +54,8 @@ void CConfig::Initialize()
 	{
 		Log("Failed to load <%s>, saving default setting and stuff !", CONFIG_FILENAME);
 		SaveDummy();
-		SaveSetting();
+		SaveSetting(true);
 		SaveStuff();
-		return;
 	}
 	LoadSetting();
 	LoadStuff();
@@ -106,25 +105,25 @@ void CConfig::LoadSetting()
 
 	// Load GAME
 	/// Player keyboard
-	for (int i = 0; i < _countof(layout[1]); i++)
-		layout[1][i] = (short)ini.GetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str());
+	for (int i = 0; i < _countof(layout[1]); i++) layout[1][i] = (short)ini.GetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str());
+	for (int i = 0; i < _countof(layout[1]); i++) layout[0][i] = layout[1][i];
 
 	/// Now joystick
-	jLayout[0] = ini.GetLongValue(SECTION_GAME, "JDck");
-	jLayout[1] = ini.GetLongValue(SECTION_GAME, "JDsh");
-	jLayout[2] = ini.GetLongValue(SECTION_GAME, "JWlk");
-	jLayout[3] = ini.GetLongValue(SECTION_GAME, "JJmp");
-	jLayout[4] = ini.GetLongValue(SECTION_GAME, "JAct");
-	jLayout[5] = ini.GetLongValue(SECTION_GAME, "JDrw");
-	jLayout[6] = ini.GetLongValue(SECTION_GAME, "JFlr");
-	jLayout[7] = ini.GetLongValue(SECTION_GAME, "JLok");
-	jLayout[8] = ini.GetLongValue(SECTION_GAME, "JRol");
-	jLayout[9] = ini.GetLongValue(SECTION_GAME, "JInv");
-	ControlMethod = ini.GetLongValue(SECTION_GAME, "ControlMethod");
-	MusicVolume = ini.GetLongValue(SECTION_GAME, "MusicVolume");
-	SFXVolume = ini.GetLongValue(SECTION_GAME, "SFXVolume");
-	SoundQuality = ini.GetLongValue(SECTION_GAME, "SoundQuality");
-	App.AutoTarget = ini.GetLongValue(SECTION_GAME, "AutoTarget");
+	jLayout[0] = ini.GetLongValue(SECTION_GAME, "JDck", 5);
+	jLayout[1] = ini.GetLongValue(SECTION_GAME, "JDsh", 3);
+	jLayout[2] = ini.GetLongValue(SECTION_GAME, "JWlk", 4);
+	jLayout[3] = ini.GetLongValue(SECTION_GAME, "JJmp", 0);
+	jLayout[4] = ini.GetLongValue(SECTION_GAME, "JAct", 1);
+	jLayout[5] = ini.GetLongValue(SECTION_GAME, "JDrw", 2);
+	jLayout[6] = ini.GetLongValue(SECTION_GAME, "JFlr", 9);
+	jLayout[7] = ini.GetLongValue(SECTION_GAME, "JLok", 6);
+	jLayout[8] = ini.GetLongValue(SECTION_GAME, "JRol", 7);
+	jLayout[9] = ini.GetLongValue(SECTION_GAME, "JInv", 8);
+	ControlMethod = ini.GetLongValue(SECTION_GAME, "ControlMethod", 0);
+	MusicVolume = ini.GetLongValue(SECTION_GAME, "MusicVolume", 100);
+	SFXVolume = ini.GetLongValue(SECTION_GAME, "SFXVolume", 100);
+	SoundQuality = ini.GetLongValue(SECTION_GAME, "SoundQuality", 1);
+	App.AutoTarget = ini.GetLongValue(SECTION_GAME, "AutoTarget", 1);
 }
 
 void CConfig::SaveSetting(bool isFirst)
@@ -159,11 +158,14 @@ void CConfig::SaveSetting(bool isFirst)
 	ini.SetLongValue(SECTION_GAME, "JRol", jLayout[8]);
 	ini.SetLongValue(SECTION_GAME, "JInv", jLayout[9]);
 
-	ini.SetLongValue(SECTION_GAME, "ControlMethod", ControlMethod);
-	ini.SetLongValue(SECTION_GAME, "MusicVolume", MusicVolume);
-	ini.SetLongValue(SECTION_GAME, "SFXVolume", SFXVolume);
-	ini.SetLongValue(SECTION_GAME, "SoundQuality", SoundQuality);
-	ini.SetLongValue(SECTION_GAME, "AutoTarget", App.AutoTarget);
+	if (!isFirst)
+	{
+		ini.SetLongValue(SECTION_GAME, "ControlMethod", ControlMethod);
+		ini.SetLongValue(SECTION_GAME, "MusicVolume", MusicVolume);
+		ini.SetLongValue(SECTION_GAME, "SFXVolume", SFXVolume);
+		ini.SetLongValue(SECTION_GAME, "SoundQuality", SoundQuality);
+		ini.SetLongValue(SECTION_GAME, "AutoTarget", App.AutoTarget);
+	}
 
 	// Saving SYSTEM
 	ini.SetLongValue(SECTION_SYSTEM, "VMode", App.DXInfo.nDisplayMode);
@@ -306,21 +308,21 @@ void CConfig::SaveDummy()
 	// Game
 	for (int i = 0; i < _countof(layout[1]); i++)
 		ini.SetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str(), 0);
-	ini.SetLongValue(SECTION_GAME, "JDck", 0);
-	ini.SetLongValue(SECTION_GAME, "JDsh", 0);
-	ini.SetLongValue(SECTION_GAME, "JWlk", 0);
+	ini.SetLongValue(SECTION_GAME, "JDck", 5);
+	ini.SetLongValue(SECTION_GAME, "JDsh", 3);
+	ini.SetLongValue(SECTION_GAME, "JWlk", 4);
 	ini.SetLongValue(SECTION_GAME, "JJmp", 0);
-	ini.SetLongValue(SECTION_GAME, "JAct", 0);
-	ini.SetLongValue(SECTION_GAME, "JDrw", 0);
-	ini.SetLongValue(SECTION_GAME, "JFlr", 0);
-	ini.SetLongValue(SECTION_GAME, "JLok", 0);
-	ini.SetLongValue(SECTION_GAME, "JRol", 0);
-	ini.SetLongValue(SECTION_GAME, "JInv", 0);
+	ini.SetLongValue(SECTION_GAME, "JAct", 1);
+	ini.SetLongValue(SECTION_GAME, "JDrw", 2);
+	ini.SetLongValue(SECTION_GAME, "JFlr", 9);
+	ini.SetLongValue(SECTION_GAME, "JLok", 6);
+	ini.SetLongValue(SECTION_GAME, "JRol", 7);
+	ini.SetLongValue(SECTION_GAME, "JInv", 8);
 	ini.SetLongValue(SECTION_GAME, "ControlMethod", 0);
-	ini.SetLongValue(SECTION_GAME, "MusicVolume", 0);
-	ini.SetLongValue(SECTION_GAME, "SFXVolume", 0);
-	ini.SetLongValue(SECTION_GAME, "SoundQuality", 0);
-	ini.SetLongValue(SECTION_GAME, "AutoTarget", 0);
+	ini.SetLongValue(SECTION_GAME, "MusicVolume", 90);
+	ini.SetLongValue(SECTION_GAME, "SFXVolume", 90);
+	ini.SetLongValue(SECTION_GAME, "SoundQuality", 1);
+	ini.SetLongValue(SECTION_GAME, "AutoTarget", 1);
 
 	// System
 	ini.SetLongValue(SECTION_SYSTEM, "DD", 0);
