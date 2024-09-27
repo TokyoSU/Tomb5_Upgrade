@@ -354,6 +354,7 @@
     <ClCompile Include="specific\specificfx.cpp" />
     <ClCompile Include="specific\texture.cpp" />
     <ClCompile Include="specific\time.cpp" />
+    <ClCompile Include="specific\window.cpp" />
     <ClCompile Include="specific\winmain.cpp" />
     <ClCompile Include="tomb5\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -494,6 +495,7 @@
     <ClInclude Include="specific\specificfx.h" />
     <ClInclude Include="specific\texture.h" />
     <ClInclude Include="specific\time.h" />
+    <ClInclude Include="specific\window.h" />
     <ClInclude Include="specific\winmain.h" />
     <ClInclude Include="tomb5\pch.h" />
     <ClInclude Include="tomb5\tomb5.h" />

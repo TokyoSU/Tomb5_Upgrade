@@ -14,6 +14,7 @@
 #include "gamemain.h"
 #include "LoadSave.h"
 #include "setupdlg.h"
+#include "window.h"
 
 #define GET_DLL_PROC(dll, proc, n) \
 { \
@@ -98,7 +99,7 @@ long PlayFmv(long num)
 	char name[80];
 	char path[80];
 
-	if (MainThread.ended)
+	if (!g_Window.IsOpened())
 		return 0;
 
 	/*
@@ -160,13 +161,10 @@ long PlayFmv(long num)
 
 		for (int i = 0; i != nFmvFrames[num]; i++)
 		{
-			if (input & IN_OPTION || input & IN_DRAW || MainThread.ended)
+			if (input & IN_OPTION || input & IN_DRAW || !g_Window.IsOpened())
 				break;
-
 			BinkNextFrame(Bink);
-
 			while (BinkWait(Bink));
-
 			ShowBinkFrame();
 			BinkDoFrame(Bink);
 			S_UpdateInput();
@@ -177,7 +175,9 @@ long PlayFmv(long num)
 		Bink = 0;
 	}
 	else
+	{
 		Log("FAILED TO CREATE BINK OBJECT");
+	}
 
 	if (rm)
 	{

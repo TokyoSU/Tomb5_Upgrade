@@ -21,7 +21,7 @@ void DXSaveScreen(LPDIRECTDRAWSURFACE4 surf, const char* name);
 HRESULT DXShowFrame();
 void DXMove(long x, long y);
 void DXClose();
-long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, long WindowStyle);
+long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd);
 long DXChangeVideoMode();
 long DXToggleFullScreen();
 HRESULT __stdcall DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR lpDeviceName, LPD3DDEVICEDESC lpHWDesc, LPD3DDEVICEDESC lpHELDesc, LPVOID lpContext);

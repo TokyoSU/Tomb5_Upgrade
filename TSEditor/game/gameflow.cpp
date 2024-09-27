@@ -31,6 +31,7 @@
 #include "lara.h"
 #include "cutseq.h"
 #include "../tomb5/tomb5.h"
+#include "../specific/window.h"
 
 GAMEFLOW* Gameflow;
 PHD_VECTOR gfLensFlare;
@@ -139,8 +140,9 @@ void DoGameflow()
 	gfCurrentLevel = Gameflow->TitleEnabled ? 0 : 1;
 	gf = &gfScriptWad[gfScriptOffset[gfCurrentLevel]];
 
-	while (1)
+	while (true)
 	{
+		g_Window.Update();
 		switch (n = *gf++)
 		{
 		case CMD_FMV:
@@ -151,7 +153,9 @@ void DoGameflow()
 			gfLevelFlags = gf[1] | (gf[2] << 8);
 
 			if (!(gfLevelFlags & GF_NOLEVEL))
+			{
 				DoLevel(gf[3], gf[4]);
+			}
 			else
 			{
 				gfStatus = 999;
@@ -608,7 +612,7 @@ long TitleOptions()
 		}
 	}
 
-	if (MainThread.ended)
+	if (!g_Window.IsOpened())
 		return 4;
 
 	if (ret)
@@ -684,10 +688,12 @@ void DoTitle(uchar name, uchar audio)
 
 	while (!gfStatus)
 	{
+		g_Window.Update();
+
 		S_InitialisePolyList();
 		SkyDrawPhase();
-		gfStatus = TitleOptions();
 
+		gfStatus = TitleOptions();
 		if (gfStatus)
 			break;
 
@@ -853,8 +859,9 @@ void DoLevel(uchar Name, uchar Audio)
 
 	while (!gfStatus)	//game loooooooooooopppppppppppp
 	{
-		S_InitialisePolyList();
+		g_Window.Update();
 
+		S_InitialisePolyList();
 		if (gfLegendTime && !DestFadeScreenHeight && !FadeScreenHeight && !cutseq_num)
 		{
 			PrintString(phd_winwidth >> 1, phd_winymax - font_height, 2, SCRIPT_TEXT(gfLegend), FF_CENTER);
@@ -874,7 +881,6 @@ void DoLevel(uchar Name, uchar Audio)
 		}
 
 		gfStatus = ControlPhase(nframes, 0);
-
 		if (GlobalSoftReset)
 		{
 			GlobalSoftReset = 0;
@@ -896,7 +902,6 @@ void DoLevel(uchar Name, uchar Audio)
 		if (gamestatus)
 		{
 			gfStatus = 0;
-
 			if (DoFade == 2)
 				gfStatus = gamestatus;
 		}

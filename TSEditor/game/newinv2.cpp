@@ -28,6 +28,7 @@
 #include "spotcam.h"
 #include "../specific/dxshell.h"
 #include "savegame.h"
+#include "../specific/window.h"
 
 static RINGME* rings[2];
 static RINGME pcring1;
@@ -436,6 +437,8 @@ long S_CallInventory2()
 
 	while (!reset_flag && !val)
 	{
+		g_Window.Update();
+
 		OBJLIST_SPACING = phd_centerx >> 1;
 		S_InitialisePolyList();
 		SetDebounce = 1;
@@ -450,8 +453,7 @@ long S_CallInventory2()
 			val = 1;
 		}
 
-		return_value = MainThread.ended;
-
+		return_value = !g_Window.IsOpened();
 		if (return_value)
 			return return_value;
 

@@ -1798,27 +1798,24 @@ struct DXPTR
 struct WINAPP
 {
 	HINSTANCE hInstance;
-	HWND hWnd;
-	WNDCLASS WindowClass;
 	DXINFO DXInfo;
 	DXPTR dx;
-	HANDLE mutex;
-	float fps;
 	LPDIRECT3DMATERIAL3 GlobalMaterial;
 	D3DMATERIALHANDLE GlobalMaterialHandle;
 	HACCEL hAccel;
-	bool SetupComplete;
-	bool BumpMapping;
+	float fps;
+	long StartFlags;
+	long Desktopbpp;
+	long AutoTarget;
 	long TextureSize;
 	long BumpMapSize;
+	bool SetupComplete;
+	bool BumpMapping;
 	bool mmx;
 	bool Filtering;
 	bool Volumetric;
 	bool SoundDisabled;
-	long StartFlags;
 	volatile bool fmv;
-	long Desktopbpp;
-	long AutoTarget;
 };
 
 struct FIRE_LIST
@@ -2389,10 +2386,9 @@ struct ROOMLET_LIGHT
 
 struct THREAD
 {
-	volatile long active;
-	volatile long ended;
-	ulong handle;
-	ulong address;
+	SDL_Thread* handle;
+	volatile bool active;
+	volatile bool ended;
 };
 
 struct DS_SAMPLE

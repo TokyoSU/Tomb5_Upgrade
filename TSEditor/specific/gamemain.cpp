@@ -14,9 +14,9 @@
 #include "specificfx.h"
 #include "../game/savegame.h"
 #include "../tomb5/tomb5.h"
+#include "window.h"
 
 WATERTAB WaterTable[22][64];
-THREAD MainThread;
 float vert_wibble_table[32];
 short* clipflags;
 long SaveCounter;
@@ -25,19 +25,15 @@ static ushort GetRandom(WATERTAB* wt, long lp)
 {
 	long loop;
 	ushort ret;
-
 	do
 	{
 		ret = rand() & 0xFC;
-		
 		for (loop = 0; loop < lp; loop++)
 		{
 			if (wt[loop].random == ret)
 				break;
 		}
-
 	} while (loop != lp);
-
 	return ret;
 }
 
@@ -166,14 +162,16 @@ long S_LoadGame(long slot_num)
 bool GameInitialise()
 {
 	Log(__FUNCTION__);
+
 	init_game_malloc();
-	clipflags = (short*)malloc(0x8000);
+	clipflags = (short*)malloc(0x8000); // NOTE: There is malloc for clipflags.
 	init_water_table();
 	aInitFX();
-	return 1;
+
+	return clipflags != NULL;
 }
 
-unsigned int __stdcall GameMain(void* ptr)
+INT GameMain(LPVOID ptr)
 {
 	Log(__FUNCTION__);
 
@@ -184,7 +182,8 @@ unsigned int __stdcall GameMain(void* ptr)
 		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 		InitFont();
 		TIME_Init();
-		App.SetupComplete = 1;
+
+		App.SetupComplete = true;
 		S_CDStop();
 		ClearSurfaces();
 
@@ -192,13 +191,11 @@ unsigned int __stdcall GameMain(void* ptr)
 			SOUND_Init();
 
 		init_tomb5_stuff();
+
 		DoGameflow();
+
 		GameClose();
 		S_CDStop();
-
-		PostMessage(App.hWnd, WM_CLOSE, 0, 0);
-		MainThread.active = 0;
-		_endthreadex(1);
 	}
 
 	return 1;
@@ -207,20 +204,14 @@ unsigned int __stdcall GameMain(void* ptr)
 void GameClose()
 {
 	Log(__FUNCTION__);
+
 	ACMClose();
 	FreeLevel();
-	free(clipflags);
 
-	if (wav_file_buffer)
-		free(wav_file_buffer);
-
-	if (ADPCMBuffer)
-		free(ADPCMBuffer);
-
-	if (logF)
-		fclose(logF);
-
-	free(malloc_buffer);
-	free(gfScriptFile);
-	free(gfLanguageFile);
+	SafeFree(clipflags);
+	SafeFree(wav_file_buffer);
+	SafeFree(ADPCMBuffer);
+	SafeFree(malloc_buffer);
+	SafeFree(gfScriptFile);
+	SafeFree(gfLanguageFile);
 }
