@@ -14,6 +14,7 @@ vcpkg remove tinyfiledialogs:x64-windows
 vcpkg remove spdlog:x64-windows
 vcpkg remove freetype:x64-windows
 vcpkg remove zlib:x64-windows
+vcpkg remove simpleini:x64-windows
 
 vcpkg remove angelscript:x86-windows
 vcpkg remove sdl2:x86-windows
@@ -27,5 +28,6 @@ vcpkg remove tinyfiledialogs:x86-windows
 vcpkg remove spdlog:x86-windows
 vcpkg remove freetype:x86-windows
 vcpkg remove zlib:x86-windows
+vcpkg remove simpleini:x86-windows
 
 pause

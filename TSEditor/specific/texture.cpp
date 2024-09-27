@@ -46,7 +46,7 @@ LPDIRECTDRAWSURFACE4 CreateTexturePage(long w, long h, long MipMapCount, long* p
 	}
 
 	DXCreateSurface(App.dx.lpDD, &desc, &tSurf);
-	DXAttempt(tSurf->Lock(0, &desc, DDLOCK_NOSYSLOCK, 0));
+	DXAttempt(tSurf->Lock(0, &desc, DDLOCK_NOSYSLOCK, NULL));
 
 	if (!format)
 	{

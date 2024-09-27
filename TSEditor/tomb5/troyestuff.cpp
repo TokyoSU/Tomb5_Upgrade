@@ -82,7 +82,7 @@ void TroyeMenu(long textY, long& menu, ulong& selection, ulong selection_bak)
 	}
 
 	if (changed)
-		save_new_tomb5_settings();
+		save_tomb5_stuff();
 }
 
 bool Page0(long& num, long textY, ulong selection)
