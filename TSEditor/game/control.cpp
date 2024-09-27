@@ -46,6 +46,7 @@
 #include "../specific/output.h"
 #include "../specific/gamemain.h"
 #include "../tomb5/tomb5.h"
+#include "../specific/window.h"
 
 uchar ShatterSounds[18][10] =
 {
@@ -149,6 +150,8 @@ static long S_Death()
 
 	while (!ret)
 	{
+		g_Window.Update();
+
 		S_InitialisePolyList();
 		SetDebounce = 1;
 		S_UpdateInput();
@@ -330,7 +333,7 @@ long ControlPhase(long nframes, long demo_mode)
 			}
 		}
 
-		if (MainThread.ended)
+		if (!g_Window.IsOpened())
 			return 4;
 
 		if (input & IN_LOOK && !SniperCamActive && !bUseSpotCam && !bTrackCamInit &&
@@ -594,7 +597,6 @@ long ControlPhase(long nframes, long demo_mode)
 		if (!gfGameMode)
 		{
 			GameTimer++;
-
 			if (savegame.Level.Timer && !GLOBAL_playing_cutseq)
 				savegame.Level.Timer++;
 		}

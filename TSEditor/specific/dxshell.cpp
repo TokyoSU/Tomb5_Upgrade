@@ -3,6 +3,7 @@
 #include "function_stubs.h"
 #include "winmain.h"
 #include "input.h"
+#include "window.h"
 
 long DDSCL_FLAGS[11] =	// for DXSetCooperativeLevel logging
 {
@@ -542,7 +543,7 @@ void DXClose()
 	}
 }
 
-long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, long WindowStyle)
+long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd)
 {
 	DXDISPLAYMODE* dm;
 	LPDIRECTDRAWCLIPPER clipper;
@@ -556,7 +557,6 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 	G_dxptr = dxptr;
 	G_dxptr->Flags = Flags;
 	G_dxptr->hWnd = hWnd;
-	G_dxptr->WindowStyle = WindowStyle;
 
 	if (Flags & DXF_NOFREE)
 		flag = 1;
@@ -625,13 +625,13 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 			G_dxptr->lpPrimaryBuffer->GetAttachedSurface(&desc.ddsCaps, &G_dxptr->lpBackBuffer);
 		}
 		else
+		{
 			G_dxptr->lpBackBuffer = G_dxptr->lpPrimaryBuffer;
+		}
 
 		dm = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].DisplayModes[G_dxinfo->nDisplayMode];
-
 		G_dxptr->dwRenderWidth = dm->w;
 		G_dxptr->dwRenderHeight = dm->h;
-
 		G_dxptr->rViewport.top = 0;
 		G_dxptr->rViewport.left = 0;
 		G_dxptr->rViewport.right = dm->w;
@@ -640,13 +640,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 	else
 	{
 		Log("DXCreate: Windowed Mode");
-		dm = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].DisplayModes[G_dxinfo->nDisplayMode];
-		r.top = 0;
-		r.left = 0;
-		r.right = dm->w;
-		r.bottom = dm->h;
-		AdjustWindowRect(&r, WindowStyle, FALSE);
-		SDL_SetWindowPosition(App.hWindow, r.right - r.left, r.bottom - r.top);
+
 		GetClientRect(hWnd, &G_dxptr->rViewport);
 		GetClientRect(hWnd, &G_dxptr->rScreen);
 		ClientToScreen(hWnd, (LPPOINT)&G_dxptr->rScreen);
@@ -655,7 +649,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		G_dxptr->dwRenderWidth = G_dxptr->rViewport.right;
 		G_dxptr->dwRenderHeight = G_dxptr->rViewport.bottom;
 
-		Log("w %d h %d", G_dxptr->dwRenderWidth, G_dxptr->dwRenderHeight);
+		Log("RenderSize: %dx%d", G_dxptr->dwRenderWidth, G_dxptr->dwRenderHeight);
 		desc.dwFlags = DDSD_CAPS;
 		desc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
 
@@ -673,14 +667,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 
 		DXAttempt(clipper->SetHWnd(0, hWnd));
 		DXAttempt(G_dxptr->lpPrimaryBuffer->SetClipper(clipper));
-
-		if (clipper)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Clipper", clipper, clipper->Release());
-			clipper = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Clipper");
+		SafeRelease(clipper, "Clipper");
 
 		desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
 		desc.dwWidth = G_dxptr->dwRenderWidth;
@@ -738,7 +725,7 @@ long DXChangeVideoMode()
 
 	G_dxptr->Flags |= DXF_NOFREE;
 	G_dxptr->lpD3D->EvictManagedTextures();
-	val = DXCreate(0, 0, 0, G_dxptr->Flags, G_dxptr, G_dxptr->hWnd, G_dxptr->WindowStyle);
+	val = DXCreate(0, 0, 0, G_dxptr->Flags, G_dxptr, G_dxptr->hWnd);
 	G_dxptr->Flags ^= DXF_NOFREE;
 
 	Log("Exited DXChangeVideoMode %d", val);
@@ -766,9 +753,13 @@ long DXToggleFullScreen()
 	G_dxptr->lpD3D->EvictManagedTextures();
 	dm = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].DisplayModes[G_dxinfo->nDisplayMode];
 
-	DXCreate(dm->w, dm->h, dm->bpp, G_dxptr->Flags, G_dxptr, G_dxptr->hWnd, G_dxptr->WindowStyle);
+	DXCreate(dm->w, dm->h, dm->bpp, G_dxptr->Flags, G_dxptr, G_dxptr->hWnd);
 
-	WinSetStyle(G_dxptr->Flags & DXF_FULLSCREEN, G_dxptr->WindowStyle);
+	if (G_dxptr->Flags & DXF_FULLSCREEN)
+		g_Window.MakeFullscreen();
+	else
+		g_Window.MakeWindowed();
+
 	G_dxptr->Flags ^= DXF_NOFREE;
 	return 1;
 }

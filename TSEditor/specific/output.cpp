@@ -30,6 +30,7 @@
 #include "../game/health.h"
 #include "../game/text.h"
 #include "../tomb5/tomb5.h"
+#include "window.h"
 
 D3DTLVERTEX aVertexBuffer[1024];
 
@@ -725,6 +726,7 @@ void RenderLoadPic(long unused)
 
 	do
 	{
+		g_Window.Update();
 		phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
 		S_InitialisePolyList();
 		RenderIt(camera.pos.room_number);
@@ -734,7 +736,6 @@ void RenderLoadPic(long unused)
 
 		S_OutputPolyList();
 		S_DumpScreen();
-
 	} while (DoFade != 2);
 
 	phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
@@ -1219,39 +1220,31 @@ void aCalcColorSplit(long col, long* pC, long* pS)
 
 long S_DumpScreen()
 {
-	long n;
-
-	n = Sync();
-
+	long n = Sync();
 	while (n < 2)
 	{
-		while (!Sync());	//wait for sync
+		while (!Sync()); // wait for sync
 		n++;
 	}
-
 	GnFrameCounter++;
 	_EndScene();
 	DXShowFrame();
-	App.dx.DoneBlit = 1;
+	App.dx.DoneBlit = TRUE;
 	return n;
 }
 
 long S_DumpScreenFrame()
 {
-	long n;
-
-	n = Sync();
-
+	long n = Sync();
 	while (n < 1)
 	{
-		while (!Sync());	//wait for sync
+		while (!Sync()); // wait for sync
 		n++;
 	}
-
 	GnFrameCounter++;
 	_EndScene();
 	DXShowFrame();
-	App.dx.DoneBlit = 1;
+	App.dx.DoneBlit = TRUE;
 	return n;
 }
 
@@ -1359,14 +1352,12 @@ void SkinNormalsToScratch(long node)
 
 void S_InitialisePolyList()
 {
-	D3DRECT r;
-
+	D3DRECT r = {};
 	r.x1 = App.dx.rViewport.left;
 	r.y1 = App.dx.rViewport.top;
 	r.y2 = App.dx.rViewport.top + App.dx.rViewport.bottom;
 	r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
 	DXAttempt(App.dx.lpViewport->Clear2(1, &r, D3DCLEAR_TARGET, 0, 1.0F, 0));
-
 	_BeginScene();
 	InitBuckets();
 	InitialiseSortList();
@@ -1374,15 +1365,14 @@ void S_InitialisePolyList()
 
 void S_OutputPolyList()
 {
-	D3DRECT r;
+	D3DRECT r = {};
 	static long c;
 	long h;
 	char buf[128];
 
-	WinFrameRate();
 	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
 	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, FALSE);
 
 	if (resChangeCounter)
 	{

@@ -6,6 +6,7 @@
 #include "LoadSave.h"
 #include "../game/sound.h"
 #include "audio.h"
+#include "window.h"
 
 char* samples_buffer;
 
@@ -120,7 +121,7 @@ bool DXDSCreate()
 {
 	Log(__FUNCTION__);
 	DXAttempt(DirectSoundCreate(G_dxinfo->DSInfo[G_dxinfo->nDS].lpGuid, &App.dx.lpDS, 0));
-	DXAttempt(App.dx.lpDS->SetCooperativeLevel(App.hWnd, DSSCL_EXCLUSIVE));
+	DXAttempt(App.dx.lpDS->SetCooperativeLevel(g_Window.GetHandle(), DSSCL_EXCLUSIVE));
 	DXSetOutputFormat();
 	sound_active = 1;
 	return 1;

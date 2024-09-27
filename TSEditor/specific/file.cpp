@@ -1202,7 +1202,7 @@ bool LoadSamples()
 	return 1;
 }
 
-unsigned int __stdcall LoadLevel(void* name)
+static INT LoadLevel(LPVOID name)
 {
 	OBJECT_INFO* obj;
 	TEXTURESTRUCT* tex;
@@ -1215,6 +1215,7 @@ unsigned int __stdcall LoadLevel(void* name)
 	short data[16];
 
 	Log("Begin " __FUNCTION__);
+
 	FreeLevel();
 	nTextures = 1;
 	Textures[0].tex = 0;
@@ -1348,8 +1349,8 @@ unsigned int __stdcall LoadLevel(void* name)
 	}
 
 	aMakeCutsceneResident(gfResidentCut[0], gfResidentCut[1], gfResidentCut[2], gfResidentCut[3]);
-	LevelLoadingThread.active = 0;
-	_endthreadex(1);
+	
+	LevelLoadingThread.active = false;
 	return 1;
 }
 
@@ -1407,9 +1408,9 @@ long S_LoadLevelFile(long num)
 			ReleaseScreen();
 	}
 
-	LevelLoadingThread.active = 1;
-	LevelLoadingThread.ended = 0;
-	LevelLoadingThread.handle = _beginthreadex(0, 0, LoadLevel, name, 0, (unsigned int*)&LevelLoadingThread.address);
+	LevelLoadingThread.active = true;
+	LevelLoadingThread.ended = false;
+	LevelLoadingThread.handle = SDL_CreateThread(LoadLevel, "LoadLevel", name);
 
 	while (LevelLoadingThread.active)
 	{
@@ -1420,5 +1421,6 @@ long S_LoadLevelFile(long num)
 	if (App.dx.Flags & DXF_HWR && !S_DrawLoadBar())
 		while (!S_DrawLoadBar());
 
+	LevelLoadingThread.ended = true;
 	return 1;
 }

@@ -26,6 +26,7 @@
 #include "../tomb5/troyestuff.h"
 #include "../tomb5/tomb5.h"
 #include "drawbars.h"
+#include "../specific/window.h"
 
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
 long SoundQuality = 1;
@@ -1068,10 +1069,11 @@ long S_LoadSave(long load_or_save, long mono, long inv_active)
 	if (!inv_active)
 		InventoryActive = 1;
 
-	while (1)
+	while (true)
 	{
-		S_InitialisePolyList();
+		g_Window.Update();
 
+		S_InitialisePolyList();
 		if (fade)
 			dbinput = 0;
 		else
@@ -1112,7 +1114,7 @@ long S_LoadSave(long load_or_save, long mono, long inv_active)
 			break;
 		}
 
-		if (MainThread.ended)
+		if (!g_Window.IsOpened())
 			break;
 	}
 
@@ -1340,6 +1342,7 @@ long S_PauseMenu()
 
 	do
 	{
+		g_Window.Update();
 		S_InitialisePolyList();
 
 		if (fade)
@@ -1370,7 +1373,7 @@ long S_PauseMenu()
 			break;
 		}
 
-	} while (!MainThread.ended);
+	} while (g_Window.IsOpened());
 
 	TIME_Init();
 	FreeMonoScreen();
@@ -1512,7 +1515,7 @@ void SpecialFeaturesDisplayScreens(long num)
 	count = 0;
 	LoadScreen(first, num);
 
-	while (!MainThread.ended && !(dbinput & IN_DESELECT))
+	while (g_Window.IsOpened() && !(dbinput & IN_DESELECT))
 	{
 		_BeginScene();
 		InitBuckets();

@@ -16,6 +16,7 @@
 #include "gamemain.h"
 #include "file.h"
 #include "fmv.h"
+#include "window.h"
 #include "setupdlg.h"
 
 WINAPP App;
@@ -31,116 +32,12 @@ static COMMANDLINES commandlines[] =
 void ClearSurfaces()
 {
 	D3DRECT r{};
-
 	r.x1 = App.dx.rViewport.left;
 	r.y1 = App.dx.rViewport.top;
 	r.y2 = App.dx.rViewport.top + App.dx.rViewport.bottom;
 	r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
-
 	DXAttempt(App.dx.lpViewport->Clear2(1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
 	S_DumpScreen();
-}
-
-bool WinRunCheck(LPCSTR WindowName, LPCSTR ClassName, HANDLE* mutex)
-{
-	Log(__FUNCTION__);
-	*mutex = CreateMutex(0, 1, WindowName);
-
-	if (GetLastError() == ERROR_ALREADY_EXISTS)
-	{
-		HWND window = FindWindow(ClassName, WindowName);
-		if (window)
-		{
-			SendMessage(window, WM_ACTIVATE, WA_ACTIVE, 0);
-			SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-		}
-		return 1;
-	}
-	return 0;
-}
-
-float WinFrameRate()
-{
-	double t, time_now;
-	static float fps;
-	static long time, counter;
-	static char first_time;
-
-	if (!(first_time & 1))
-	{
-		first_time |= 1;
-		time = clock();
-	}
-
-	counter++;
-
-	if (counter == 10)
-	{
-		time_now = clock();
-		t = (time_now - time) / (double)CLOCKS_PER_SEC;
-		time = (long)time_now;
-		fps = float(counter / t);
-		counter = 0;
-	}
-
-	App.fps = fps;
-	return fps;
-}
-
-void WinMainWndProc()
-{
-	SDL_Event evts;
-	WinFrameRate();
-	while (SDL_PollEvent(&evts) != 0)
-	{
-		switch (evts.type)
-		{
-		case SDL_QUIT:
-		case SDL_APP_TERMINATING:
-			closing = true;
-			break;
-		case SDL_WINDOWEVENT:
-			switch (evts.window.event)
-			{
-			case SDL_WINDOWEVENT_FOCUS_GAINED:
-				Log("SDL_WINDOWEVENT_FOCUS_GAINED");
-				if (App.SetupComplete)
-				{
-					ResumeThread((HANDLE)MainThread.handle);
-					App.dx.WaitAtBeginScene = FALSE;
-					Log("Game Thread Resumed");
-				}
-				break;
-			case SDL_WINDOWEVENT_FOCUS_LOST:
-				Log("SDL_WINDOWEVENT_FOCUS_LOST");
-				if (App.SetupComplete)
-				{
-					Log("HangGameThread");
-					while (App.dx.InScene) {};
-					App.dx.WaitAtBeginScene = TRUE;
-					while (!App.dx.InScene) {};
-					SuspendThread((HANDLE)MainThread.handle);
-					Log("Game Thread Suspended");
-				}
-				break;
-			case SDL_WINDOWEVENT_MOVED:
-				Log("SDL_WINDOWEVENT_MOVED");
-				DXMove(evts.window.data1, evts.window.data2);
-				break;
-			}
-			break;
-		}
-	}
-}
-
-void WinProcMsg()
-{
-	Log(__FUNCTION__);
-	do
-	{
-		WinMainWndProc();
-	}
-	while (!MainThread.ended && !closing);
 }
 
 void WinProcessCommands(long cmd)
@@ -160,14 +57,15 @@ void WinProcessCommands(long cmd)
 		App.dx.WaitAtBeginScene = TRUE;
 		while (!App.dx.InScene) {};
 
-		SuspendThread((HANDLE)MainThread.handle);
+		//SuspendThread(MainThread.handle);
 		Log("Game Thread Suspended");
 
 		DXToggleFullScreen();
 		HWInitialise();
 		S_InitD3DMatrix();
 		aSetViewMatrix();
-		ResumeThread((HANDLE)MainThread.handle);
+
+		//ResumeThread(MainThread.handle);
 		App.dx.WaitAtBeginScene = 0;
 		Log("Game Thread Resumed");
 
@@ -193,7 +91,7 @@ void WinProcessCommands(long cmd)
 		while (App.dx.InScene) {};
 		App.dx.WaitAtBeginScene = 1;
 		while (!App.dx.InScene) {};
-		SuspendThread((HANDLE)MainThread.handle);
+		//SuspendThread(MainThread.handle);
 		Log("Game Thread Suspended");
 
 		odm = App.DXInfo.nDisplayMode;
@@ -254,7 +152,7 @@ void WinProcessCommands(long cmd)
 			aSetViewMatrix();
 		}
 
-		ResumeThread((HANDLE)MainThread.handle);
+		//ResumeThread(MainThread.handle);
 		App.dx.WaitAtBeginScene = 0;
 		Log("Game Thread Resumed");
 		resChangeCounter = 120;
@@ -263,22 +161,14 @@ void WinProcessCommands(long cmd)
 
 void CLSetup(char* cmd)
 {
-	Log("CLSetup");
-
-	if (cmd)
-		start_setup = 0;
-	else
-		start_setup = 1;
+	Log(__FUNCTION__);
+	start_setup = !(cmd != NULL);
 }
 
 void CLNoFMV(char* cmd)
 {
-	Log("CLNoFMV");
-
-	if (cmd)
-		fmvs_disabled = 0;
-	else
-		fmvs_disabled = 1;
+	Log(__FUNCTION__);
+	fmvs_disabled = !(cmd != NULL);
 }
 
 void WinProcessCommandLine(LPSTR cmd)
@@ -355,151 +245,25 @@ void WinProcessCommandLine(LPSTR cmd)
 	}
 }
 
-/*LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	static long mouseX, mouseY, mouseB;
-	static bool closing;
-
-	switch (uMsg)
-	{
-	case WM_CREATE:
-		resChangeCounter = 0;
-		Log("WM_CREATE");
-		break;
-
-	case WM_MOVE:
-		Log("WM_MOVE");
-		DXMove((short)lParam, short((lParam >> 16) & 0xFFFF));
-		break;
-
-	case WM_ACTIVATE:
-
-		if (!closing)
-		{
-			if (App.fmv)
-				return 0;
-
-			switch (wParam & 0xFFFF)
-			{
-			case WA_INACTIVE:
-				
-
-				return 0;
-
-			case WA_ACTIVE:
-			case WA_CLICKACTIVE:
-				
-
-				return 0;
-			}
-		}
-
-		break;
-
-	case WM_CLOSE:
-		closing = 1;
-		PostQuitMessage(0);
-		break;
-
-	case WM_COMMAND:
-		Log("WM_COMMAND");
-		WinProcessCommands(wParam & 0xFFFF);
-		break;
-
-	case WM_MOUSEMOVE:
-		mouseX = GET_X_LPARAM(lParam);
-		mouseY = GET_Y_LPARAM(lParam);
-		mouseB = wParam;
-		break;
-
-	case WM_APP:
-		FillADPCMBuffer((char*)lParam, wParam);
-		return 0;
-	}
-
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}*/
-
 void WinClose()
 {
 	Log(__FUNCTION__);
 
 	SaveSettings();
-	CloseHandle(App.mutex);
+
+	if (G_dxptr != NULL)
+	{
+		DXAttempt(G_dxptr->Keyboard->Unacquire());
+		SafeRelease(G_dxptr->Keyboard, "Keyboard");
+		SafeRelease(G_dxptr->lpDirectInput, "DirectInput");
+	}
+
 	DXFreeInfo(&App.DXInfo);
-	DestroyAcceleratorTable(App.hAccel);
 	DXClose();
 	FreeBinkStuff();
-
-	if (G_dxptr == NULL)
-		return;
-
-	DXAttempt(G_dxptr->Keyboard->Unacquire());
-
-	if (G_dxptr->Keyboard)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "Keyboard", G_dxptr->Keyboard, G_dxptr->Keyboard->Release());
-		G_dxptr->Keyboard = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "Keyboard");
-
-	if (G_dxptr->lpDirectInput)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "DirectInput", G_dxptr->lpDirectInput, G_dxptr->lpDirectInput->Release());
-		G_dxptr->lpDirectInput = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "DirectInput");
-}
-
-bool WinRegisterWindow(HINSTANCE hinstance)
-{
-	App.hInstance = hinstance;
-
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) < 0)
-	{
-		Log("Failed to initialize SDL2, Error: %s", SDL_GetError());
-		return false;
-	}
-
-	return true;
-}
-
-bool WinCreateWindow()
-{
-	App.hWindow = SDL_CreateWindow("Tomb Raider Chronicles", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_RESIZABLE);
-	if (App.hWindow == NULL)
-	{
-		Log("Failed to create SDL window, Error: %s", SDL_GetError());
-		return false;
-	}
-
-	SDL_SysWMinfo data;
-	ZeroMemory(&data, sizeof(data));
-	SDL_VERSION(&data.version);
-	if (SDL_GetWindowWMInfo(App.hWindow, &data) == SDL_FALSE)
-	{
-		Log("Failed to get the window SDL handle, Error: %s", SDL_GetError());
-		return false;
-	}
-
-	App.hWnd = data.info.win.window;
-	return App.hWnd != NULL;
-}
-
-void WinSetStyle(bool fullscreen, ulong& set)
-{
-	if (fullscreen)
-	{
-		set |= DDSCL_FULLSCREEN | DDSCL_EXCLUSIVE;
-		SDL_SetWindowFullscreen(App.hWindow, SDL_WINDOW_FULLSCREEN);
-	}
-	else
-	{
-		set &= ~(DDSCL_FULLSCREEN | DDSCL_EXCLUSIVE);
-		SDL_SetWindowFullscreen(App.hWindow, NULL);
-	}
+	DestroyAcceleratorTable(App.hAccel);
+	
+	g_Window.Release();
 }
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -512,46 +276,35 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	atexit(WinClose);
 
-	if (WinRunCheck("Tomb Raider Chronicles", "MainGameWindow", &App.mutex))
+	g_Window.Initialize(hInstance);
+	if (g_Window.CheckIfInstanceAlreadyRunning()) {
 		exit(EXIT_SUCCESS);
+	}
 
 	LoadGameflow();
 	WinProcessCommandLine(lpCmdLine);
 
-	if (!WinRegisterWindow(hInstance))
-	{
-		Log("Unable To Register Window Class");
-		exit(EXIT_FAILURE);
-	}
+	g_Window.Create(640, 480, "Tomb Raider Chronicles", "Tomb5:Class");
 
-	if (!WinCreateWindow())
-	{
-		Log("Unable To Create Window");
-		exit(EXIT_FAILURE);
-	}
-
-	DXGetInfo(&App.DXInfo, App.hWnd);
+	DXGetInfo(&App.DXInfo, g_Window.GetHandle());
 
 	if (start_setup || !LoadSettings())
 	{
 		if (!SetupDialog())
 		{
-			free(gfScriptFile);
-			free(gfLanguageFile);
-			WinClose();
+			SafeFree(gfScriptFile);
+			SafeFree(gfLanguageFile);
 			exit(EXIT_SUCCESS);
 		}
-
 		LoadSettings();
 	}
 
-	if (!fmvs_disabled)
+	g_Window.Show();
+
+	if (!fmvs_disabled && !LoadBinkStuff())
 	{
-		if (!LoadBinkStuff())
-		{
-			//MessageBox(0, "Failed to load Bink, disabling FMVs.", "Tomb Raider V", 0);
-			fmvs_disabled = 1;
-		}
+		Log("Failed to load Bink, disabling FMVs.");
+		fmvs_disabled = true;
 	}
 
 	App.dx.WaitAtBeginScene = FALSE;
@@ -559,36 +312,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	App.fmv = false;
 
 	dm = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].DisplayModes[G_dxinfo->nDisplayMode];
-	if (!DXCreate(dm->w, dm->h, dm->bpp, App.StartFlags, &App.dx, App.hWnd, WS_OVERLAPPEDWINDOW))
+	if (!DXCreate(dm->w, dm->h, dm->bpp, App.StartFlags, &App.dx, g_Window.GetHandle()))
 	{
 		MessageBox(0, SCRIPT_TEXT(TXT_Failed_To_Setup_DirectX), "Tomb Raider", 0);
 		exit(EXIT_FAILURE);
 	}
 
-	WinSetStyle(G_dxptr->Flags & DXF_FULLSCREEN, G_dxptr->WindowStyle);
-	if (App.dx.Flags & DXF_FULLSCREEN)
+	if (G_dxptr->Flags & DXF_FULLSCREEN)
 	{
-		SetCursor(NULL);
 		ShowCursor(FALSE);
+		g_Window.MakeFullscreen();
+	}
+	else
+	{
+		ShowCursor(TRUE);
+		g_Window.MakeWindowed();
 	}
 
-	DXInitInput(App.hWnd, App.hInstance);
+	DXInitInput(g_Window.GetHandle(), App.hInstance);
 	App.hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
-
 	if (!App.SoundDisabled)
 	{
 		DXDSCreate();
 		ACMInit();
 	}
-
-	MainThread.active = TRUE;
-	MainThread.ended = FALSE;
-	MainThread.handle = _beginthreadex(0, 0, GameMain, 0, 0, (unsigned int*)&MainThread.address);
-
-	WinProcMsg();
-
-	MainThread.ended = TRUE;
-	while (MainThread.active) {};
-
+	GameMain(NULL);
 	exit(EXIT_SUCCESS);
 }

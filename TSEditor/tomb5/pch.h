@@ -11,7 +11,6 @@
 #define WIN32_LEAN_AND_MEAN 
 #define _USE_MATH_DEFINES
 #define DIRECTINPUT_VERSION 0x0800
-#define DO_LOG
 
 #include <windows.h>
 #include <windowsx.h>
