@@ -14,6 +14,7 @@ vcpkg install tinyfiledialogs:x64-windows
 vcpkg install spdlog:x64-windows
 vcpkg install freetype:x64-windows
 vcpkg install zlib:x64-windows
+vcpkg install simpleini:x64-windows
 
 vcpkg install angelscript[core,addons]:x86-windows
 vcpkg install sdl2:x86-windows
@@ -27,5 +28,6 @@ vcpkg install tinyfiledialogs:x86-windows
 vcpkg install spdlog:x86-windows
 vcpkg install freetype:x86-windows
 vcpkg install zlib:x86-windows
+vcpkg install simpleini:x86-windows
 
 pause

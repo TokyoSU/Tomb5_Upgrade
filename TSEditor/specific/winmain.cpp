@@ -18,6 +18,7 @@
 #include "fmv.h"
 #include "window.h"
 #include "setupdlg.h"
+#include "configuration.h"
 
 WINAPP App;
 long resChangeCounter;
@@ -276,6 +277,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	atexit(WinClose);
 
+	g_Config.Initialize();
+
 	g_Window.Initialize(hInstance);
 	if (g_Window.CheckIfInstanceAlreadyRunning()) {
 		exit(EXIT_SUCCESS);
@@ -336,6 +339,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		DXDSCreate();
 		ACMInit();
 	}
+
 	GameMain(NULL);
+
 	exit(EXIT_SUCCESS);
 }

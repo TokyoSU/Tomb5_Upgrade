@@ -333,6 +333,7 @@
     <ClCompile Include="specific\alexstuff.cpp" />
     <ClCompile Include="specific\audio.cpp" />
     <ClCompile Include="specific\clipping.cpp" />
+    <ClCompile Include="specific\configuration.cpp" />
     <ClCompile Include="specific\d3dmatrix.cpp" />
     <ClCompile Include="specific\drawbars.cpp" />
     <ClCompile Include="specific\drawlara.cpp" />
@@ -474,6 +475,7 @@
     <ClInclude Include="specific\alexstuff.h" />
     <ClInclude Include="specific\audio.h" />
     <ClInclude Include="specific\clipping.h" />
+    <ClInclude Include="specific\configuration.h" />
     <ClInclude Include="specific\d3dmatrix.h" />
     <ClInclude Include="specific\drawbars.h" />
     <ClInclude Include="specific\drawlara.h" />
