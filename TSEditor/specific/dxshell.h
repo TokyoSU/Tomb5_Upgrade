@@ -1,7 +1,6 @@
 #pragma once
 #include "../global/types.h"
 
-void DXReadKeyboard(char* KeyMap);
 void DXBitMask2ShiftCnt(ulong mask, uchar* shift, uchar* count);
 long DXAttempt(HRESULT r);
 long DIAttempt(HRESULT r);
@@ -30,6 +29,7 @@ BOOL __stdcall DXEnumDirectSound(LPGUID lpGuid, LPCSTR lpcstrDescription, LPCSTR
 long DXGetInfo(DXINFO* dxinfo, HWND hwnd);
 void DXFreeInfo(DXINFO* dxinfo);
 long DXUpdateJoystick();
+void DXReadKeyboard();
 void DXInitInput(HWND hwnd, HINSTANCE hinstance);
 const char* DXGetErrorString(HRESULT hr);
 const char* DIGetErrorString(HRESULT hr);
@@ -39,4 +39,4 @@ extern DXINFO* G_dxinfo;
 extern LPDIRECTDRAW4 G_ddraw;
 extern LPDIRECT3D3 G_d3d;
 extern HWND G_hwnd;
-extern char keymap[256];
+extern Uint8 keymap[SDL_NUM_SCANCODES];

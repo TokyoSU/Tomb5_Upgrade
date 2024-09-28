@@ -122,6 +122,12 @@ void CWindow::UpdateWindow()
 		case SDL_APP_TERMINATING:
 			m_is_opened = false;
 			break;
+		case SDL_KEYDOWN:
+			keymap[evts.key.keysym.scancode] = 1;
+			break;
+		case SDL_KEYUP:
+			keymap[evts.key.keysym.scancode] = 0;
+			break;
 		case SDL_WINDOWEVENT:
 			if (App.fmv)
 				break;

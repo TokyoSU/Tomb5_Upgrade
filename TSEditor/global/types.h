@@ -38,6 +38,59 @@ typedef unsigned long ulong;
 
 /*enums*/
 
+enum LayoutType
+{
+	LAY_Default,
+	LAY_Player,
+	LAY_Count
+};
+
+enum LayoutKeyType
+{
+	LAYK_Forward,
+	LAYK_Backward,
+	LAYK_Left,
+	LAYK_Right,
+	LAYK_Duck,
+	LAYK_Sprint,
+	LAYK_Walk,
+	LAYK_Jump,
+	LAYK_Action,
+	LAYK_DrawWeapon,
+	LAYK_UseFlare,
+	LAYK_Look,
+	LAYK_Roll,
+	LAYK_Inventory,
+	LAYK_StepLeft,
+	LAYK_StepRight,
+	LAYK_Pause,
+	LAYK_Select,
+	LAYK_Count
+};
+
+enum LayoutJoystickType
+{
+	LAYK_JOY_Jump,
+	LAYK_JOY_Action,
+	LAYK_JOY_DrawWeapon,
+	LAYK_JOY_Sprint,
+	LAYK_JOY_Walk,
+	LAYK_JOY_Duck,
+	LAYK_JOY_UseFlare,
+	LAYK_JOY_Look,
+	LAYK_JOY_Roll,
+	LAYK_JOY_Select,
+	LAYK_JOY_Count
+};
+
+enum ControlMethodType
+{
+	CMT_Keyboard,
+	CMT_Joystick,
+	CMT_Reset,
+	CMT_Count
+};
+
 enum DX_FLAGS
 {
 	DXF_NONE = 0x0,
@@ -415,6 +468,21 @@ enum trigobj_types
 };
 
 /*structs*/
+
+struct KeyButton
+{
+	SDL_Scancode code;
+	const char* keyName;
+	KeyButton() {
+		code = SDL_SCANCODE_UNKNOWN;
+		keyName = NULL;
+	}
+	KeyButton(SDL_Scancode _code, LPCSTR _keyName) {
+		code = _code;
+		keyName = _keyName;
+	}
+};
+
 struct OBJECT_VECTOR
 {
 	long x;

@@ -187,7 +187,7 @@ void LaraCheatGetStuff()
 void LaraCheatyBits()
 {
 #ifndef _DEBUG	//public releases have cheats in inventory, except for DOZY
-	if (keymap[DIK_D] && keymap[DIK_O] && keymap[DIK_Z] && keymap[DIK_Y])
+	if (keymap[SDL_SCANCODE_D] && keymap[SDL_SCANCODE_O] && keymap[SDL_SCANCODE_Z] && keymap[SDL_SCANCODE_Y])
 	{
 		lara_item->pos.y_pos -= 128;
 
@@ -210,13 +210,13 @@ void LaraCheatyBits()
 		}
 	}
 #else
-	if (keymap[DIK_F1])
+	if (keymap[SDL_SCANCODE_F1])
 	{
 		LaraCheatGetStuff();
 		lara_item->hit_points = 1000;
 	}
 
-	if (keymap[DIK_F2])
+	if (keymap[SDL_SCANCODE_F2])
 	{
 		lara_item->pos.y_pos -= 128;
 
@@ -239,7 +239,7 @@ void LaraCheatyBits()
 		}
 	}
 
-	if (keymap[DIK_F3])
+	if (keymap[SDL_SCANCODE_F3])
 	{
 		gfLevelComplete = gfCurrentLevel + 1;
 		SCNoDrawLara = 0;

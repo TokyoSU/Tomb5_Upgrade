@@ -40,20 +40,13 @@ DXINFO* G_dxinfo;
 LPDIRECTDRAW4 G_ddraw;
 LPDIRECT3D3 G_d3d;
 HWND G_hwnd;
-char keymap[256];
+Uint8 keymap[SDL_NUM_SCANCODES];
 
 static char tga_header[18] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 1, 0, 1, 16, 0 };
 
-void DXReadKeyboard(char* KeyMap)
+void DXReadKeyboard()
 {
-	while FAILED(G_dxptr->Keyboard->GetDeviceState(256, KeyMap))
-	{
-		if FAILED(G_dxptr->Keyboard->Acquire())
-		{
-			memset(KeyMap, 0, 256);
-			break;
-		}
-	}
+
 }
 
 void DXBitMask2ShiftCnt(ulong mask, uchar* shift, uchar* count)
@@ -445,7 +438,7 @@ void DXSaveScreen(LPDIRECTDRAWSURFACE4 surf, const char* name)
 
 HRESULT DXShowFrame()
 {
-	if (keymap[DIK_APOSTROPHE])
+	if (keymap[SDL_SCANCODE_APOSTROPHE])
 		DXSaveScreen(App.dx.lpBackBuffer, "Tomb");
 
 	if FAILED(G_dxptr->lpPrimaryBuffer->IsLost())

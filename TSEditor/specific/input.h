@@ -1,18 +1,19 @@
 #pragma once
 #include "../global/types.h"
 
-long Key(long number);
+LPCSTR GetKeyboardButtonNameFromScancode(SDL_Scancode code);
+bool Key(LayoutKeyType number);
 long S_UpdateInput();
 long ReadJoystick(long& x, long& y);
 
-extern const char* KeyboardButtons[272];
-extern const char* GermanKeyboard[272];
+extern KeyButton KeyboardButtons[SDL_NUM_SCANCODES];
+extern KeyButton GermanKeyboard[SDL_NUM_SCANCODES];
 extern const char* JoyStickButtons[16];
 extern long jLayout[32];
 extern long defaultJLayout[32];
 
-extern short layout[2][18];
-extern long conflict[18];
+extern SDL_Scancode layout[LAY_Count][LAYK_Count];
+extern bool conflict[LAYK_Count];
 extern long input;
 extern long dbinput;
 extern long inputBusy;

@@ -29,5 +29,5 @@ extern long sfx_frequencies[3];
 extern long SoundQuality;
 extern long MusicVolume;
 extern long SFXVolume;
-extern long ControlMethod;
+extern ControlMethodType ControlMethod;
 extern char MonoScreenOn;
