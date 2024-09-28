@@ -552,11 +552,11 @@ long TitleOptions()
 			ret = 3;
 		}
 
-		if (keymap[DIK_C] && keymap[DIK_U] && keymap[DIK_T] && keymap[DIK_S])
+		if (keymap[SDL_SCANCODE_C] && keymap[SDL_SCANCODE_U] && keymap[SDL_SCANCODE_T] && keymap[SDL_SCANCODE_S])
 			dels_cutseq_selector_flag = 1;
 	}
 
-	if (dbinput & IN_SELECT && !keymap[DIK_LALT] && menu < 2)
+	if (dbinput & IN_SELECT && !keymap[SDL_SCANCODE_LALT] && menu < 2)
 	{
 		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 

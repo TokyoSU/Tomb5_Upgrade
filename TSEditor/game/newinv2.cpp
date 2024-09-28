@@ -469,10 +469,10 @@ long S_CallInventory2()
 
 		item = rings[RING_INVENTORY]->current_object_list[rings[RING_INVENTORY]->curobjinlist].invitem;
 
-		if (item == INV_COMPASS_ITEM && keymap[DIK_G] && keymap[DIK_U] && keymap[DIK_N] && keymap[DIK_S])//GUNS
+		if (item == INV_COMPASS_ITEM && keymap[SDL_SCANCODE_G] && keymap[SDL_SCANCODE_U] && keymap[SDL_SCANCODE_N] && keymap[SDL_SCANCODE_S])//GUNS
 			dels_give_lara_guns_cheat();
 
-		if (item == INV_COMPASS_ITEM && keymap[DIK_B] && keymap[DIK_I] && keymap[DIK_T] && keymap[DIK_S])//BITS
+		if (item == INV_COMPASS_ITEM && keymap[SDL_SCANCODE_B] && keymap[SDL_SCANCODE_I] && keymap[SDL_SCANCODE_T] && keymap[SDL_SCANCODE_S])//BITS
 		{
 			savegame.CampaignSecrets[0] = 9;
 			savegame.CampaignSecrets[1] = 9;
@@ -480,17 +480,17 @@ long S_CallInventory2()
 			savegame.CampaignSecrets[3] = 9;
 		}
 
-		if (item == INV_COMPASS_ITEM && keymap[DIK_I] && keymap[DIK_T] && keymap[DIK_E] && keymap[DIK_M])	//ITEM
+		if (item == INV_COMPASS_ITEM && keymap[SDL_SCANCODE_I] && keymap[SDL_SCANCODE_T] && keymap[SDL_SCANCODE_E] && keymap[SDL_SCANCODE_M])	//ITEM
 			dels_give_lara_items_cheat();
 
-		if (item == INV_COMPASS_ITEM && keymap[DIK_S] && keymap[DIK_K] && keymap[DIK_I] && keymap[DIK_P])	//SKIP
+		if (item == INV_COMPASS_ITEM && keymap[SDL_SCANCODE_S] && keymap[SDL_SCANCODE_K] && keymap[SDL_SCANCODE_I] && keymap[SDL_SCANCODE_P])	//SKIP
 		{
 			gfLevelComplete = gfCurrentLevel + 1;
 			SCNoDrawLara = 0;
 			bDisableLaraControl = 0;
 		}
 
-		if (item == INV_COMPASS_ITEM && keymap[DIK_H] && keymap[DIK_E] && keymap[DIK_A] && keymap[DIK_L])	//heal
+		if (item == INV_COMPASS_ITEM && keymap[SDL_SCANCODE_H] && keymap[SDL_SCANCODE_E] && keymap[SDL_SCANCODE_A] && keymap[SDL_SCANCODE_L])	//heal
 			lara_item->hit_points = 1000;
 
 		if (GLOBAL_invkeypadmode)

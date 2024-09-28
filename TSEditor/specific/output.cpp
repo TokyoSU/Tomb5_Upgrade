@@ -1457,7 +1457,7 @@ void S_OutputPolyList()
 
 	if (c == 2)
 	{
-		if (keymap[DIK_F12])
+		if (keymap[SDL_SCANCODE_F12])
 			App.BumpMapping = App.BumpMapping != 1;
 
 		c = 0;

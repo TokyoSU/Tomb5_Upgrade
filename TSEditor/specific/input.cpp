@@ -16,57 +16,161 @@
 #include "../game/newinv2.h"
 #include "../tomb5/tomb5.h"
 
-const char* KeyboardButtons[272] =
+KeyButton KeyboardButtons[] =
 {
-	0,
-	"Esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "Bksp",
-	"Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "<", ">", "Return",
-	"Ctrl", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "`",
-	"Shift", "#", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "Shift",
-	"Padx", "Alt", "Space", "Caps", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Nmlk", 0,
-	"Pad7", "Pad8", "Pad9", "Pad-",
-	"Pad4", "Pad5", "Pad6", "Pad+",
-	"Pad1", "Pad2", "Pad3",
-	"Pad0", "Pad.", 0, 0, "\\", 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Enter", "Ctrl", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Shift", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Pad/", 0, 0, "Alt", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Home", "Up", "PgUp", 0, "Left", 0, "Right", 0, "End", "Down", "PgDn", "Ins", "Del",
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Joy 1", "Joy 2", "Joy 3", "Joy 4", "Joy 5", "Joy 6", "Joy 7", "Joy 8",
-	"Joy 9", "Joy 10", "Joy 11", "Joy 12", "Joy 13", "Joy 14", "Joy 15", "Joy 16"
+	KeyButton(SDL_SCANCODE_UNKNOWN, "Unknown"),
+
+	KeyButton(SDL_SCANCODE_A, "A"),
+	KeyButton(SDL_SCANCODE_B, "B"),
+	KeyButton(SDL_SCANCODE_C, "C"),
+	KeyButton(SDL_SCANCODE_D, "D"),
+	KeyButton(SDL_SCANCODE_E, "E"),
+	KeyButton(SDL_SCANCODE_F, "F"),
+	KeyButton(SDL_SCANCODE_G, "G"),
+	KeyButton(SDL_SCANCODE_H, "H"),
+	KeyButton(SDL_SCANCODE_I, "I"),
+	KeyButton(SDL_SCANCODE_J, "J"),
+	KeyButton(SDL_SCANCODE_K, "K"),
+	KeyButton(SDL_SCANCODE_L, "L"),
+	KeyButton(SDL_SCANCODE_M, "M"),
+	KeyButton(SDL_SCANCODE_N, "N"),
+	KeyButton(SDL_SCANCODE_O, "O"),
+	KeyButton(SDL_SCANCODE_P, "P"),
+	KeyButton(SDL_SCANCODE_Q, "Q"),
+	KeyButton(SDL_SCANCODE_R, "R"),
+	KeyButton(SDL_SCANCODE_S, "S"),
+	KeyButton(SDL_SCANCODE_T, "T"),
+	KeyButton(SDL_SCANCODE_U, "U"),
+	KeyButton(SDL_SCANCODE_V, "V"),
+	KeyButton(SDL_SCANCODE_W, "W"),
+	KeyButton(SDL_SCANCODE_X, "X"),
+	KeyButton(SDL_SCANCODE_Y, "Y"),
+	KeyButton(SDL_SCANCODE_Z, "Z"),
+
+	KeyButton(SDL_SCANCODE_1, "1"),
+	KeyButton(SDL_SCANCODE_2, "2"),
+	KeyButton(SDL_SCANCODE_3, "3"),
+	KeyButton(SDL_SCANCODE_4, "4"),
+	KeyButton(SDL_SCANCODE_5, "5"),
+	KeyButton(SDL_SCANCODE_6, "6"),
+	KeyButton(SDL_SCANCODE_7, "7"),
+	KeyButton(SDL_SCANCODE_8, "8"),
+	KeyButton(SDL_SCANCODE_9, "9"),
+	KeyButton(SDL_SCANCODE_0, "0"),
+
+	KeyButton(SDL_SCANCODE_RETURN, "Return"),
+	KeyButton(SDL_SCANCODE_ESCAPE, "Escape"),
+	KeyButton(SDL_SCANCODE_BACKSPACE, "Backspace"),
+	KeyButton(SDL_SCANCODE_TAB, "Tab"),
+	KeyButton(SDL_SCANCODE_SPACE, "Space"),
+
+	KeyButton(SDL_SCANCODE_MINUS, "Minus"),
+	KeyButton(SDL_SCANCODE_EQUALS, "Equals"),
+	KeyButton(SDL_SCANCODE_LEFTBRACKET, "LeftBracket"),
+	KeyButton(SDL_SCANCODE_RIGHTBRACKET, "RightBacket"),
+	KeyButton(SDL_SCANCODE_BACKSLASH, "Backslash"),
+	KeyButton(SDL_SCANCODE_NONUSHASH, "NonUsSlash"),
+	KeyButton(SDL_SCANCODE_SEMICOLON, "Semicolon"),
+	KeyButton(SDL_SCANCODE_APOSTROPHE, "Apostrophe"),
+	KeyButton(SDL_SCANCODE_GRAVE, "Grave"),
+	KeyButton(SDL_SCANCODE_COMMA, "Comma"),
+	KeyButton(SDL_SCANCODE_PERIOD, "Period"),
+	KeyButton(SDL_SCANCODE_SLASH, "Slash"),
+	KeyButton(SDL_SCANCODE_CAPSLOCK, "Capslock"),
+
+	KeyButton(SDL_SCANCODE_F1, "F1"),
+	KeyButton(SDL_SCANCODE_F2, "F2"),
+	KeyButton(SDL_SCANCODE_F3, "F3"),
+	KeyButton(SDL_SCANCODE_F4, "F4"),
+	KeyButton(SDL_SCANCODE_F5, "F5"),
+	KeyButton(SDL_SCANCODE_F6, "F6"),
+	KeyButton(SDL_SCANCODE_F7, "F7"),
+	KeyButton(SDL_SCANCODE_F8, "F8"),
+	KeyButton(SDL_SCANCODE_F9, "F9"),
+	KeyButton(SDL_SCANCODE_F10, "F10"),
+	KeyButton(SDL_SCANCODE_F11, "F11"),
+	KeyButton(SDL_SCANCODE_F12, "F12"),
+	
+	KeyButton(SDL_SCANCODE_PRINTSCREEN, "PrintScreen"),
+	KeyButton(SDL_SCANCODE_SCROLLLOCK, "ScrollLock"),
+	KeyButton(SDL_SCANCODE_PAUSE, "Pause"),
+	KeyButton(SDL_SCANCODE_INSERT, "Insert"),
+
+	KeyButton(SDL_SCANCODE_HOME, "Home"),
+	KeyButton(SDL_SCANCODE_PAGEUP, "PageUp"),
+	KeyButton(SDL_SCANCODE_DELETE, "Delete"),
+	KeyButton(SDL_SCANCODE_END, "End"),
+	KeyButton(SDL_SCANCODE_PAGEDOWN, "PageDown"),
+	KeyButton(SDL_SCANCODE_RIGHT, "Right"),
+	KeyButton(SDL_SCANCODE_LEFT, "Left"),
+	KeyButton(SDL_SCANCODE_DOWN, "Down"),
+	KeyButton(SDL_SCANCODE_UP, "Up"),
+
+	KeyButton(SDL_SCANCODE_NUMLOCKCLEAR, "NumLockClear"),
+
+	KeyButton(SDL_SCANCODE_KP_DIVIDE, "Numpad Divide"),
+	KeyButton(SDL_SCANCODE_KP_MULTIPLY, "Numpad Multiply"),
+	KeyButton(SDL_SCANCODE_KP_MINUS, "Numpad Minus"),
+	KeyButton(SDL_SCANCODE_KP_PLUS, "Numpad Plus"),
+	KeyButton(SDL_SCANCODE_KP_ENTER, "Numpad Enter"),
+	KeyButton(SDL_SCANCODE_KP_1, "Numpad 1"),
+	KeyButton(SDL_SCANCODE_KP_2, "Numpad 2"),
+	KeyButton(SDL_SCANCODE_KP_3, "Numpad 3"),
+	KeyButton(SDL_SCANCODE_KP_4, "Numpad 4"),
+	KeyButton(SDL_SCANCODE_KP_5, "Numpad 5"),
+	KeyButton(SDL_SCANCODE_KP_6, "Numpad 6"),
+	KeyButton(SDL_SCANCODE_KP_7, "Numpad 7"),
+	KeyButton(SDL_SCANCODE_KP_8, "Numpad 8"),
+	KeyButton(SDL_SCANCODE_KP_9, "Numpad 9"),
+	KeyButton(SDL_SCANCODE_KP_0, "Numpad 0"),
+	KeyButton(SDL_SCANCODE_KP_PERIOD, "Numpad Period"),
+	KeyButton(SDL_SCANCODE_KP_EQUALS, "Numpad Equals"),
+	KeyButton(SDL_SCANCODE_KP_COMMA, "Keypad Comma"),
+
+	KeyButton(SDL_SCANCODE_NONUSBACKSLASH, "NonUsBackslash"),
+
+	KeyButton(SDL_SCANCODE_APPLICATION, "Application"),
+	KeyButton(SDL_SCANCODE_POWER, "Power"),
+
+	KeyButton(SDL_SCANCODE_F13, "F13"),
+	KeyButton(SDL_SCANCODE_F14, "F14"),
+	KeyButton(SDL_SCANCODE_F15, "F15"),
+	KeyButton(SDL_SCANCODE_F16, "F16"),
+	KeyButton(SDL_SCANCODE_F17, "F17"),
+	KeyButton(SDL_SCANCODE_F18, "F18"),
+	KeyButton(SDL_SCANCODE_F19, "F19"),
+	KeyButton(SDL_SCANCODE_F20, "F20"),
+	KeyButton(SDL_SCANCODE_F21, "F21"),
+	KeyButton(SDL_SCANCODE_F22, "F22"),
+	KeyButton(SDL_SCANCODE_F23, "F23"),
+	KeyButton(SDL_SCANCODE_F24, "F24"),
+
+	KeyButton(SDL_SCANCODE_EXECUTE, "Execute"),
+	KeyButton(SDL_SCANCODE_HELP, "Help"),
+	KeyButton(SDL_SCANCODE_MENU, "Menu"),
+	KeyButton(SDL_SCANCODE_SELECT, "Select"),
+	KeyButton(SDL_SCANCODE_STOP, "Stop"),
+	KeyButton(SDL_SCANCODE_AGAIN, "Again"),
+	KeyButton(SDL_SCANCODE_UNDO, "Undo"),
+	KeyButton(SDL_SCANCODE_CUT, "Cut"),
+	KeyButton(SDL_SCANCODE_COPY, "Copy"),
+	KeyButton(SDL_SCANCODE_PASTE, "Paste"),
+	KeyButton(SDL_SCANCODE_FIND, "Find"),
+	KeyButton(SDL_SCANCODE_MUTE, "Mute"),
+	KeyButton(SDL_SCANCODE_VOLUMEUP, "VolumeUp"),
+	KeyButton(SDL_SCANCODE_VOLUMEDOWN, "VolumeDown"),
+
+	KeyButton(SDL_SCANCODE_LCTRL, "Left Control"),
+	KeyButton(SDL_SCANCODE_LSHIFT, "Left Shift"),
+	KeyButton(SDL_SCANCODE_LALT, "Left Alt"),
+	KeyButton(SDL_SCANCODE_LGUI, "Left Gui"),
+	KeyButton(SDL_SCANCODE_RCTRL, "Right Control"),
+	KeyButton(SDL_SCANCODE_RSHIFT, "Right Shift"),
+	KeyButton(SDL_SCANCODE_RALT, "Right Alt"),
+	KeyButton(SDL_SCANCODE_RGUI, "Right Gui")
 };
 
-const char* GermanKeyboard[272] =
-{
-	0,
-	"Esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "=", "`", "Entf",
-	"Tab", "Q", "W", "E", "R", "T", "Z", "U", "I", "O", "P", "~u", "x", "Enter",
-	"Strg", "A", "S", "D", "F", "G", "H", "J", "K", "L", "~o", "~a", "( ",
-	"Shift", "#", "Y", "X", "C", "V", "B", "N", "M", ",", ".", "-", "Shift",
-	"Num x", "Alt", "Leert.", "Caps", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Nmlk", 0,
-	"Num7", "Num8", "Num9", "Num-",
-	"Num4", "Num5", "Num6", "Num+",
-	"Num1", "Num2", "Num3",
-	"Num0", "Num.", 0, 0, ">", 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Enter", "Strg", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Shift", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Num/", 0, 0, "Alt", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Pos1", "Hoch", "BdAuf", 0, "Links", 0, "Rechts", 0, "Ende", "Runter", "BdAb", "Einfg", "Entf",
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	"Joy 1", "Joy 2", "Joy 3", "Joy 4", "Joy 5", "Joy 6", "Joy 7", "Joy 8",
-	"Joy 9", "Joy 10", "Joy 11", "Joy 12", "Joy 13", "Joy 14", "Joy 15", "Joy 16"
-};
+KeyButton GermanKeyboard[SDL_NUM_SCANCODES] = {};
 
 const char* JoyStickButtons[16] =
 {
@@ -77,16 +181,17 @@ const char* JoyStickButtons[16] =
 long jLayout[32] = { 5, 3, 4, 0, 1, 2, 9, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 long defaultJLayout[32] = { 5, 3, 4, 0, 1, 2, 9, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-short layout[2][18] =
+SDL_Scancode layout[LAY_Count][LAYK_Count] =
 {
-	{ DIK_UP, DIK_DOWN, DIK_LEFT, DIK_RIGHT, DIK_PERIOD, DIK_SLASH, DIK_RSHIFT, DIK_RALT, DIK_RCONTROL,
-	DIK_SPACE, DIK_COMMA, DIK_NUMPAD0, DIK_END, DIK_ESCAPE, DIK_DELETE, DIK_PGDN, DIK_P, DIK_RETURN },
-
-	{ DIK_UP, DIK_DOWN, DIK_LEFT, DIK_RIGHT, DIK_PERIOD, DIK_SLASH, DIK_RSHIFT, DIK_RALT, DIK_RCONTROL,
-	DIK_SPACE, DIK_COMMA, DIK_NUMPAD0, DIK_END, DIK_ESCAPE, DIK_DELETE, DIK_PGDN, DIK_P, DIK_RETURN }
+	// Default
+	{ SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D, SDL_SCANCODE_KP_1, SDL_SCANCODE_KP_7, SDL_SCANCODE_LSHIFT, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_5,
+	SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_9, SDL_SCANCODE_KP_0, SDL_SCANCODE_KP_6, SDL_SCANCODE_TAB, SDL_SCANCODE_PAGEUP, SDL_SCANCODE_PAGEDOWN, SDL_SCANCODE_P, SDL_SCANCODE_RETURN },
+	// Player
+	{ SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D, SDL_SCANCODE_KP_1, SDL_SCANCODE_KP_7, SDL_SCANCODE_LSHIFT, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_5,
+	SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_9, SDL_SCANCODE_KP_0, SDL_SCANCODE_KP_6, SDL_SCANCODE_TAB, SDL_SCANCODE_PAGEUP, SDL_SCANCODE_PAGEDOWN, SDL_SCANCODE_P, SDL_SCANCODE_RETURN }
 };
+bool conflict[LAYK_Count];
 
-long conflict[18];
 long input;
 long dbinput;
 long inputBusy;
@@ -94,11 +199,21 @@ long joystick_read;
 long joystick_read_x;
 long joystick_read_y;
 long joystick_read_fire;
-
 static long joy_fire;
-
 short ammo_change_timer = 0;
 char ammo_change_buf[12];
+
+LPCSTR GetKeyboardButtonNameFromScancode(SDL_Scancode code)
+{
+	// Avoid unknown id which is 0 !
+	for (int i = 1; i < _countof(KeyboardButtons); i++)
+	{
+		const auto& key = KeyboardButtons[i];
+		if (key.code == code)
+			return key.keyName;
+	}
+	return KeyboardButtons[0].keyName; // return Unknown !
+}
 
 static void DoWeaponHotkey()
 {
@@ -118,7 +233,7 @@ static void DoWeaponHotkey()
 	if (!goin)
 		return;
 	
-	if (keymap[DIK_1])
+	if (keymap[SDL_SCANCODE_1])
 	{
 		if (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR)
 		{
@@ -173,7 +288,7 @@ static void DoWeaponHotkey()
 			}
 		}
 	}
-	else if (keymap[DIK_2])
+	else if (keymap[SDL_SCANCODE_2])
 	{
 		if (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR)
 		{
@@ -221,7 +336,7 @@ static void DoWeaponHotkey()
 				lara.gun_status = LG_DRAW_GUNS;
 		}
 	}
-	else if (keymap[DIK_3])
+	else if (keymap[SDL_SCANCODE_3])
 	{
 		if (!(lara.uzis_type_carried & W_PRESENT))
 			return;
@@ -231,7 +346,7 @@ static void DoWeaponHotkey()
 		if (lara.gun_status == LG_NO_ARMS && lara.gun_type == WEAPON_UZI)
 			lara.gun_status = LG_DRAW_GUNS;
 	}
-	else if (keymap[DIK_4])
+	else if (keymap[SDL_SCANCODE_4])
 	{
 		if (!(lara.sixshooter_type_carried & W_PRESENT))
 			return;
@@ -243,56 +358,19 @@ static void DoWeaponHotkey()
 	}
 }
 
-long Key(long number)
+bool Key(LayoutKeyType keyType)
 {
-	short key = layout[1][number];
+	SDL_Scancode key = layout[LAY_Player][keyType];
+	if (keymap[key] != 0) return true;
 
-	if (number >= 256)
-		return joy_fire & (1 << number);
+	if (conflict[keyType]) return false;
 
-	if (keymap[key])
-		return 1;
+	key = layout[LAY_Default][keyType];
+	return keymap[key] != 0;
+}
 
-	switch (key)
-	{
-	case DIK_RCONTROL:
-		return keymap[DIK_LCONTROL];
-	case DIK_LCONTROL:
-		return keymap[DIK_RCONTROL];
-	case DIK_RSHIFT:
-		return keymap[DIK_LSHIFT];
-	case DIK_LSHIFT:
-		return keymap[DIK_RSHIFT];
-	case DIK_RMENU:
-		return keymap[DIK_LMENU];
-	case DIK_LMENU:
-		return keymap[DIK_RMENU];
-	}
-
-	if (conflict[number])
-		return 0;
-
-	key = layout[0][number];
-
-	if (keymap[key])
-		return 1;
-
-	switch (key)
-	{
-	case DIK_RCONTROL:
-		return keymap[DIK_LCONTROL];
-	case DIK_LCONTROL:
-		return keymap[DIK_RCONTROL];
-	case DIK_RSHIFT:
-		return keymap[DIK_LSHIFT];
-	case DIK_LSHIFT:
-		return keymap[DIK_RSHIFT];
-	case DIK_RMENU:
-		return keymap[DIK_LMENU];
-	case DIK_LMENU:
-		return keymap[DIK_RMENU];
-	}
-
+static long KeyJoystick(long number)
+{
 	return 0;
 }
 
@@ -313,81 +391,81 @@ long S_UpdateInput()
 	debounce = SetDebounce;
 
 	DXUpdateJoystick();
-	DXReadKeyboard(keymap);
+	DXReadKeyboard();
 
-	if (ControlMethod == 1)
+	if (ControlMethod == CMT_Joystick)
 		joy_fire = ReadJoystick(joy_x, joy_y);
 
 	linput = 0;
-
-	if (ControlMethod == 1)
+	if (ControlMethod == CMT_Joystick)
 	{
 		if (joy_x < -8)
 			linput = IN_LEFT;
 		else if (joy_x > 8)
 			linput = IN_RIGHT;
-
 		if (joy_y > 8)
 			linput |= IN_BACK;
 		else if (joy_y < -8)
 			linput |= IN_FORWARD;
 	}
 
-	if (Key(0))
+	if (Key(LAYK_Forward))
 		linput |= IN_FORWARD;
 
-	if (Key(1))
+	if (Key(LAYK_Backward))
 		linput |= IN_BACK;
 
-	if (Key(2))
+	if (Key(LAYK_Left))
 		linput |= IN_LEFT;
 
-	if (Key(3))
+	if (Key(LAYK_Right))
 		linput |= IN_RIGHT;
 
-	if (Key(4))
+	if (Key(LAYK_Duck))
 		linput |= IN_DUCK;
 
-	if (Key(5))
+	if (Key(LAYK_Sprint))
 		linput |= IN_SPRINT;
 
-	if (Key(6))
+	if (Key(LAYK_Walk))
 		linput |= IN_WALK;
 
-	if (Key(7))
+	if (Key(LAYK_Jump))
 		linput |= IN_JUMP;
 
-	if (Key(8))
+	if (Key(LAYK_Action))
 		linput |= IN_SELECT | IN_ACTION;
 
-	if (Key(9))
+	if (Key(LAYK_DrawWeapon))
 		linput |= IN_DRAW;
 
-	if (ControlMethod == 1)
+	if (ControlMethod == CMT_Joystick)
 	{
-		if (Key(jLayout[3] + 256))
+		// TODO: Finish joystick control method !
+
+		if (KeyJoystick(jLayout[LAYK_JOY_Jump]))
 			linput |= IN_JUMP;
 
-		if (Key(jLayout[4] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_Action]))
 			linput |= IN_SELECT | IN_ACTION;
 
-		if (Key(jLayout[5] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_DrawWeapon]))
 			linput |= IN_DRAW;
 
-		if (Key(jLayout[1] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_Sprint]))
 			linput |= IN_SPRINT;
 
-		if (Key(jLayout[2] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_Walk]))
 			linput |= IN_WALK;
 
-		if (Key(jLayout[0] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_Duck]))
 			linput |= IN_DUCK;
 
-		if (Key(jLayout[6] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_UseFlare]))
 			flag = 1;
 	}
 
-	if (Key(10) || flag)
+	if (Key(LAYK_UseFlare) || flag)
 	{
 		if (!flare_no_db)
 		{
@@ -407,42 +485,44 @@ long S_UpdateInput()
 		}
 	}
 	else
+	{
 		flare_no_db = 0;
+	}
 
-	if (Key(11))
+	if (Key(LAYK_Look))
 		linput |= IN_LOOK;
 
-	if (Key(12))
+	if (Key(LAYK_Roll))
 		linput |= IN_ROLL;
 
-	if (Key(13))
+	if (Key(LAYK_Inventory))
 		linput |= IN_OPTION;
 
-	if (Key(14))
+	if (Key(LAYK_StepLeft))
 		linput |= IN_WALK | IN_LEFT;
 
-	if (Key(15))
+	if (Key(LAYK_StepRight))
 		linput |= IN_WALK | IN_RIGHT;
 
-	if (Key(16))
+	if (Key(LAYK_Pause))
 		linput |= IN_PAUSE;
 
-	if (Key(17))
+	if (Key(LAYK_Action))
 		linput |= IN_SELECT;
 
-	if (ControlMethod == 1)
+	if (ControlMethod == CMT_Joystick)
 	{
-		if (Key(jLayout[7] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_Look]))
 			linput |= IN_LOOK;
 
-		if (Key(jLayout[8] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_Roll]))
 			linput |= IN_ROLL;
 
-		if (Key(jLayout[9] + 256))
+		if (KeyJoystick(jLayout[LAYK_JOY_Select]))
 			linput |= IN_OPTION;
 	}
 
-	if (keymap[DIK_ESCAPE])
+	if (keymap[SDL_SCANCODE_ESCAPE])
 		linput |= IN_DESELECT | IN_OPTION;
 
 	if (lara.gun_status == LG_READY)
@@ -470,7 +550,7 @@ long S_UpdateInput()
 
 	DoWeaponHotkey();
 
-	if (keymap[DIK_0])
+	if (keymap[SDL_SCANCODE_0])
 	{
 		if (!med_hotkey_timer)
 		{
@@ -500,7 +580,7 @@ long S_UpdateInput()
 			}
 		}
 	}
-	else if (keymap[DIK_9])
+	else if (keymap[SDL_SCANCODE_9])
 	{
 		if (!med_hotkey_timer)
 		{
@@ -533,7 +613,7 @@ long S_UpdateInput()
 	else if (med_hotkey_timer)
 		med_hotkey_timer--;
 
-	if (keymap[DIK_F10])
+	if (keymap[SDL_SCANCODE_F10])
 		linput |= IN_E;
 
 	if (linput & IN_WALK && !(linput & (IN_FORWARD | IN_BACK)))
@@ -558,10 +638,10 @@ long S_UpdateInput()
 
 	if (!gfGameMode && Gameflow->LoadSaveEnabled)
 	{
-		if (keymap[DIK_F5])
+		if (keymap[SDL_SCANCODE_F5])
 			linput |= IN_SAVE;
 
-		if (keymap[DIK_F6])
+		if (keymap[SDL_SCANCODE_F6])
 			linput |= IN_LOAD;
 	}
 
@@ -574,28 +654,28 @@ long S_UpdateInput()
 		{
 			case 0:
 
-				if (keymap[DIK_D])
+				if (keymap[SDL_SCANCODE_D])
 					cheat_code = 1;
 
 				break;
 
 			case 1:
 
-				if (keymap[DIK_O])
+				if (keymap[SDL_SCANCODE_O])
 					cheat_code = 2;
 
 				break;
 
 			case 2:
 
-				if (keymap[DIK_Z])
+				if (keymap[SDL_SCANCODE_Z])
 					cheat_code = 3;
 
 				break;
 
 			case 3:
 
-				if (keymap[DIK_Y])
+				if (keymap[SDL_SCANCODE_Y])
 					linput = IN_CHEAT;
 
 				break;
@@ -607,7 +687,6 @@ long S_UpdateInput()
 	if (lara.Busy)
 	{
 		linput &= IN_PAUSE | IN_LOOK | IN_OPTION | IN_RIGHT | IN_LEFT | IN_BACK | IN_FORWARD;
-
 		if (linput & IN_FORWARD && linput & IN_BACK)
 			linput ^= IN_BACK;
 	}
@@ -618,11 +697,10 @@ long S_UpdateInput()
 	input = linput;
 	linput = weird;
 
-	if (keymap[DIK_F])
+	if (keymap[SDL_SCANCODE_F])
 		linput = 1;
 
 	weird &= weird ^ linput;
-
 	return 1;
 }
 

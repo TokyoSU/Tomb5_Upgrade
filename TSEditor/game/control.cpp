@@ -266,7 +266,7 @@ long ControlPhase(long nframes, long demo_mode)
 
 		if (cutseq_trig)
 		{
-			if (tomb5.cutseq_skipper && keymap[DIK_ESCAPE] && !ScreenFading && !bDoCredits)	//skip them with esc
+			if (tomb5.cutseq_skipper && keymap[SDL_SCANCODE_ESCAPE] && !ScreenFading && !bDoCredits)	//skip them with esc
 				do_cutseq_skipper_stuff();
 
 			input = 0;

@@ -105,8 +105,11 @@ void CConfig::LoadSetting()
 
 	// Load GAME
 	/// Player keyboard
-	for (int i = 0; i < _countof(layout[1]); i++) layout[1][i] = (short)ini.GetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str());
-	for (int i = 0; i < _countof(layout[1]); i++) layout[0][i] = layout[1][i];
+	for (int i = 0; i < LAYK_Count; i++)
+	{
+		layout[LAY_Player][i] = (SDL_Scancode)ini.GetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str());
+		layout[LAY_Default][i] = layout[LAY_Player][i];
+	}
 
 	/// Now joystick
 	jLayout[0] = ini.GetLongValue(SECTION_GAME, "JDck", 5);
@@ -119,7 +122,7 @@ void CConfig::LoadSetting()
 	jLayout[7] = ini.GetLongValue(SECTION_GAME, "JLok", 6);
 	jLayout[8] = ini.GetLongValue(SECTION_GAME, "JRol", 7);
 	jLayout[9] = ini.GetLongValue(SECTION_GAME, "JInv", 8);
-	ControlMethod = ini.GetLongValue(SECTION_GAME, "ControlMethod", 0);
+	ControlMethod = (ControlMethodType)ini.GetLongValue(SECTION_GAME, "ControlMethod", 0);
 	MusicVolume = ini.GetLongValue(SECTION_GAME, "MusicVolume", 100);
 	SFXVolume = ini.GetLongValue(SECTION_GAME, "SFXVolume", 100);
 	SoundQuality = ini.GetLongValue(SECTION_GAME, "SoundQuality", 1);
@@ -143,8 +146,8 @@ void CConfig::SaveSetting(bool isFirst)
 	
 	// Saving GAME
 	/// Player keyboard
-	for (int i = 0; i < _countof(layout[1]); i++)
-		ini.SetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str(), layout[1][i]);
+	for (int i = 0; i < LAYK_Count; i++)
+		ini.SetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str(), (long)layout[LAY_Player][i]);
 
 	/// Now joystick
 	ini.SetLongValue(SECTION_GAME, "JDck", jLayout[0]);
@@ -306,7 +309,7 @@ void CConfig::SaveDummy()
 	CSimpleIniA ini;
 
 	// Game
-	for (int i = 0; i < _countof(layout[1]); i++)
+	for (int i = 0; i < LAYK_Count; i++)
 		ini.SetLongValue(SECTION_GAME, std::string("Key" + std::to_string(i)).c_str(), 0);
 	ini.SetLongValue(SECTION_GAME, "JDck", 5);
 	ini.SetLongValue(SECTION_GAME, "JDsh", 3);

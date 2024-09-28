@@ -32,7 +32,7 @@ long sfx_frequencies[3] = { 11025, 22050, 44100 };
 long SoundQuality = 1;
 long MusicVolume = 40;
 long SFXVolume = 80;
-long ControlMethod;
+ControlMethodType ControlMethod;
 
 static DXTEXTURE MonoScreen;
 char MonoScreenOn;
@@ -55,19 +55,15 @@ static const char* screen_paths[5] =
 
 void CheckKeyConflicts()
 {
-	short key;
-
-	for (int i = 0; i < 18; i++)
+	for (int i = 0; i < LAYK_Count; i++)
 	{
-		key = layout[0][i];
-
-		conflict[i] = 0;
-
-		for (int j = 0; j < 18; j++)
+		auto key = layout[LAY_Default][i];
+		conflict[i] = false;
+		for (int j = 0; j < LAYK_Count; j++)
 		{
-			if (key == layout[1][j])
+			if (key == layout[LAY_Player][j])
 			{
-				conflict[i] = 1;
+				conflict[i] = true;
 				break;
 			}
 		}
@@ -206,7 +202,7 @@ long GetCampaignCheatValue()
 	{
 	case 0:
 
-		if (keymap[DIK_F])
+		if (keymap[SDL_SCANCODE_F])
 		{
 			timer = 450;
 			counter = 1;
@@ -216,50 +212,50 @@ long GetCampaignCheatValue()
 
 	case 1:
 
-		if (keymap[DIK_I])
+		if (keymap[SDL_SCANCODE_I])
 			counter = 2;
 
 		break;
 
 	case 2:
 
-		if (keymap[DIK_L])
+		if (keymap[SDL_SCANCODE_L])
 			counter = 3;
 
 		break;
 
 	case 3:
-		if (keymap[DIK_T])
+		if (keymap[SDL_SCANCODE_T])
 			counter = 4;
 
 		break;
 
 	case 4:
 
-		if (keymap[DIK_H])
+		if (keymap[SDL_SCANCODE_H])
 			counter = 5;
 
 		break;
 
 	case 5:
 
-		if (keymap[DIK_Y])
+		if (keymap[SDL_SCANCODE_Y])
 			counter = 6;
 
 		break;
 
 	case 6:
 
-		if (keymap[DIK_1])
+		if (keymap[SDL_SCANCODE_1])
 			jump = LVL5_STREETS_OF_ROME;
 
-		if (keymap[DIK_2])
+		if (keymap[SDL_SCANCODE_2])
 			jump = LVL5_BASE;
 
-		if (keymap[DIK_3])
+		if (keymap[SDL_SCANCODE_3])
 			jump = LVL5_GALLOWS_TREE;
 
-		if (keymap[DIK_4])
+		if (keymap[SDL_SCANCODE_4])
 			jump = LVL5_THIRTEENTH_FLOOR;
 
 		if (jump)
@@ -276,16 +272,18 @@ long GetCampaignCheatValue()
 
 void DoOptions()
 {
-	const char** keyboard_buttons;
+	KeyButton* keyboard_buttons;
 	static long menu;	//0: options, 1: controls, 100: special features
 	static ulong sel = 1;	//selection
 	static ulong last_sel;
 	static ulong sel2;		//selection for when mapping keys
-	static long mSliderCol = 0x3F3F3F;
-	static long sSliderCol = 0x3F3F3F;
+	static D3DCOLOR mSliderCol = 0x3F3F3F;
+	static D3DCOLOR sSliderCol = 0x3F3F3F;
 	static long sfx_bak;
 	static long sfx_quality_bak;
 	static long sfx_breath_db = -1;
+	static long select_if_key_found = 0;
+	const long select_if_key_found_delay = 10;
 	ulong nMask;
 	long f, y, i, SFMask, jread, jx, jy, lp, lp2;
 	const char* text;
@@ -305,6 +303,9 @@ void DoOptions()
 		sfx_quality_bak = SoundQuality;
 	}
 
+	if (select_if_key_found > 0)
+		select_if_key_found--;
+
 	f = font_height - 4;
 
 	if (menu == 1)	//controls menu
@@ -314,7 +315,7 @@ void DoOptions()
 		else
 			keyboard_buttons = KeyboardButtons;
 
-		if (ControlMethod)
+		if (ControlMethod != CMT_Keyboard)
 			nMask = 11;
 		else
 			nMask = 17;
@@ -323,7 +324,7 @@ void DoOptions()
 
 		font_height = GetFixedScale(27);
 
-		if (!ControlMethod)
+		if (ControlMethod == CMT_Keyboard)
 		{
 			y = 2;
 			i = 1;
@@ -348,14 +349,14 @@ void DoOptions()
 			y = 2;
 			i = 1;
 
-			for (lp = 0; lp < 16; lp++)
+			for (lp = 0; lp < LAYK_Count - 2; lp++) // Avoid drawing Pause and Select Key.
 			{
-				text = (waiting_for_key && (sel2 & (1 << i))) ? SCRIPT_TEXT(TXT_Waiting) : keyboard_buttons[layout[1][lp]];
+				text = (waiting_for_key && (sel2 & (1 << i))) ? SCRIPT_TEXT(TXT_Waiting) : GetKeyboardButtonNameFromScancode(layout[1][lp]);
 				PrintString(phd_centerx + (phd_centerx >> 2), y++ * font_height, sel2 & (1 << i++) ? 1 : 6, text, 0);
 			}
 		}
 
-		if (ControlMethod == 1)
+		if (ControlMethod == CMT_Joystick)
 		{
 			y = 3;
 			i = 1;
@@ -373,7 +374,7 @@ void DoOptions()
 
 			for (lp = 0, f = 3; lp < 10; lp++, f++)
 			{
-				sprintf(buf, "(%s)", keyboard_buttons[layout[1][lp + 4]]);
+				sprintf(buf, "(%s)", GetKeyboardButtonNameFromScancode(layout[1][lp]));
 				PrintString(phd_centerx + (phd_centerx >> 3) + (phd_centerx >> 1), f * font_height, 5, buf, 0);
 			}
 
@@ -389,24 +390,25 @@ void DoOptions()
 
 		font_height = default_font_height;
 
-		if (!ControlMethod)
+		if (ControlMethod == CMT_Keyboard)
 			PrintString(phd_centerx + (phd_centerx >> 2), font_height, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Keyboard), 0);
-		else if (ControlMethod == 1)
+		else if (ControlMethod == CMT_Joystick)
 			PrintString(phd_centerx + (phd_centerx >> 2), font_height, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Joystick), 0);
-		else if (ControlMethod == 2)
+		else if (ControlMethod == CMT_Reset)
 			PrintString(phd_centerx + (phd_centerx >> 2), font_height, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Reset), 0);
 
-		if (ControlMethod < 2 && !waiting_for_key)
+		if (ControlMethod != CMT_Reset && !waiting_for_key)
 		{
-			if (dbinput & IN_FORWARD)
+			if (select_if_key_found <= 0 && dbinput & IN_FORWARD)
 			{
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				select_if_key_found = select_if_key_found_delay / 3;
 				sel >>= 1;
 			}
-
-			if (dbinput & IN_BACK)
+			if (select_if_key_found <= 0 && dbinput & IN_BACK)
 			{
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				select_if_key_found = select_if_key_found_delay / 3;
 				sel <<= 1;
 			}
 		}
@@ -415,41 +417,35 @@ void DoOptions()
 		{
 			i = 0;
 
-			if (keymap[DIK_ESCAPE])
+			if (keymap[SDL_SCANCODE_ESCAPE])
 			{
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				sel2 = 0;
 				dbinput = 0;
-				waiting_for_key = 0;
+				waiting_for_key = false;
 				return;
 			}
 
-			if (!ControlMethod)
+			if (ControlMethod == CMT_Keyboard)
 			{
-				for (lp = 0; lp < 255; lp++)
+				for (lp = 0; lp < SDL_NUM_SCANCODES; lp++)
 				{
-					if (keymap[lp] && keyboard_buttons[lp])
+					if (select_if_key_found <= 0 && keymap[lp] != 0 && lp != SDL_SCANCODE_RETURN && lp != SDL_SCANCODE_LEFT && lp != SDL_SCANCODE_RIGHT && lp != SDL_SCANCODE_UP && lp != SDL_SCANCODE_DOWN)
 					{
-						if (lp != DIK_RETURN && lp != DIK_LEFT && lp != DIK_RIGHT && lp != DIK_UP && lp != DIK_DOWN)
+						sel2 >>= 2;
+						while (sel2 != 0)
 						{
-							waiting_for_key = 0;
-
-							sel2 >>= 2;
-
-							while (sel2)
-							{
-								i++;
-								sel2 >>= 1;
-							}
-
-							sel2 = 0;
-							layout[1][i] = (short)lp;
+							i++;
+							sel2 >>= 1;
 						}
+						sel2 = 0;
+						select_if_key_found = select_if_key_found_delay;
+						layout[LAY_Player][i] = (SDL_Scancode)lp;
+						waiting_for_key = false;
 					}
 				}
 			}
-
-			if (ControlMethod == 1)
+			else if (ControlMethod == CMT_Joystick)
 			{
 				jread = ReadJoystick(jx, jy);
 
@@ -474,7 +470,7 @@ void DoOptions()
 					}
 
 					jLayout[i] = lp2;
-					waiting_for_key = 0;
+					waiting_for_key = false;
 				}
 			}
 
@@ -482,20 +478,20 @@ void DoOptions()
 			dbinput = 0;
 		}
 
-		if (dbinput & IN_SELECT && sel > 1 && ControlMethod < 2)
+		if (select_if_key_found <= 0 && dbinput & IN_SELECT && sel > 1 && ControlMethod != CMT_Reset)
 		{
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			sel2 = sel;
-			waiting_for_key = 1;
+			waiting_for_key = true;
 			memset(keymap, 0, sizeof(keymap));
 		}
 
-		if (dbinput & IN_SELECT && ControlMethod == 2)
+		if (dbinput & IN_SELECT && ControlMethod == CMT_Reset)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, 2);
-			memcpy(layout[1], layout, 72);
-			ControlMethod = 0;
-			memcpy(jLayout, defaultJLayout, 32);
+			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			memcpy(layout[1], layout[0], sizeof(layout[0]));
+			ControlMethod = CMT_Keyboard;
+			memcpy(jLayout, defaultJLayout, sizeof(jLayout));
 		}
 
 		if (sel & 1)
@@ -503,40 +499,36 @@ void DoOptions()
 			if (dbinput & IN_LEFT)
 			{
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
-				ControlMethod--;
+				if (ControlMethod == CMT_Reset)
+					ControlMethod = CMT_Joystick;
+				else if (ControlMethod == CMT_Joystick)
+					ControlMethod = CMT_Keyboard;
 			}
-
 			if (dbinput & IN_RIGHT)
 			{
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
-				ControlMethod++;
+				if (ControlMethod == CMT_Keyboard)
+					ControlMethod = CMT_Joystick;
+				else if (ControlMethod == CMT_Joystick)
+					ControlMethod = CMT_Reset;
 			}
-
-			if (ControlMethod > 2)
-				ControlMethod = 2;
-
-			if (ControlMethod < 0)
-				ControlMethod = 0;
 		}
 
 		if (!sel)
 			sel = 1;
-
 		if (sel > ulong(1 << (nMask - 1)))
 			sel = 1 << (nMask - 1);
 
 		if (dbinput & IN_DESELECT)
 		{
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
-
-			if (ControlMethod < 2)
+			if (ControlMethod != CMT_Reset)
 				menu = 0;
-
 			dbinput = 0;
 			sel = 1;
 		}
 	}
-	else if (menu == 100)	//special features
+	else if (menu == 100)	// special features
 	{
 		PrintString(phd_centerx, f + 3 * font_height, 6, SCRIPT_TEXT(TXT_Special_Features), FF_CENTER);
 		PrintString(phd_centerx, f + 5 * font_height, SpecialFeaturesPage[0] ? (sel & 1 ? 1 : 2) : 3, SCRIPT_TEXT(TXT_Storyboards_Part_1), FF_CENTER);
@@ -589,9 +581,9 @@ void DoOptions()
 			dbinput &= ~IN_DESELECT;
 		}
 	}
-	else if (menu == 0)	//main options menu
+	else if (menu == 0)	// main options menu
 	{
-		f= 3 * font_height;
+		f = 3 * font_height;
 		nMask = 6;
 		PrintString(phd_centerx, 3 * font_height, 6, SCRIPT_TEXT(TXT_Options), FF_CENTER);
 		PrintString(phd_centerx, f + font_height + (font_height >> 1), sel & 1 ? 1 : 2, SCRIPT_TEXT(TXT_Control_Configuration), FF_CENTER);
@@ -681,15 +673,14 @@ void DoOptions()
 		{
 			sfx_bak = SFXVolume;
 
-			if (input & IN_LEFT || keymap[DIK_LEFT])
+			if (input & IN_LEFT || keymap[SDL_SCANCODE_LEFT])
 				MusicVolume--;
 
-			if (input & IN_RIGHT || keymap[DIK_RIGHT])
+			if (input & IN_RIGHT || keymap[SDL_SCANCODE_RIGHT])
 				MusicVolume++;
 
 			if (MusicVolume > 100)
 				MusicVolume = 100;
-
 			if (MusicVolume < 0)
 				MusicVolume = 0;
 
@@ -699,10 +690,10 @@ void DoOptions()
 		}
 		else if (sel & 4)
 		{
-			if (input & IN_LEFT || keymap[DIK_LEFT])
+			if (input & IN_LEFT || keymap[SDL_SCANCODE_LEFT])
 				SFXVolume--;
 
-			if (input & IN_RIGHT || keymap[DIK_RIGHT])
+			if (input & IN_RIGHT || keymap[SDL_SCANCODE_RIGHT])
 				SFXVolume++;
 
 			if (SFXVolume > 100)
@@ -780,7 +771,9 @@ void DoOptions()
 		}
 	}
 	else if (menu == 200)
+	{
 		TroyeMenu(font_height - (font_height >> 1), menu, sel, last_sel);
+	}
 }
 
 void CreateMonoScreen()
@@ -1294,7 +1287,7 @@ long S_DisplayPauseMenu(long reset)
 				return 1;
 			}
 
-			if (dbinput & IN_SELECT && !keymap[DIK_LALT])
+			if (dbinput & IN_SELECT && !keymap[SDL_SCANCODE_LALT])
 			{
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_DEFAULT);
 
