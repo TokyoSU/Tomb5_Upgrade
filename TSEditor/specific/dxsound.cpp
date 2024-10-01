@@ -123,8 +123,8 @@ bool DXDSCreate()
 	DXAttempt(DirectSoundCreate(G_dxinfo->DSInfo[G_dxinfo->nDS].lpGuid, &App.dx.lpDS, 0));
 	DXAttempt(App.dx.lpDS->SetCooperativeLevel(g_Window.GetHandle(), DSSCL_EXCLUSIVE));
 	DXSetOutputFormat();
-	sound_active = 1;
-	return 1;
+	sound_active = true;
+	return true;
 }
 
 bool InitSampleDecompress()

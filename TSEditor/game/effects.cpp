@@ -497,10 +497,9 @@ void SoundEffects()
 	if (!sound_active)
 		return;
 
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < _countof(LaSlot); i++)
 	{
 		slot = &LaSlot[i];
-
 		if (slot->nSampleInfo >= 0)
 		{
 			if ((sample_infos[slot->nSampleInfo].flags & 3) != 3)

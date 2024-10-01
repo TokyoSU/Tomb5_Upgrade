@@ -3,7 +3,8 @@
 
 #pragma pack(push, 1)
 
-/*macros*/
+// Macros
+
 #define SQUARE(x) ((x)*(x))
 #define	TRIGMULT2(a,b)		(((a) * (b)) >> 14)
 #define	TRIGMULT3(a,b,c)	(TRIGMULT2((TRIGMULT2(a, b)), c))
@@ -17,19 +18,23 @@
 #define	CLRG(clr)	((clr >> 8) & 0xFF)		//shift b out of the way and 0xFF
 #define	CLRB(clr)	((clr) & 0xFF)			//and 0xFF
 
-//misc
+// Misc
 #define SCRIPT_TEXT(num)		(&gfStringWad[gfStringOffset[num]])
 #define NO_HEIGHT -32512
 #define	NO_ITEM	-1
 #define NO_ROOM	255
-#define MAX_ITEMS	256
-#define MAX_SAMPLES	450
-#define MAX_RIPPLES	128
 #define FVF (D3DFVF_TEX2 | D3DFVF_SPECULAR | D3DFVF_DIFFUSE | D3DFVF_XYZRHW)
 #define MALLOC_SIZE	15000000	//15MB
 #define GAME_FOV	(80 * 182)
-#define MAX_LOT		5
 #define W2V_SHIFT	14
+
+// Max values
+
+#define MAX_LOT 5
+#define MAX_SOUND_EFFECT 32
+#define MAX_ITEMS 256
+#define MAX_SAMPLES 450
+#define MAX_RIPPLES 128
 
 /*typedefs*/
 typedef unsigned char uchar;

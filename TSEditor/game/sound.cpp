@@ -1,77 +1,68 @@
 #include "../tomb5/pch.h"
 #include "sound.h"
-#include "../specific/function_stubs.h"
-#include "../specific/dxsound.h"
-#include "../specific/3dmath.h"
-#include "gameflow.h"
 #include "deltapak.h"
 #include "camera.h"
 #include "control.h"
+#include "gameflow.h"
+#include "lara.h"
+#include "../specific/function_stubs.h"
+#include "../specific/dxsound.h"
+#include "../specific/3dmath.h"
 
-SAMPLE_INFO* sample_infos;
-SoundSlot LaSlot[32];
-short* sample_lut;
-long sound_active;
-long sound_cut_flag = 0;
+SAMPLE_INFO* sample_infos = NULL;
+SoundSlot LaSlot[MAX_SOUND_EFFECT];
+short* sample_lut = NULL;
+bool sound_active = false;
+DWORD sound_cut_flag = NULL;
 
 void SoundEffectCS(long sfx, PHD_3DPOS* pos, long flags)
 {
-	long bak;
-
-	bak = GLOBAL_playing_cutseq;
+	if (!sound_active)
+		return;
+	long bak = GLOBAL_playing_cutseq;
 	GLOBAL_playing_cutseq = 0;
 	SoundEffect(sfx, pos, flags);
 	GLOBAL_playing_cutseq = bak;
 }
 
-void SayNo()
+bool SayNo()
 {
-	long fx;
-
-	fx = SFX_LARA_NO;
-
-	if (Gameflow->Language == 1)
-		fx = SFX_LARA_NO_FRENCH;
-	else if (Gameflow->Language == 6)
-		fx = SFX_LARA_NO_JAPANESE;
-
-	SoundEffect(fx, 0, SFX_ALWAYS);
+	return SoundEffect(SFX_LARA_NO, &lara_item->pos, SFX_DEFAULT);
 }
 
 void SOUND_Init()
 {
-	for (int i = 0; i < 32; i++)
-		LaSlot[i].nSampleInfo = -1;
-
-	sound_active = 1;
+	for (int i = 0; i < _countof(LaSlot); i++)
+	{
+		SoundSlot& slotRef = LaSlot[i];
+		slotRef.nSampleInfo = -1;
+	}
 }
 
 void SOUND_Stop()
 {
-	if (sound_active)
+	if (!sound_active)
+		return;
+	S_SoundStopAllSamples();
+	for (int i = 0; i < _countof(LaSlot); i++)
 	{
-		S_SoundStopAllSamples();
-
-		for (int i = 0; i < 32; i++)
-			LaSlot[i].nSampleInfo = -1;
+		SoundSlot& slotRef = LaSlot[i];
+		slotRef.nSampleInfo = -1;
 	}
 }
 
 void StopSoundEffect(long sfx)
 {
-	long lut;
-
-	if (sound_active)
+	if (!sound_active)
+		return;
+	long lut = sample_lut[sfx];
+	for (int i = 0; i < _countof(LaSlot); i++)
 	{
-		lut = sample_lut[sfx];
-
-		for (int i = 0; i < 32; i++)
+		SoundSlot& slotRef = LaSlot[i];
+		if (slotRef.nSampleInfo >= lut && slotRef.nSampleInfo < (lut + ((sample_infos[lut].flags >> 2) & 0xF)))
 		{
-			if (LaSlot[i].nSampleInfo >= lut && LaSlot[i].nSampleInfo < (lut + ((sample_infos[lut].flags >> 2) & 0xF)))
-			{
-				S_SoundStopSample(i);
-				LaSlot[i].nSampleInfo = -1;
-			}
+			S_SoundStopSample(i);
+			slotRef.nSampleInfo = -1;
 		}
 	}
 }
@@ -96,7 +87,6 @@ void GetPanVolume(SoundSlot* slot)
 		else
 		{
 			distance = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
-
 			if (distance <= SQUARE(radius))
 			{
 				if (distance >= 0x100000)
@@ -136,59 +126,48 @@ void GetPanVolume(SoundSlot* slot)
 	}
 }
 
-long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
+bool SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 {
 	SAMPLE_INFO* info;
-	PHD_3DPOS pos2;
+	PHD_3DPOS pos2 = {};
 	long lut, radius, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
 
-	if (GLOBAL_playing_cutseq)
-	{
-		if (!sound_cut_flag)
-			return sound_cut_flag;
-	}
+	if (!sound_active)
+		return false;
+	if (GLOBAL_playing_cutseq != 0 && sound_cut_flag == 0)
+		return false;
 
 	if (sfx == SFX_LARA_NO)
 	{
-		switch (Gameflow->Language)
-		{
-		case 1:
+		if (Gameflow->Language == 1)
 			sfx = SFX_LARA_NO_FRENCH;
-			break;
-
-		case 2:
-		case 3:
-		case 4:
-			sfx = SFX_LARA_NO;
-			break;
-
-		case 6:
+		else if (Gameflow->Language == 6)
 			sfx = SFX_LARA_NO_JAPANESE;
-			break;
-		}
 	}
 
-	if (!sound_active || !(flags & 2) && (flags & 1) != (room[camera.pos.room_number].flags & 1))
-		return 0;
+	if (!(flags & SFX_ALWAYS) || ((flags & SFX_WATER) != (room[camera.pos.room_number].flags & ROOM_UNDERWATER)))
+		return false;
 
 	lut = sample_lut[sfx];
+	if (lut == SFX_LUT_FILE_NOT_PRESENT)
+		return false;
 
-	if (lut == -1)
+	if (lut == SFX_LUT_FILE_NOT_FOUND)
 	{
-		Log("Non present sample:%d", sfx);
-		sample_lut[sfx] = -2;
-		return 0;
+		Log("Non present sample: %d", sfx);
+		sample_lut[sfx] = SFX_LUT_FILE_NOT_PRESENT;
+		return false;
 	}
 
-	if (lut == -2)
-		return 0;
 
 	info = &sample_infos[lut];
+	if (info->number < 0)
+		return false;
 
 	if (info->randomness)
 	{
 		if ((GetRandomDraw() & 0xFF) > (uchar)info->randomness)
-			return 0;
+			return false;
 	}
 
 	radius = (info->radius + 1) << 10;
@@ -200,26 +179,15 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		dy = pos->y_pos - camera.pos.y;
 		dz = pos->z_pos - camera.pos.z;
 
-		if (dx < -radius)
-			return 0;
-
-		if (dx > radius)
-			return 0;
-
-		if (dy < -radius)
-			return 0;
-
-		if (dy > radius)
-			return 0;
-
-		if (dz < -radius)
-			return 0;
-
-		if (dz > radius)
-			return 0;
+		if (dx < -radius ||
+			dx > radius ||
+			dy < -radius ||
+			dy > radius ||
+			dz < -radius ||
+			dz > radius)
+			return false;
 
 		distance = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
-
 		if (distance > SQUARE(radius))
 			return 0;
 
@@ -241,22 +209,19 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 	}
 
 	volume = info->volume << 6;
-
 	if (flags & SFX_SETVOL)
 		volume = (volume * ((flags >> 8) & 0x1F)) >> 5;
-
 	if (info->flags & 0x4000)
 		volume -= GetRandomDraw() << 12 >> 15;
 
 	OrigVolume = volume;
 
 	if (distance)
-		volume = (volume * (4096 - (phd_sin((distance << 14) / radius) >> 2))) >> 12;
+		volume = (volume * (4096 - (phd_sin((distance << W2V_SHIFT) / radius) >> 2))) >> 12;
 
 	if (volume <= 0)
-		return 0;
-
-	if (volume > 0x7FFF)
+		return false;
+	else if (volume > 0x7FFF)
 		volume = 0x7FFF;
 
 	if (flags & SFX_SETPITCH)
@@ -265,47 +230,40 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		pitch = 0x10000;
 
 	pitch += info->pitch << 9;
-
 	if (info->flags & 0x2000)
 		pitch += ((6000 * GetRandomDraw()) >> 14) - 6000;
 
-	if (info->number < 0)
-		return 0;
-
 	rnd = (info->flags >> 2) & 0xF;
-
 	if (rnd == 1)
 		sample = info->number;
 	else
 		sample = info->number + ((rnd * GetRandomDraw()) >> 15);
 
 	flag = info->flags & 3;
-
 	switch (flag)
 	{
 	case 1:
-
-		for (int i = 0; i < 32; i++)
+		for (int i = 0; i < _countof(LaSlot); i++)
 		{
-			if (LaSlot[i].nSampleInfo == lut)
+			SoundSlot& slotRef = LaSlot[i];
+			if (slotRef.nSampleInfo == lut)
 			{
 				if (S_SoundSampleIsPlaying(i))
-					return 0;
-
-				LaSlot[i].nSampleInfo = -1;
+					return false;
+				slotRef.nSampleInfo = -1;
 			}
 		}
 
 		break;
 
 	case 2:
-
-		for (int i = 0; i < 32; i++)
+		for (int i = 0; i < _countof(LaSlot); i++)
 		{
-			if (LaSlot[i].nSampleInfo == lut)
+			SoundSlot& slotRef = LaSlot[i];
+			if (slotRef.nSampleInfo == lut)
 			{
 				S_SoundStopSample(i);
-				LaSlot[i].nSampleInfo = -1;
+				slotRef.nSampleInfo = -1;
 				break;
 			}
 		}
@@ -313,25 +271,22 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		break;
 
 	case 3:
-
-		for (int i = 0; i < 32; i++)
+		for (int i = 0; i < _countof(LaSlot); i++)
 		{
-			if (LaSlot[i].nSampleInfo == lut)
+			SoundSlot& slotRef = LaSlot[i];
+			if (slotRef.nSampleInfo == lut)
 			{
-				if (volume > LaSlot[i].nVolume)
-				{
-					LaSlot[i].OrigVolume = OrigVolume;
-					LaSlot[i].nVolume = volume;
-					LaSlot[i].nPan = pan;
-					LaSlot[i].nPitch = pitch;
-					LaSlot[i].distance = distance;
-					LaSlot[i].pos.x = pos->x_pos;
-					LaSlot[i].pos.y = pos->y_pos;
-					LaSlot[i].pos.z = pos->z_pos;
-					return 1;
-				}
-
-				return 0;
+				if (volume <= slotRef.nVolume)
+					return false;
+				slotRef.OrigVolume = OrigVolume;
+				slotRef.nVolume = volume;
+				slotRef.nPan = pan;
+				slotRef.nPitch = pitch;
+				slotRef.distance = distance;
+				slotRef.pos.x = pos->x_pos;
+				slotRef.pos.y = pos->y_pos;
+				slotRef.pos.z = pos->z_pos;
+				return true;
 			}
 		}
 
@@ -345,16 +300,17 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 	
 	if (dx >= 0)
 	{
-		LaSlot[dx].OrigVolume = OrigVolume;
-		LaSlot[dx].nVolume = volume;
-		LaSlot[dx].nPan = pan;
-		LaSlot[dx].nPitch = pitch;
-		LaSlot[dx].nSampleInfo = lut;
-		LaSlot[dx].distance = distance;
-		LaSlot[dx].pos.x = pos->x_pos;
-		LaSlot[dx].pos.y = pos->y_pos;
-		LaSlot[dx].pos.z = pos->z_pos;
-		return 1;
+		SoundSlot& slotRef = LaSlot[dx];
+		slotRef.OrigVolume = OrigVolume;
+		slotRef.nVolume = volume;
+		slotRef.nPan = pan;
+		slotRef.nPitch = pitch;
+		slotRef.nSampleInfo = lut;
+		slotRef.distance = distance;
+		slotRef.pos.x = pos->x_pos;
+		slotRef.pos.y = pos->y_pos;
+		slotRef.pos.z = pos->z_pos;
+		return true;
 	}
 
 	if (dx == -1)
@@ -362,11 +318,12 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		vol = 0x8000000;
 		slot = -1;
 
-		for (int i = 0; i < 32; i++)
+		for (int i = 0; i < _countof(LaSlot); i++)
 		{
-			if ((LaSlot[i].nSampleInfo >= 0) && (LaSlot[i].nVolume <= vol))
+			SoundSlot& slotRef = LaSlot[i];
+			if ((slotRef.nSampleInfo >= 0) && (slotRef.nVolume <= vol))
 			{
-				vol = LaSlot[i].nVolume;
+				vol = slotRef.nVolume;
 				slot = i;
 			}
 		}
@@ -374,7 +331,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		if (volume > vol)
 		{
 			S_SoundStopSample(slot);
-			LaSlot[slot].nSampleInfo = -1;
+
+			SoundSlot& slotRef = LaSlot[slot];
+			slotRef.nSampleInfo = -1;
 
 			if (flag == 3)
 				dx = S_SoundPlaySampleLooped(sample, (ushort)volume, pitch, (short)pan);
@@ -383,25 +342,26 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 
 			if (dx >= 0)
 			{
-				LaSlot[dx].OrigVolume = OrigVolume;
-				LaSlot[dx].nVolume = volume;
-				LaSlot[dx].nPan = pan;
-				LaSlot[dx].nPitch = pitch;
-				LaSlot[dx].nSampleInfo = lut;
-				LaSlot[dx].distance = distance;
-				LaSlot[dx].pos.x = pos->x_pos;
-				LaSlot[dx].pos.y = pos->y_pos;
-				LaSlot[dx].pos.z = pos->z_pos;
-				return 1;
+				slotRef = LaSlot[dx];
+				slotRef.OrigVolume = OrigVolume;
+				slotRef.nVolume = volume;
+				slotRef.nPan = pan;
+				slotRef.nPitch = pitch;
+				slotRef.nSampleInfo = lut;
+				slotRef.distance = distance;
+				slotRef.pos.x = pos->x_pos;
+				slotRef.pos.y = pos->y_pos;
+				slotRef.pos.z = pos->z_pos;
+				return true;
 			}
 		}
 
-		return 0;
+		return false;
 	}
 
 	if (sample >= 0)
 		Log("Can't play SFX %d", sfx);
 
 	info->number = -1;
-	return 0;
+	return false;
 }

@@ -2,18 +2,18 @@
 #include "../global/types.h"
 
 void SoundEffectCS(long sfx, PHD_3DPOS* pos, long flags);
-void SayNo();
+bool SayNo();
 void SOUND_Init();
 void SOUND_Stop();
 void StopSoundEffect(long sfx);
 void GetPanVolume(SoundSlot* slot);
-long SoundEffect(long sfx, PHD_3DPOS* pos, long flags);
+bool SoundEffect(long sfx, PHD_3DPOS* pos, long flags);
 
 extern SAMPLE_INFO* sample_infos;
-extern SoundSlot LaSlot[32];
+extern SoundSlot LaSlot[MAX_SOUND_EFFECT];
 extern short* sample_lut;
-extern long sound_active;
-extern long sound_cut_flag;
+extern bool sound_active;
+extern DWORD sound_cut_flag;
 
 enum sfx_types
 {
@@ -22,9 +22,16 @@ enum sfx_types
 	SFX_WATERONLY = (2 << 14)
 };
 
+enum sfx_lut_error_flags
+{
+	SFX_LUT_NONE = 0,
+	SFX_LUT_FILE_NOT_FOUND = -1,
+	SFX_LUT_FILE_NOT_PRESENT = -2,
+};
+
 enum sfx_options
 {
-	SFX_DEFAULT = 0, // no special options
+	SFX_DEFAULT = 0, // no special options (LAND)
 	SFX_WATER = 1, // only if room underwater and not SFX_ALWAYS
 	SFX_ALWAYS = 2, // force sound to always play even if SFX_WATER is set and room is not underwater
 	SFX_SETPITCH = 4, // pitch (?) is stored in bits 16..31 = (flag >> 8) & 0xFFFF00, default is 0x10000
