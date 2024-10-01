@@ -17,11 +17,11 @@ long DXStartSample(long num, long volume, long pitch, long pan, ulong flags);
 long CalcVolume(long volume);
 void S_SoundStopAllSamples();
 void S_SoundStopSample(long num);
-long S_SoundPlaySample(long num, ushort volume, long pitch, short pan);
-long S_SoundPlaySampleLooped(long num, ushort volume, long pitch, short pan);
+long S_SoundPlaySample(int num, int volume, int pitch, short pan);
+long S_SoundPlaySampleLooped(int num, int volume, int pitch, short pan);
 void DXFreeSounds();
 long S_SoundSampleIsPlaying(long num);
-void S_SoundSetPanAndVolume(long num, short pan, ushort volume);
+void S_SoundSetPanAndVolume(long num, short pan, int volume);
 void S_SoundSetPitch(long num, long pitch);
 bool DXCreateSample(long num, LPWAVEFORMATEX format, LPVOID data, ulong bytes);
 

@@ -320,12 +320,12 @@ void S_SoundStopSample(long num)
 	DXStopSample(num);
 }
 
-long S_SoundPlaySample(long num, ushort volume, long pitch, short pan)
+long S_SoundPlaySample(int num, int volume, int pitch, short pan)
 {
 	return DXStartSample(num, CalcVolume(volume), pitch, pan, 0);
 }
 
-long S_SoundPlaySampleLooped(long num, ushort volume, long pitch, short pan)
+long S_SoundPlaySampleLooped(int num, int volume, int pitch, short pan)
 {
 	return DXStartSample(num, CalcVolume(volume), pitch, pan, DSBPLAY_LOOPING);
 }
@@ -352,7 +352,7 @@ long S_SoundSampleIsPlaying(long num)
 	return 0;
 }
 
-void S_SoundSetPanAndVolume(long num, short pan, ushort volume)
+void S_SoundSetPanAndVolume(long num, short pan, int volume)
 {
 	if (sound_active)
 	{

@@ -730,7 +730,7 @@ struct SAMPLE_INFO
 	short number;
 	uchar volume;
 	char radius;
-	char randomness;
+	uchar randomness;
 	char pitch;
 	short flags;
 };
