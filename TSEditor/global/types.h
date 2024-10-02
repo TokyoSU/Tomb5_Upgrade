@@ -545,6 +545,12 @@ struct PHD_VECTOR
 	long x;
 	long y;
 	long z;
+	PHD_VECTOR() {}
+	PHD_VECTOR(long _x, long _y, long _z) {
+		x = _x;
+		y = _y;
+		z = _z;
+	}
 };
 
 struct PHD_3DPOS
@@ -2552,13 +2558,15 @@ struct COLOR_BIT_MASKS
 
 struct TR4LS
 {
-	long px;
-	long py;
-	long pz;
-	long tx;
-	long ty;
-	long tz;
-	uchar rn;
+	PHD_VECTOR src = {};
+	PHD_VECTOR target = {};
+	short roomNumber = NO_ROOM;
+	TR4LS() {}
+	TR4LS(PHD_VECTOR _src, PHD_VECTOR _target, short _roomNum) {
+		src = _src;
+		target = _target;
+		roomNumber = _roomNum;
+	}
 };
 
 struct STARS

@@ -1,13 +1,13 @@
 #pragma once
 #include "../global/types.h"
 
-void SoundEffectCS(long sfx, PHD_3DPOS* pos, long flags);
 bool SayNo();
 void SOUND_Init();
 void SOUND_Stop();
 void StopSoundEffect(long sfx);
 void GetPanVolume(SoundSlot* slot);
 bool SoundEffect(long sfx, PHD_3DPOS* pos, long flags);
+bool SoundEffectCS(long sfx, PHD_3DPOS* pos, long flags);
 
 extern SAMPLE_INFO* sample_infos;
 extern SoundSlot LaSlot[MAX_SOUND_EFFECT];

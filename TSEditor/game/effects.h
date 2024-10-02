@@ -25,6 +25,7 @@ void ClearSpidersPatch(ITEM_INFO* item);
 void ResetTest(ITEM_INFO* item);
 void LaraLocationPad(ITEM_INFO* item);
 void KillActiveBaddies(ITEM_INFO* item);
+void KillActiveBaddies(bool fullRemove);
 void BaddieBiteEffect(ITEM_INFO* item, BITE_INFO* bite);
 void TL_1(ITEM_INFO* item);
 void TL_2(ITEM_INFO* item);

@@ -15,18 +15,10 @@ short* sample_lut = NULL;
 bool sound_active = false;
 DWORD sound_cut_flag = NULL;
 
-void SoundEffectCS(long sfx, PHD_3DPOS* pos, long flags)
-{
-	if (!sound_active)
-		return;
-	long bak = GLOBAL_playing_cutseq;
-	GLOBAL_playing_cutseq = 0;
-	SoundEffect(sfx, pos, flags);
-	GLOBAL_playing_cutseq = bak;
-}
-
 bool SayNo()
 {
+	// NOTE: Changed pos from NULL to &lara_item->pos and flags from ALWAYS to DEFAULT,
+	// Only allow the sound NO to be on LAND and near LARA.
 	return SoundEffect(SFX_LARA_NO, &lara_item->pos, SFX_DEFAULT);
 }
 
@@ -129,7 +121,8 @@ void GetPanVolume(SoundSlot* slot)
 bool SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 {
 	if (!sound_active)
-		return false;
+		return true;
+
 	if (GLOBAL_playing_cutseq != 0 && sound_cut_flag == 0)
 		return false;
 
@@ -177,12 +170,9 @@ bool SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		auto dx = pos->x_pos - camera.pos.x;
 		auto dy = pos->y_pos - camera.pos.y;
 		auto dz = pos->z_pos - camera.pos.z;
-		if (dx < -radius ||
-			dx > radius ||
-			dy < -radius ||
-			dy > radius ||
-			dz < -radius ||
-			dz > radius)
+		if (dx < -radius || dx > radius ||
+			dy < -radius || dy > radius ||
+			dz < -radius || dz > radius)
 			return false;
 
 		distance = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
@@ -351,4 +341,15 @@ bool SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 
 	info->number = -1;
 	return false;
+}
+
+bool SoundEffectCS(long sfx, PHD_3DPOS* pos, long flags)
+{
+	if (!sound_active)
+		return true;
+	auto bak = GLOBAL_playing_cutseq;
+	GLOBAL_playing_cutseq = 0;
+	auto result = SoundEffect(sfx, pos, flags);
+	GLOBAL_playing_cutseq = bak;
+	return result;
 }

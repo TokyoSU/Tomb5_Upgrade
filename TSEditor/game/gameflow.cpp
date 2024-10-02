@@ -711,9 +711,8 @@ void DoTitle(uchar name, uchar audio)
 
 	if (gfLevelComplete == 1 && gfStatus != 2)
 		PlayFmvNow(2, 1);
-
 	if (gfStatus != 4 && tomb5.tr4_loadscreens)
-		RenderLoadPic(0);
+		RenderLoadPic();
 
 	input = 0;
 }
@@ -927,7 +926,7 @@ void DoLevel(uchar Name, uchar Audio)
 	lara.examine3 = 0;
 
 	if (tomb5.tr4_loadscreens)
-		RenderLoadPic(0);
+		RenderLoadPic();
 
 	if (gfStatus == 3 && gfCurrentLevel == LVL5_RED_ALERT)
 	{

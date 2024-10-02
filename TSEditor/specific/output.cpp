@@ -47,7 +47,7 @@ static short SkinClip[40][12];
 
 static PHD_VECTOR load_cam;
 static PHD_VECTOR load_target;
-static char load_roomnum = (char)NO_ROOM;
+static short load_roomnum = NO_ROOM;
 
 void S_DrawPickup(short object_number)
 {
@@ -658,43 +658,47 @@ void aTransformLightPrelightClipMesh(MESH_DATA* mesh)
 
 static TR4LS tr4_load_screens[15] =
 {
-	{30548, 1770, 14103, 29452, 1576, 14853, 36},			//Title
-	{58434, -634, 42783, 57337, -1048, 40945, 59},			//Streets of Rome
-	{71226, 336, 32992, 71875, -568, 33761, 23},			//Trajan's Markets
-	{37136, -111, 31451, 38734, 343, 33029, 47},			//Colosseum
-	{46136, -6491, 27144, 46971, -6059, 28119, 95},			//The Base
-	{57948, 3115, 47907, 56425, 3509, 50335, 49},			//Sub
-	{22752, 14192, 63136, 24777, 13541, 61615, 11},			//Deepsea
-	{61212, -1112, 58204, 59492, -582, 57087, 4},			//Sinking
-	{63265, 8282, 62685, 63871, 8091, 64431, 113},			//Gallows
-	{48924, 18279, 38112, 47348, 19063, 39496, 55},			//Labyrinth
-	{36048, 9395, 41333, 36985, 8725, 42910, 101},			//Old Mill
-	{34286, -5004, 44626, 34288, -3651, 44523, 16},			//13th
-	{18204, -24322, 69690, 17000, -25322, 67556, 97},		//Iris
-	{46959, -1147, 71996, 47934, -1109, 70446, 0},			//Security breach cut
-	{51416, -2639, 47734, 51437, -2444, 36968, 119},		//Red Alert
+	TR4LS(PHD_VECTOR(30548, 1770, 14103), PHD_VECTOR(29452,  1576, 14853), 36),			//Title
+	TR4LS(PHD_VECTOR(58434, -634, 42783), PHD_VECTOR(57337, -1048, 40945), 59),			//Streets of Rome
+	TR4LS(PHD_VECTOR(71226,  336, 32992), PHD_VECTOR(71875, -568, 33761), 23),			//Trajan's Markets
+	TR4LS(PHD_VECTOR(37136, -111, 31451), PHD_VECTOR(38734, 343, 33029), 47),			//Colosseum
+	TR4LS(PHD_VECTOR(46136, -6491, 27144), PHD_VECTOR(46971, -6059, 28119), 95),		//The Base
+	TR4LS(PHD_VECTOR(57948, 3115, 47907), PHD_VECTOR(56425, 3509, 50335), 49),			//Sub
+	TR4LS(PHD_VECTOR(22752, 14192, 63136), PHD_VECTOR(24777, 13541, 61615), 11),		//Deepsea
+	TR4LS(PHD_VECTOR(61212, -1112, 58204), PHD_VECTOR(59492, -582, 57087), 4),			//Sinking
+	TR4LS(PHD_VECTOR(63265, 8282, 62685), PHD_VECTOR(63871, 8091, 64431), 113),			//Gallows
+	TR4LS(PHD_VECTOR(48924, 18279, 38112), PHD_VECTOR(47348, 19063, 39496), 55),		//Labyrinth
+	TR4LS(PHD_VECTOR(36048, 9395, 41333), PHD_VECTOR(36985, 8725, 42910), 101),			//Old Mill
+	TR4LS(PHD_VECTOR(34286, -5004, 44626), PHD_VECTOR(34288, -3651, 44523), 16),		//13th
+	TR4LS(PHD_VECTOR(18204, -24322, 69690), PHD_VECTOR(17000, -25322, 67556), 97),		//Iris
+	TR4LS(PHD_VECTOR(46959, -1147, 71996), PHD_VECTOR(47934, -1109, 70446), 0),			//Security breach cut
+	TR4LS(PHD_VECTOR(51416, -2639, 47734), PHD_VECTOR(51437, -2444, 36968), 119),		//Red Alert
 };
 
-static inline void GetLoadScreenCam()
+static void GetLoadScreenCam()
 {
-	TR4LS* ls;
-
-	ls = &tr4_load_screens[gfCurrentLevel];
-	load_cam.x = ls->px;
-	load_cam.y = ls->py;
-	load_cam.z = ls->pz;
-	load_target.x = ls->tx;
-	load_target.y = ls->ty;
-	load_target.z = ls->tz;
-	load_roomnum = ls->rn;
+	TR4LS* ls = &tr4_load_screens[gfCurrentLevel];
+	load_cam.x = ls->src.x;
+	load_cam.y = ls->src.y;
+	load_cam.z = ls->src.z;
+	load_target.x = ls->target.x;
+	load_target.y = ls->target.y;
+	load_target.z = ls->target.z;
+	load_roomnum = ls->roomNumber;
 }
 
-void RenderLoadPic(long unused)
+void RenderLoadPic()
 {
 	long x, y;
 	short poisoned;
 
 	GetLoadScreenCam();
+	if (load_roomnum == NO_ROOM)
+		return;
+	// NOTE: Avoid crash if the script have negative room number or more than loaded room count.
+	if (load_roomnum < 0 || load_roomnum > number_rooms)
+		return;
+
 	camera.pos.x = load_cam.x;
 	camera.pos.y = load_cam.y;
 	camera.pos.z = load_cam.z;
@@ -706,10 +710,7 @@ void RenderLoadPic(long unused)
 	camera.target.z = load_target.z;
 	camera.pos.room_number = load_roomnum;
 
-	if (load_roomnum == NO_ROOM)
-		return;
-
-	KillActiveBaddies((ITEM_INFO*)0xABCDEF);
+	KillActiveBaddies(false);
 	SetFade(255, 0);
 	poisoned = lara.poisoned;
 	FadeScreenHeight = 0;

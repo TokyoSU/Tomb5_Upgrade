@@ -5,7 +5,7 @@ void S_DrawPickup(short object_number);
 void aTransformLightClipMesh(MESH_DATA* mesh);
 void aTransformLightPrelightClipMesh(MESH_DATA* mesh);
 void phd_PutPolygons_train(short* lol, long x);
-void RenderLoadPic(long unused);
+void RenderLoadPic();
 long S_GetObjectBounds(short* bounds);
 void S_AnimateTextures(long n);
 long aCheckMeshClip(MESH_DATA* mesh);

@@ -309,18 +309,19 @@ void LaraLocationPad(ITEM_INFO* item)
 
 void KillActiveBaddies(ITEM_INFO* item)
 {
-	ITEM_INFO* target_item;
-	short item_num;
+	KillActiveBaddies(item != NULL);
+}
 
-	for (item_num = next_item_active; item_num != NO_ITEM; item_num = target_item->next_active)
+void KillActiveBaddies(bool fullRemove)
+{
+	ITEM_INFO* target_item = NULL;
+	for (short item_num = next_item_active; item_num != NO_ITEM; item_num = target_item->next_active)
 	{
 		target_item = &items[item_num];
-
 		if (objects[target_item->object_number].intelligent)
 		{
 			target_item->status = ITEM_INVISIBLE;
-
-			if (item != ((void*)0xABCDEF))
+			if (fullRemove)
 			{
 				RemoveActiveItem(item_num);
 				DisableBaddieAI(item_num);
@@ -328,17 +329,12 @@ void KillActiveBaddies(ITEM_INFO* item)
 			}
 		}
 	}
-
 	flipeffect = -1;
 }
 
 void BaddieBiteEffect(ITEM_INFO* item, BITE_INFO* bite)
 {
-	PHD_VECTOR pos;
-
-	pos.x = bite->x;
-	pos.y = bite->y;
-	pos.z = bite->z;
+	PHD_VECTOR pos(bite->x, bite->y, bite->z);
 	GetJointAbsPosition(item, &pos, bite->mesh_num);
 	DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 4, item->pos.y_rot, item->room_number);
 }
@@ -436,7 +432,7 @@ void TL_9(ITEM_INFO* item)
 
 void TL_10(ITEM_INFO* item)
 {
-	if (savegame.TLCount == 9)
+	if (savegame.TLCount < 10)
 	{
 		IsAtmospherePlaying = 0;
 		S_CDPlay(13, 0);
@@ -446,7 +442,7 @@ void TL_10(ITEM_INFO* item)
 
 void TL_11(ITEM_INFO* item)
 {
-	if (savegame.TLCount == 10)
+	if (savegame.TLCount < 11)
 	{
 		IsAtmospherePlaying = 0;
 		S_CDPlay(0, 0);
@@ -456,7 +452,7 @@ void TL_11(ITEM_INFO* item)
 
 void TL_12(ITEM_INFO* item)
 {
-	if (savegame.TLCount == 11)
+	if (savegame.TLCount < 12)
 	{
 		IsAtmospherePlaying = 0;
 		S_CDPlay(35, 0);

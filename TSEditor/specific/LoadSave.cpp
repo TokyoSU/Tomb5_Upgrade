@@ -1050,13 +1050,10 @@ void S_DisplayMonoScreen()
 
 long S_LoadSave(long load_or_save, long mono, long inv_active)
 {
-	long fade, ret;
-
-	fade = 0;
+	long fade = 0, ret;
 
 	if (!mono)
 		CreateMonoScreen();
-
 	GetSaveLoadFiles();
 
 	if (!inv_active)
