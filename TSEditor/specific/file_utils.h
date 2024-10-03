@@ -47,15 +47,10 @@ class CFileReader : public IFileReader
 {
 public:
 	bool LoadFile(LPCSTR filePath);
-	friend IFileReader;
-protected:
-	friend IFileReader;
 };
 
 class CMemoryFileReader : public IFileReader
 {
 public:
 	bool LoadFile(void* data, size_t size);
-protected:
-	friend IFileReader;
 };
