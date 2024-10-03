@@ -360,7 +360,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	}
 
 	/// ====================================================
-	///   LOAD TEXTURE 32 AND TEXTURE 16 BITS
+	///   LOAD TEXTURE 32 AND 16 BITS
 	/// ====================================================
 
 	if (format <= 1)
