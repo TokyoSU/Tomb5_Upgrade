@@ -10,7 +10,7 @@ void SeedRandomDraw(long seed);
 void Log(const char* s, ...);
 
 template<class _Ty>
-static void SafeRelease(_Ty& ptr, LPCSTR name)
+static void SafeRelease(_Ty* ptr, LPCSTR name)
 {
 	if (ptr)
 	{
@@ -24,7 +24,7 @@ static void SafeRelease(_Ty& ptr, LPCSTR name)
 }
 
 template<class _Ty>
-static void SafeFree(_Ty& ptr)
+static void SafeFree(_Ty* ptr)
 {
 	if (ptr)
 	{

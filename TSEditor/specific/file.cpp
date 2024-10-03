@@ -361,7 +361,6 @@ void S_GetUVRotateTextures()
 void FreeLevel()
 {
 	Log(__FUNCTION__);
-
 	FreeTextures();
 	DXFreeSounds();
 	malloc_ptr = malloc_buffer;
@@ -372,7 +371,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 {
 	DXTEXTUREINFO* dxtex;
 	LPDIRECTDRAWSURFACE4 tSurf;
-	LPDIRECT3DTEXTURE2 pTex;
+	LPDIRECT3DTEXTURE2 pTex = nullptr;
 	uchar* TextureData;
 	long* d;
 	char* pData;
@@ -389,7 +388,9 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	dxtex = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].TextureInfos[G_dxinfo->nTexture];
 
 	if (dxtex->rbpp == 8 && dxtex->gbpp == 8 && dxtex->bbpp == 8 && dxtex->abpp == 8)
+	{
 		format = 1;
+	}
 	else if (dxtex->rbpp == 5 && dxtex->gbpp == 5 && dxtex->bbpp == 5 && dxtex->abpp == 1)
 	{
 		format = 2;
@@ -402,7 +403,6 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		fread(&compressedSize, 1, 4, level_fp);
 		CompressedData = (char*)malloc(compressedSize);
 		FileData = (char*)malloc(size);
-
 		if (FileCompressed)
 		{
 			fread(CompressedData, compressedSize, 1, level_fp);
@@ -418,8 +418,6 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 			fread(&compressedSize, 1, 4, level_fp);
 			fseek(level_fp, size, SEEK_CUR);
 		}
-
-		free(CompressedData);
 	}
 	else
 	{
@@ -435,7 +433,6 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		fread(&compressedSize, 1, 4, level_fp);
 		CompressedData = (char*)malloc(compressedSize);
 		FileData = (char*)malloc(size);
-
 		if (FileCompressed)
 		{
 			fread(CompressedData, compressedSize, 1, level_fp);
@@ -443,9 +440,8 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		}
 		else
 			fread(FileData, size, 1, level_fp);
-
-		free(CompressedData);
 	}
+	SafeFree(CompressedData);
 
 	pData = FileData;
 
@@ -468,7 +464,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		S_LoadBar();
 	}
 
-	free(TextureData);
+	SafeFree(TextureData);
 
 	Log("OTPages %d", OTPages);
 	size = OTPages * skip * 0x10000;
@@ -490,7 +486,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		S_LoadBar();
 	}
 
-	free(TextureData);
+	SafeFree(TextureData);
 	S_LoadBar();
 
 	Log("BTPages %d", BTPages);
@@ -534,10 +530,10 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 			S_LoadBar();
 		}
 
-		free(TextureData);
+		SafeFree(TextureData);
 	}
 
-	free(pData);
+	SafeFree(pData);
 
 	fread(&size, 1, 4, level_fp);
 	fread(&compressedSize, 1, 4, level_fp);
@@ -552,7 +548,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	else
 		fread(FileData, size, 1, level_fp);
 
-	free(CompressedData);
+	SafeFree(CompressedData);
 
 	pData = FileData;
 	TextureData = (uchar*)malloc(0x40000);
@@ -574,7 +570,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 
 		pComp = (char*)malloc(*(long*)CompressedData);
 		Decompress(pComp, CompressedData + 4, size - 4, *(long*)CompressedData);
-		free(CompressedData);
+		SafeFree(CompressedData);
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -650,8 +646,8 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 
 	Log("Created %d Texture Pages", nTextures - 1);
 
-	free(TextureData);
-	free(pData);
+	SafeFree(TextureData);
+	SafeFree(pData);
 	return 1;
 }
 
