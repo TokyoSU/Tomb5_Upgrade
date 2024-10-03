@@ -21,7 +21,7 @@ bool LoadAnimatedTextures();
 bool LoadTextureInfos();
 bool LoadItems();
 bool LoadAIInfo();
-bool LoadCinematic();
+bool LoadSampleMap();
 bool LoadSamples();
 long S_LoadLevelFile(long num);
 

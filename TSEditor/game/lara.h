@@ -184,5 +184,5 @@ extern void (*lara_collision_routines[])(ITEM_INFO* item, COLL_INFO* coll);
 extern LARA_INFO lara;
 extern ITEM_INFO* lara_item;
 extern short DashTimer;
-extern char LaraDrawType;
-extern char WeatherType;
+extern short LaraDrawType;
+extern short WeatherType;

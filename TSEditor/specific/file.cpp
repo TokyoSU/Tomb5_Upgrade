@@ -1,5 +1,6 @@
 #include "../tomb5/pch.h"
 #include "file.h"
+#include "file_utils.h"
 #include "function_stubs.h"
 #include "../game/gameflow.h"
 #include "../game/setup.h"
@@ -55,44 +56,10 @@ TEXTURESTRUCT* AnimatingWaterfalls[6];
 float AnimatingWaterfallsV[6];
 
 static TEXTURESTRUCT* MonitorScreenTex;
-static FILE* level_fp;
-static char* FileData;
-static char* CompressedData;
+static CFileReader levelCompressed;
+static CMemoryFileReader levelUncompressed;
+static char* compressed, *decompressed;
 static float MonitorScreenU;
-static long FileCompressed = 1;
-
-static char ReadChar()
-{
-	char read;
-
-	read = *(char*)FileData;
-	FileData += sizeof(char);
-	return read;
-}
-
-static short ReadShort()
-{
-	short read;
-
-	read = *(short*)FileData;
-	FileData += sizeof(short);
-	return read;
-}
-
-static long ReadLong()
-{
-	long read;
-
-	read = *(long*)FileData;
-	FileData += sizeof(long);
-	return read;
-}
-
-static void ReadBlock(void* dest, long size)
-{
-	memcpy(dest, FileData, size);
-	FileData += size;
-}
 
 FILE* FileOpen(const char* Filename)
 {
@@ -342,10 +309,7 @@ void DoMonitorScreen()
 void S_GetUVRotateTextures()
 {
 	TEXTURESTRUCT* tex;
-	short* pRange;
-
-	pRange = aranges + 1;
-
+	short* pRange = aranges + 1;
 	for (int i = 0; i < nAnimUVRanges; i++, pRange++)
 	{
 		for (int j = (int)*(pRange++); j >= 0; j--, pRange++)
@@ -353,7 +317,6 @@ void S_GetUVRotateTextures()
 			tex = &textinfo[*pRange];
 			AnimatingTexturesV[i][j][0] = tex->v1;
 		}
-
 		pRange--;
 	}
 }
@@ -372,12 +335,11 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	DXTEXTUREINFO* dxtex;
 	LPDIRECTDRAWSURFACE4 tSurf;
 	LPDIRECT3DTEXTURE2 pTex = nullptr;
-	uchar* TextureData;
+	uchar* texData;
 	long* d;
-	char* pData;
 	char* pComp;
 	char* s;
-	long format, skip, size, compressedSize, nTex, c;
+	long format, skip, uncompSize, realUncompSize, compSize, nTex, c;
 	uchar r, g, b, a;
 
 	Log(__FUNCTION__);
@@ -397,64 +359,54 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		skip = 2;
 	}
 
+	/// ====================================================
+	///   LOAD TEXTURE 32 AND TEXTURE 16 BITS
+	/// ====================================================
+
 	if (format <= 1)
 	{
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-		CompressedData = (char*)malloc(compressedSize);
-		FileData = (char*)malloc(size);
-		if (FileCompressed)
-		{
-			fread(CompressedData, compressedSize, 1, level_fp);
-			Decompress(FileData, CompressedData, compressedSize, size);
-			fread(&size, 1, 4, level_fp);
-			fread(&compressedSize, 1, 4, level_fp);
-			fseek(level_fp, compressedSize, SEEK_CUR);
-		}
-		else
-		{
-			fread(FileData, size, 1, level_fp);
-			fread(&size, 1, 4, level_fp);
-			fread(&compressedSize, 1, 4, level_fp);
-			fseek(level_fp, size, SEEK_CUR);
-		}
+		// Read 32Bit Textures.
+		uncompSize = levelCompressed.ReadLong();
+		compSize = levelCompressed.ReadLong();
+		compressed = (char*)malloc(compSize);
+		decompressed = (char*)malloc(uncompSize);
+		levelCompressed.ReadBytes(compressed, compSize);
+		Decompress(decompressed, compressed, compSize, uncompSize);
+		realUncompSize = uncompSize;
+		// Skip 16Bit Textures.
+		uncompSize = levelCompressed.ReadLong();
+		compSize = levelCompressed.ReadLong();
+		levelCompressed.Seek(compSize, RW_SEEK_CUR);
 	}
 	else
 	{
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-
-		if (FileCompressed)
-			fseek(level_fp, compressedSize, SEEK_CUR);
-		else
-			fseek(level_fp, size, SEEK_CUR);
-
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-		CompressedData = (char*)malloc(compressedSize);
-		FileData = (char*)malloc(size);
-		if (FileCompressed)
-		{
-			fread(CompressedData, compressedSize, 1, level_fp);
-			Decompress(FileData, CompressedData, compressedSize, size);
-		}
-		else
-			fread(FileData, size, 1, level_fp);
+		// Skip 32Bit Textures.
+		uncompSize = levelCompressed.ReadLong();
+		compSize = levelCompressed.ReadLong();
+		levelCompressed.Seek(compSize, RW_SEEK_CUR);
+		// Read 16Bit Textures.
+		uncompSize = levelCompressed.ReadLong();
+		compSize = levelCompressed.ReadLong();
+		compressed = (char*)malloc(compSize);
+		decompressed = (char*)malloc(uncompSize);
+		levelCompressed.ReadBytes(compressed, compSize);
+		Decompress(decompressed, compressed, compSize, uncompSize);
+		realUncompSize = uncompSize;
 	}
-	SafeFree(CompressedData);
+	SafeFree(compressed);
 
-	pData = FileData;
+	CMemoryFileReader texReader;
+	texReader.LoadFile(decompressed, realUncompSize);
 
 	Log("RTPages %d", RTPages);
-	size = RTPages * skip * 0x10000;
-	TextureData = (uchar*)malloc(size);
-	ReadBlock(TextureData, size);
+	uncompSize = RTPages * skip * 0x10000;
+	texData = (uchar*)malloc(uncompSize);
+	texReader.ReadBytes(texData, uncompSize);
 	S_LoadBar();
-
 	for (int i = 0; i < RTPages; i++)
 	{
 		nTex = nTextures++;
-		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 0, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 0, (long*)(texData + (i * skip * 0x10000)), 0, format);
 		DXAttempt(tSurf->QueryInterface(IID_IDirect3DTexture2, (LPVOID*)&pTex));
 		Textures[nTex].tex = pTex;
 		Textures[nTex].surface = tSurf;
@@ -463,19 +415,18 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		Textures[nTex].bump = 0;
 		S_LoadBar();
 	}
-
-	SafeFree(TextureData);
+	SafeFree(texData);
 
 	Log("OTPages %d", OTPages);
-	size = OTPages * skip * 0x10000;
-	TextureData = (uchar*)malloc(size);
-	ReadBlock(TextureData, size);
+	uncompSize = OTPages * skip * 0x10000;
+	texData = (uchar*)malloc(uncompSize);
+	texReader.ReadBytes(texData, uncompSize);
 	S_LoadBar();
 
 	for (int i = 0; i < OTPages; i++)
 	{
 		nTex = nTextures++;
-		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 0, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 0, (long*)(texData + (i * skip * 0x10000)), 0, format);
 		DXAttempt(tSurf->QueryInterface(IID_IDirect3DTexture2, (LPVOID*)&pTex));
 		Textures[nTex].tex = pTex;
 		Textures[nTex].surface = tSurf;
@@ -485,28 +436,26 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		App.dx.lpD3DDevice->SetTexture(0, pTex);
 		S_LoadBar();
 	}
+	SafeFree(texData);
 
-	SafeFree(TextureData);
 	S_LoadBar();
-
 	Log("BTPages %d", BTPages);
 
 	if (BTPages)
 	{
-		size = BTPages * skip * 0x10000;
-		TextureData = (uchar*)malloc(size);
-		ReadBlock(TextureData, size);
+		uncompSize = BTPages * skip * 0x10000;
+		texData = (uchar*)malloc(uncompSize);
+		texReader.ReadBytes(texData, uncompSize);
 
 		for (int i = 0; i < BTPages; i++)
 		{
 			if (i < (BTPages >> 1))
-				tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 0, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+				tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 0, (long*)(texData + (i * skip * 0x10000)), 0, format);
 			else
 			{
 				if (!App.BumpMapping)
 					break;
-
-				tSurf = CreateTexturePage(App.BumpMapSize, App.BumpMapSize, 0, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+				tSurf = CreateTexturePage(App.BumpMapSize, App.BumpMapSize, 0, (long*)(texData + (i * skip * 0x10000)), 0, format);
 			}
 
 			nTex = nTextures++;
@@ -530,52 +479,49 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 			S_LoadBar();
 		}
 
-		SafeFree(TextureData);
+		SafeFree(texData);
 	}
+	SafeFree(decompressed);
 
-	SafeFree(pData);
+	/// ====================================================
+	///   LOAD MISC TEXTURES
+	/// ====================================================
 
-	fread(&size, 1, 4, level_fp);
-	fread(&compressedSize, 1, 4, level_fp);
-	CompressedData = (char*)malloc(compressedSize);
-	FileData = (char*)malloc(size);
+	uncompSize = levelCompressed.ReadLong();
+	compSize = levelCompressed.ReadLong();
+	compressed = (char*)malloc(compSize);
+	decompressed = (char*)malloc(uncompSize);
+	levelCompressed.ReadBytes(compressed, compSize);
+	Decompress(decompressed, compressed, compSize, uncompSize);
+	SafeFree(compressed);
+	texData = (uchar*)malloc(0x40000);
 
-	if (FileCompressed)
-	{
-		fread(CompressedData, compressedSize, 1, level_fp);
-		Decompress(FileData, CompressedData, compressedSize, size);
-	}
-	else
-		fread(FileData, size, 1, level_fp);
+	texReader.Release();
+	texReader.LoadFile(decompressed, uncompSize);
 
-	SafeFree(CompressedData);
-
-	pData = FileData;
-	TextureData = (uchar*)malloc(0x40000);
-
-	//main menu logo
+	// main menu logo
 	if (gfCurrentLevel == LVL5_TITLE)
 	{
 		pComp = 0;
-		CompressedData = 0;
+		compressed = 0;
 
 		if (Gameflow->Language == US)
-			size = LoadFile("data\\uslogo.pak", &CompressedData);
+			uncompSize = LoadFile("data\\uslogo.pak", &compressed);
 		else if (Gameflow->Language == GERMAN)
-			size = LoadFile("data\\grlogo.pak", &CompressedData);
+			uncompSize = LoadFile("data\\grlogo.pak", &compressed);
 		else if (Gameflow->Language == FRENCH)
-			size = LoadFile("data\\frlogo.pak", &CompressedData);
+			uncompSize = LoadFile("data\\frlogo.pak", &compressed);
 		else
-			size = LoadFile("data\\logo512.pak", &CompressedData);
+			uncompSize = LoadFile("data\\logo512.pak", &compressed);
 
-		pComp = (char*)malloc(*(long*)CompressedData);
-		Decompress(pComp, CompressedData + 4, size - 4, *(long*)CompressedData);
-		SafeFree(CompressedData);
+		pComp = (char*)malloc(*(long*)compressed);
+		Decompress(pComp, compressed + 4, uncompSize - 4, *(long*)compressed);
+		SafeFree(compressed);
 
 		for (int i = 0; i < 2; i++)
 		{
 			s = pComp + (i * 768);
-			d = (long*)TextureData;
+			d = (long*)texData;
 
 			for (int y = 0; y < 256; y++)
 			{
@@ -599,7 +545,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 			}
 
 			nTex = nTextures++;
-			tSurf = CreateTexturePage(256, 256, 0, (long*)TextureData, 0, 0);
+			tSurf = CreateTexturePage(256, 256, 0, (long*)texData, 0, 0);
 			DXAttempt(tSurf->QueryInterface(IID_IDirect3DTexture2, (LPVOID*)&pTex));
 			Textures[nTex].tex = pTex;
 			Textures[nTex].surface = tSurf;
@@ -608,13 +554,13 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 			Textures[nTex].bump = 0;
 		}
 
-		free(pComp);
+		SafeFree(pComp);
 	}
 
 	//shine
-	ReadBlock(TextureData, 0x40000);
+	texReader.ReadBytes(texData, 0x40000);
 	nTex = nTextures++;
-	tSurf = CreateTexturePage(256, 256, 0, (long*)TextureData, 0, 0);
+	tSurf = CreateTexturePage(256, 256, 0, (long*)texData, 0, 0);
 	DXAttempt(tSurf->QueryInterface(IID_IDirect3DTexture2, (LPVOID*)&pTex));
 	Textures[nTex].tex = pTex;
 	Textures[nTex].surface = tSurf;
@@ -623,9 +569,9 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	Textures[nTex].bump = 0;
 
 	//font
-	ReadBlock(TextureData, 0x40000);
+	texReader.ReadBytes(texData, 0x40000);
 	nTex = nTextures++;
-	tSurf = CreateTexturePage(256, 256, 0, (long*)TextureData, 0, 0);
+	tSurf = CreateTexturePage(256, 256, 0, (long*)texData, 0, 0);
 	DXAttempt(tSurf->QueryInterface(IID_IDirect3DTexture2, (LPVOID*)&pTex));
 	Textures[nTex].tex = pTex;
 	Textures[nTex].surface = tSurf;
@@ -634,9 +580,9 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	Textures[nTex].bump = 0;
 
 	//sky
-	ReadBlock(TextureData, 0x40000);
+	texReader.ReadBytes(texData, 0x40000);
 	nTex = nTextures++;
-	tSurf = CreateTexturePage(256, 256, 0, (long*)TextureData, 0, 0);
+	tSurf = CreateTexturePage(256, 256, 0, (long*)texData, 0, 0);
 	DXAttempt(tSurf->QueryInterface(IID_IDirect3DTexture2, (LPVOID*)&pTex));
 	Textures[nTex].tex = pTex;
 	Textures[nTex].surface = tSurf;
@@ -646,8 +592,9 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 
 	Log("Created %d Texture Pages", nTextures - 1);
 
-	SafeFree(TextureData);
-	SafeFree(pData);
+	texReader.Release();
+	SafeFree(decompressed);
+	SafeFree(texData);
 	return 1;
 }
 
@@ -657,19 +604,17 @@ static void aLoadRoomStream()
 	long num, size;
 	char* data;
 
-	ReadLong();	//skip unused space
-	num = ReadLong();
+	levelUncompressed.ReadLong();	//skip unused space
+	num = levelUncompressed.ReadLong();
 	room = (ROOM_INFO*)game_malloc(num * sizeof(ROOM_INFO));
 
 	for (int i = 0; i < num; i++)
 	{
 		r = &room[i];
-
-		ReadLong();		//X E L A
-
-		size = ReadLong();
+		levelUncompressed.ReadLong();		//X E L A
+		size = levelUncompressed.ReadLong();
 		data = (char*)game_malloc(size);
-		ReadBlock(data, size);
+		levelUncompressed.ReadBytes(data, size);
 		aFixUpRoom(r, data);
 	}
 
@@ -686,9 +631,9 @@ bool LoadRooms()
 	aLoadRoomStream();
 	BuildOutsideTable();
 
-	size = ReadLong();
+	size = levelUncompressed.ReadLong();
 	floor_data = (short*)game_malloc(size * sizeof(short));
-	ReadBlock(floor_data, sizeof(short) * size);
+	levelUncompressed.ReadBytes(floor_data, sizeof(short) * size);
 
 	Log("Floor Data Size %d @ %x", size, floor_data);
 	return 1;
@@ -707,13 +652,13 @@ bool LoadObjects()
 	memset(static_objects, 0, 70 * sizeof(STATIC_INFO));
 
 	//meshes
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 	mesh_base = (short*)game_malloc(num * 2);
-	ReadBlock(mesh_base, num * sizeof(short));
+	levelUncompressed.ReadBytes(mesh_base, num * sizeof(short));
 
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 	meshes = (short**)game_malloc(num * sizeof(long) * 2);	//*2 for meshswaps
-	ReadBlock(meshes, num * sizeof(long));
+	levelUncompressed.ReadBytes(meshes, num * sizeof(long));
 
 	for (lp = 0; lp < num; lp++)
 		meshes[lp] = &mesh_base[(long)meshes[lp] / 2];
@@ -721,53 +666,52 @@ bool LoadObjects()
 	num_meshes = num;
 
 	//anims
-	num_anims = ReadLong();
+	num_anims = levelUncompressed.ReadLong();
 	anims = (ANIM_STRUCT*)game_malloc(num_anims * sizeof(ANIM_STRUCT));
-	ReadBlock(anims, num_anims * sizeof(ANIM_STRUCT));
+	levelUncompressed.ReadBytes(anims, num_anims * sizeof(ANIM_STRUCT));
 
 	//changes
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 	changes = (CHANGE_STRUCT*)game_malloc(num * sizeof(CHANGE_STRUCT));
-	ReadBlock(changes, num * sizeof(CHANGE_STRUCT));
+	levelUncompressed.ReadBytes(changes, num * sizeof(CHANGE_STRUCT));
 
 	//ranges
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 	ranges = (RANGE_STRUCT*)game_malloc(num * sizeof(RANGE_STRUCT));
-	ReadBlock(ranges, num * sizeof(RANGE_STRUCT));
+	levelUncompressed.ReadBytes(ranges, num * sizeof(RANGE_STRUCT));
 
 	//anim commands
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 	commands = (short*)game_malloc(num * sizeof(short));
-	ReadBlock(commands, num * sizeof(short));
+	levelUncompressed.ReadBytes(commands, num * sizeof(short));
 
 	//bones
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 	bones = (long*)game_malloc(num * sizeof(long));
-	ReadBlock(bones, num * sizeof(long));
+	levelUncompressed.ReadBytes(bones, num * sizeof(long));
 
 	//frames
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 	frames = (short*)game_malloc(num * sizeof(short));
-	ReadBlock(frames, num * sizeof(short));
+	levelUncompressed.ReadBytes(frames, num * sizeof(short));
 
 	for (lp = 0; lp < num_anims; lp++)
 		anims[lp].frame_ptr = (short*)((long)anims[lp].frame_ptr + (long)frames);
 
-	num = ReadLong();
-
+	num = levelUncompressed.ReadLong();
 	for (lp = 0; lp < num; lp++)
 	{
-		slot = ReadLong();
+		slot = levelUncompressed.ReadLong();
 		obj = &objects[slot];
 
-		obj->nmeshes = ReadShort();
-		obj->mesh_index = ReadShort();
-		obj->bone_index = ReadLong();
-		obj->frame_base = (short*)ReadLong();
-		obj->anim_index = ReadShort();
+		obj->nmeshes = levelUncompressed.ReadShort();
+		obj->mesh_index = levelUncompressed.ReadShort();
+		obj->bone_index = levelUncompressed.ReadLong();
+		obj->frame_base = (short*)levelUncompressed.ReadLong();
+		obj->anim_index = levelUncompressed.ReadShort();
 		obj->loaded = 1;
 
-		ReadShort();	//Skip padding
+		levelUncompressed.ReadShort();	//Skip padding
 	}
 
 	if (LaraDrawType != LARA_DIVESUIT)
@@ -793,17 +737,17 @@ bool LoadObjects()
 	InitialiseClosedDoors();
 
 	//statics
-	num = ReadLong();
+	num = levelUncompressed.ReadLong();
 
 	for (int i = 0; i < num; i++)
 	{
-		slot = ReadLong();
+		slot = levelUncompressed.ReadLong();
 		stat = &static_objects[slot];
 
-		stat->mesh_number = ReadShort();
-		ReadBlock(&stat->x_minp, 6 * sizeof(short));
-		ReadBlock(&stat->x_minc, 6 * sizeof(short));
-		stat->flags = ReadShort();
+		stat->mesh_number = levelUncompressed.ReadShort();
+		levelUncompressed.ReadBytes(&stat->x_minp, 6 * sizeof(short));
+		levelUncompressed.ReadBytes(&stat->x_minc, 6 * sizeof(short));
+		stat->flags = levelUncompressed.ReadShort();
 	}
 
 	for (int i = 0; i < 70; i++)
@@ -824,14 +768,14 @@ bool LoadSprites()
 	long num_sprites, num_slots, slot;
 
 	Log(__FUNCTION__);
-	ReadLong();			//SPR 0 marker
+	levelUncompressed.ReadLong();			//SPR 0 marker
 
-	num_sprites = ReadLong();
+	num_sprites = levelUncompressed.ReadLong();
 	spriteinfo = (SPRITESTRUCT*)game_malloc(sizeof(SPRITESTRUCT) * num_sprites);
 
 	for (int i = 0; i < num_sprites; i++)
 	{
-		ReadBlock(&sprite, sizeof(PHDSPRITESTRUCT));
+		levelUncompressed.ReadBytes(&sprite, sizeof(PHDSPRITESTRUCT));
 		spriteinfo[i].height = sprite.height;
 		spriteinfo[i].offset = sprite.offset;
 		spriteinfo[i].tpage = sprite.tpage;
@@ -847,27 +791,26 @@ bool LoadSprites()
 		spriteinfo[i].tpage++;
 	}
 
-	num_slots = ReadLong();
-
+	num_slots = levelUncompressed.ReadLong();
 	if (num_slots <= 0)
 		return 1;
 
 	for (int i = 0; i < num_slots; i++)
 	{
-		slot = ReadLong();
+		slot = levelUncompressed.ReadLong();
 
 		if (slot >= NUMBER_OBJECTS)
 		{
 			slot -= NUMBER_OBJECTS;
 			stat = &static_objects[slot];
-			stat->mesh_number = ReadShort();
-			stat->mesh_number = ReadShort();
+			stat->mesh_number = levelUncompressed.ReadShort();
+			stat->mesh_number = levelUncompressed.ReadShort();
 		}
 		else
 		{
 			obj = &objects[slot];
-			obj->nmeshes = ReadShort();
-			obj->mesh_index = ReadShort();
+			obj->nmeshes = levelUncompressed.ReadShort();
+			obj->mesh_index = levelUncompressed.ReadShort();
 			obj->loaded = 1;
 		}
 	}
@@ -878,18 +821,17 @@ bool LoadSprites()
 bool LoadCameras()
 {
 	Log(__FUNCTION__);
-	number_cameras = ReadLong();
+	number_cameras = levelUncompressed.ReadLong();
 
 	if (number_cameras)
 	{
 		camera.fixed = (OBJECT_VECTOR*)game_malloc(number_cameras * sizeof(OBJECT_VECTOR));
-		ReadBlock(camera.fixed, number_cameras * sizeof(OBJECT_VECTOR));
+		levelUncompressed.ReadBytes(camera.fixed, number_cameras * sizeof(OBJECT_VECTOR));
 	}
 
-	number_spotcams = (short)ReadLong();
-
+	number_spotcams = (short)levelUncompressed.ReadLong();
 	if (number_spotcams)
-		ReadBlock(SpotCam, number_spotcams * sizeof(SPOTCAM));
+		levelUncompressed.ReadBytes(SpotCam, number_spotcams * sizeof(SPOTCAM));
 
 	return 1;
 }
@@ -897,13 +839,13 @@ bool LoadCameras()
 bool LoadSoundEffects()
 {
 	Log(__FUNCTION__);
-	number_sound_effects = ReadLong();
+	number_sound_effects = levelUncompressed.ReadLong();
 	Log("Number of SFX %d", number_sound_effects);
 
 	if (number_sound_effects)
 	{
 		sound_effects = (OBJECT_VECTOR*)game_malloc(number_sound_effects * sizeof(OBJECT_VECTOR));
-		ReadBlock(sound_effects, number_sound_effects * sizeof(OBJECT_VECTOR));
+		levelUncompressed.ReadBytes(sound_effects, number_sound_effects * sizeof(OBJECT_VECTOR));
 	}
 
 	return 1;
@@ -915,31 +857,30 @@ bool LoadBoxes()
 	long size;
 
 	Log(__FUNCTION__);
-	num_boxes = ReadLong();
+	num_boxes = levelUncompressed.ReadLong();
 
 	boxes = (BOX_INFO*)game_malloc(num_boxes * sizeof(BOX_INFO));
-	ReadBlock(boxes, num_boxes * sizeof(BOX_INFO));
+	levelUncompressed.ReadBytes(boxes, num_boxes * sizeof(BOX_INFO));
 
-	size = ReadLong();
+	size = levelUncompressed.ReadLong();
 	overlap = (ushort*)game_malloc(size * sizeof(ushort));
-	ReadBlock(overlap, size * sizeof(ushort));
+	levelUncompressed.ReadBytes(overlap, size * sizeof(ushort));
 
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
 			ground_zone[j][i] = (short*)game_malloc(num_boxes * sizeof(short));
-			ReadBlock(ground_zone[j][i], num_boxes * sizeof(short));
+			levelUncompressed.ReadBytes(ground_zone[j][i], num_boxes * sizeof(short));
 		}
 
 		ground_zone[4][i] = (short*)game_malloc(num_boxes * sizeof(short));
-		ReadBlock(ground_zone[4][i], num_boxes * sizeof(short));
+		levelUncompressed.ReadBytes(ground_zone[4][i], num_boxes * sizeof(short));
 	}
 
 	for (int i = 0; i < num_boxes; i++)
 	{
 		box = &boxes[i];
-
 		if (box->overlap_index & 0x8000)
 			box->overlap_index |= 0x4000;
 	}
@@ -952,15 +893,15 @@ bool LoadAnimatedTextures()
 	long num_anim_ranges;
 
 	Log(__FUNCTION__);
-	num_anim_ranges = ReadLong();
+	num_anim_ranges = levelUncompressed.ReadLong();
 
 	aranges = (short*)game_malloc(num_anim_ranges * 2);
-	ReadBlock(aranges, num_anim_ranges * sizeof(short));
+	levelUncompressed.ReadBytes(aranges, num_anim_ranges * sizeof(short));
 
 	if (gfCurrentLevel == LVL5_ESCAPE_WITH_THE_IRIS)
 		aranges[2] = 2076;
 
-	nAnimUVRanges = ReadChar();
+	nAnimUVRanges = levelUncompressed.ReadUChar();
 	return 1;
 }
 
@@ -1009,14 +950,14 @@ bool LoadTextureInfos()
 
 	Log(__FUNCTION__);
 
-	ReadLong();			//TEX 0 marker
-	nTInfos = ReadLong();
+	levelUncompressed.ReadLong();			//TEX 0 marker
+	nTInfos = levelUncompressed.ReadLong();
 	Log("Texture Infos : %d", nTInfos);
 	textinfo = (TEXTURESTRUCT*)game_malloc(nTInfos * sizeof(TEXTURESTRUCT));
 
 	for (int i = 0; i < nTInfos; i++)
 	{
-		ReadBlock(&tex, sizeof(PHDTEXTURESTRUCT));
+		levelUncompressed.ReadBytes(&tex, sizeof(PHDTEXTURESTRUCT));
 		textinfo[i].drawtype = tex.drawtype;
 		textinfo[i].tpage = tex.tpage & 0x7FFF;
 		textinfo[i].flag = tex.tpage ^ (tex.tpage ^ tex.flag) & 0x7FFF;
@@ -1056,8 +997,7 @@ bool LoadItems()
 	long x, y, z, num_items;
 
 	Log(__FUNCTION__);
-	num_items = ReadLong();
-
+	num_items = levelUncompressed.ReadLong();
 	if (!num_items)
 		return 1;
 
@@ -1069,15 +1009,15 @@ bool LoadItems()
 	for (int i = 0; i < num_items; i++)
 	{
 		item = &items[i];
-		item->object_number = ReadShort();
-		item->room_number = ReadShort();
-		item->pos.x_pos = ReadLong();
-		item->pos.y_pos = ReadLong();
-		item->pos.z_pos = ReadLong();
-		item->pos.y_rot = ReadShort();
-		item->shade = ReadShort();
-		item->trigger_flags = ReadShort();
-		item->flags = ReadShort();
+		item->object_number = levelUncompressed.ReadShort();
+		item->room_number = levelUncompressed.ReadShort();
+		item->pos.x_pos = levelUncompressed.ReadLong();
+		item->pos.y_pos = levelUncompressed.ReadLong();
+		item->pos.z_pos = levelUncompressed.ReadLong();
+		item->pos.y_rot = levelUncompressed.ReadShort();
+		item->shade = levelUncompressed.ReadShort();
+		item->trigger_flags = levelUncompressed.ReadShort();
+		item->flags = levelUncompressed.ReadShort();
 	}
 
 	for (int i = 0; i < num_items; i++)
@@ -1118,24 +1058,20 @@ bool LoadItems()
 
 bool LoadAIInfo()
 {
-	long num;
-
 	Log(__FUNCTION__);
-	num = ReadLong();
-
-	if (!num)
+	long num = levelUncompressed.ReadLong();
+	if (num <= 0)
 		return 1;
-
 	nAIObjects = (short)num;
 	AIObjects = (AIOBJECT*)game_malloc(num * sizeof(AIOBJECT));
-	ReadBlock(AIObjects, num * sizeof(AIOBJECT));
+	levelUncompressed.ReadBytes(AIObjects, num * sizeof(AIOBJECT));
 	return 1;
 }
 
-bool LoadCinematic()
+bool LoadSampleMap()
 {
 	Log(__FUNCTION__);
-	ReadShort();
+	levelUncompressed.ReadShort(); // Sample map size for TRNG else 0
 	return 1;
 }
 
@@ -1145,11 +1081,9 @@ bool LoadSamples()
 
 	Log(__FUNCTION__);
 	sample_lut = (short*)game_malloc(MAX_SAMPLES * sizeof(short));
-	ReadBlock(sample_lut, MAX_SAMPLES * sizeof(short));
+	levelUncompressed.ReadBytes(sample_lut, MAX_SAMPLES * sizeof(short));
 
-	num_infos = ReadLong();
-	Log("Number Of Sample Infos %d", num_infos);
-
+	num_infos = levelUncompressed.ReadLong(); Log("Number Of Sample Infos %d", num_infos);
 	if (!num_infos)
 	{
 		Log("No Sample Infos");
@@ -1157,10 +1091,9 @@ bool LoadSamples()
 	}
 
 	sample_infos = (SAMPLE_INFO*)game_malloc(num_infos * sizeof(SAMPLE_INFO));
-	ReadBlock(sample_infos, num_infos * sizeof(SAMPLE_INFO));
+	levelUncompressed.ReadBytes(sample_infos, num_infos * sizeof(SAMPLE_INFO));
 
-	num_samples = ReadLong();
-
+	num_samples = levelUncompressed.ReadLong();
 	if (!num_samples)
 	{
 		Log("No Samples");
@@ -1168,25 +1101,16 @@ bool LoadSamples()
 	}
 
 	Log("Number Of Samples %d", num_samples);
-	fread(&num_samples, 1, 4, level_fp);
-
-	if (feof(level_fp))
-		Log("END OF FILE");
+	num_samples = levelCompressed.ReadLong();
+	if (num_samples <= 0)
+		return 1;
 
 	InitSampleDecompress();
-
-	if (num_samples <= 0)
-	{
-		FreeSampleDecompress();
-		return 1;
-	}
-
 	for (int i = 0; i < num_samples; i++)
 	{
-		fread(&uncomp_size, 1, 4, level_fp);
-		fread(&comp_size, 1, 4, level_fp);
-		fread(samples_buffer, comp_size, 1, level_fp);
-
+		uncomp_size = levelCompressed.ReadLong();
+		comp_size = levelCompressed.ReadLong();
+		levelCompressed.ReadBytes(samples_buffer, comp_size);
 		if (!DXCreateSampleADPCM(samples_buffer, comp_size, uncomp_size, i))
 		{
 			FreeSampleDecompress();
@@ -1203,10 +1127,7 @@ static INT LoadLevel(LPVOID name)
 	OBJECT_INFO* obj;
 	TEXTURESTRUCT* tex;
 	MESH_DATA* mesh;
-	char* pData;
-	char* pBefore;
-	char* pAfter;
-	long version, size, compressedSize;
+	long version, uncompressedSize, compressedSize;
 	short RTPages, OTPages, BTPages;
 	short data[16];
 
@@ -1219,32 +1140,34 @@ static INT LoadLevel(LPVOID name)
 	Textures[0].width = 0;
 	Textures[0].height = 0;
 	Textures[0].bump = 0;
-	CompressedData = 0;
-	FileData = 0;
-	level_fp = 0;
-	level_fp = FileOpen((const char*)name);
 
-	if (level_fp)
+	if (levelCompressed.LoadFile((char*)name))
 	{
-		fread(&version, 1, 4, level_fp);
-		fread(&RTPages, 1, 2, level_fp);
-		fread(&OTPages, 1, 2, level_fp);
-		fread(&BTPages, 1, 2, level_fp);
+		version = levelCompressed.ReadLong();
+		RTPages = levelCompressed.ReadShort();
+		OTPages = levelCompressed.ReadShort();
+		BTPages = levelCompressed.ReadShort();
+
 		S_InitLoadBar(OTPages + BTPages + RTPages + 20);
 		S_LoadBar();
 
 		LoadTextures(RTPages, OTPages, BTPages);
 
-		fread(data, 1, 32, level_fp);
+		levelCompressed.ReadBytes(data, sizeof(data));
 		LaraDrawType = data[0] + LARA_NORMAL;
-		WeatherType = (char)data[1];
+		WeatherType = data[1];
+		// The other 28 bytes is empty.
 
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-		FileData = (char*)malloc(size);
-		fread(FileData, size, 1, level_fp);
+		/// ========================================
+		/// READ GEOMETRY DATA
+		/// ========================================
 
-		pData = FileData;
+		uncompressedSize = levelCompressed.ReadLong();
+		compressedSize = levelCompressed.ReadLong();
+		compressed = (char*)malloc(uncompressedSize);
+		decompressed = (char*)malloc(uncompressedSize);
+		levelCompressed.ReadBytes(compressed, compressedSize);
+		levelUncompressed.LoadFile(compressed, uncompressedSize);
 
 		LoadRooms();
 		S_LoadBar();
@@ -1270,33 +1193,28 @@ static INT LoadLevel(LPVOID name)
 		LoadTextureInfos();
 		S_LoadBar();
 
-		pBefore = FileData;
-		size = ReadLong();		//nItems
-		FileData += 24 * size;	//skip item data
+		//uncompressedSize = levelUncompressed.ReadLong();		//nItems
+		//decompressed = (char*)malloc(24 * uncompressedSize);
+		//levelUncompressed.ReadBytes(decompressed, 24 * uncompressedSize);
+		//SafeFree(decompressed);
+
+		LoadItems();
+		S_LoadBar();
 
 		LoadAIInfo();
 		S_LoadBar();
 
-		pAfter = FileData;
-		FileData = pBefore;
-
-		LoadItems();
-		S_LoadBar();
-		FileData = pAfter;
-
-		LoadCinematic();
+		LoadSampleMap();
 		S_LoadBar();
 
 		if (acm_ready && !App.SoundDisabled)
 			LoadSamples();
 
-		free(pData);
 		S_LoadBar();
 
 		for (int i = 0; i < 6; i++)
 		{
 			obj = &objects[WATERFALL1 + i];
-
 			if (obj->loaded)
 			{
 				tex = &textinfo[mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF];
@@ -1306,7 +1224,6 @@ static INT LoadLevel(LPVOID name)
 		}
 
 		S_LoadBar();
-
 		S_GetUVRotateTextures();
 		S_LoadBar();
 		SetupGame();
@@ -1314,15 +1231,11 @@ static INT LoadLevel(LPVOID name)
 		SetFadeClip(0, 1);
 		reset_cutseq_vars();
 
-		if (gfCurrentLevel == LVL5_STREETS_OF_ROME)
-			find_a_fucking_item(ANIMATING10)->mesh_bits = 11;
-
-		if (gfCurrentLevel == LVL5_OLD_MILL)
-			find_a_fucking_item(ANIMATING16)->mesh_bits = 1;
+		if (gfCurrentLevel == LVL5_STREETS_OF_ROME) find_a_fucking_item(ANIMATING10)->mesh_bits = 11;
+		if (gfCurrentLevel == LVL5_OLD_MILL) find_a_fucking_item(ANIMATING16)->mesh_bits = 1;
 
 		MonitorScreenTex = 0;
 		obj = &objects[MONITOR_SCREEN];
-
 		if (obj->loaded)
 		{
 			mesh = (MESH_DATA*)meshes[objects[MONITOR_SCREEN].mesh_index];
@@ -1339,13 +1252,11 @@ static INT LoadLevel(LPVOID name)
 			}
 		}
 
-		FileClose(level_fp);
 		aInit();
 		ClearFX();
 	}
 
 	aMakeCutsceneResident(gfResidentCut[0], gfResidentCut[1], gfResidentCut[2], gfResidentCut[3]);
-	
 	LevelLoadingThread.active = false;
 	return 1;
 }
