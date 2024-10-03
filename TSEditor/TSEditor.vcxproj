@@ -341,6 +341,7 @@
     <ClCompile Include="specific\dxshell.cpp" />
     <ClCompile Include="specific\dxsound.cpp" />
     <ClCompile Include="specific\file.cpp" />
+    <ClCompile Include="specific\file_utils.cpp" />
     <ClCompile Include="specific\fmv.cpp" />
     <ClCompile Include="specific\function_stubs.cpp" />
     <ClCompile Include="specific\function_table.cpp" />
@@ -483,6 +484,7 @@
     <ClInclude Include="specific\dxshell.h" />
     <ClInclude Include="specific\dxsound.h" />
     <ClInclude Include="specific\file.h" />
+    <ClInclude Include="specific\file_utils.h" />
     <ClInclude Include="specific\fmv.h" />
     <ClInclude Include="specific\function_stubs.h" />
     <ClInclude Include="specific\function_table.h" />

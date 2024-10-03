@@ -1739,11 +1739,11 @@ struct PHDTEXTURESTRUCT
 	ushort v3;
 	ushort u4;
 	ushort v4;
-	ushort padd;
 	ulong xoff;
 	ulong yoff;
 	ulong width;
 	ulong height;
+	ushort padd;
 };
 
 struct ENVUV
