@@ -21,10 +21,39 @@ public:
 	double ReadDouble();
 	void ReadBytes(void* data, size_t size);
 
+	bool IsEOF() const;
 	void Seek(int offset, int type);
 protected:
 	SDL_RWops* m_file = NULL;
 	bool m_endoffile = false;
+
+	template<class T>
+	LPCSTR GetTypeName(T id)
+	{
+		if (typeid(id) == typeid(char))
+			return "char";
+		else if (typeid(id) == typeid(unsigned char))
+			return "uchar";
+		else if (typeid(id) == typeid(short))
+			return "short";
+		else if (typeid(id) == typeid(unsigned short))
+			return "ushort";
+		else if (typeid(id) == typeid(int))
+			return "int";
+		else if (typeid(id) == typeid(unsigned int))
+			return "uint";
+		else if (typeid(id) == typeid(long))
+			return "long";
+		else if (typeid(id) == typeid(unsigned long))
+			return "ulong";
+		else if (typeid(id) == typeid(unsigned long long))
+			return "uulong";
+		else if (typeid(id) == typeid(float))
+			return "float";
+		else if (typeid(id) == typeid(double))
+			return "double";
+		return "undefined";
+	}
 
 	template<class T>
 	T _Read() {
@@ -32,7 +61,7 @@ protected:
 		size_t retval = SDL_RWread(m_file, (void*)&result, sizeof(T), 1);
 		if (retval == 0 || retval != 1)
 		{
-			Log("Failed to read file !");
+			Log("Failed to read file %s !", GetTypeName<T>(result));
 			if (SDL_GetError() == NULL)
 			{
 				Log("Reached end of file !");

@@ -73,7 +73,7 @@ double IFileReader::ReadDouble()
 void IFileReader::ReadBytes(void* data, size_t size)
 {
 	size_t retval = SDL_RWread(m_file, data, sizeof(char), size);
-	if (retval == 0 || retval != 1)
+	if (retval == 0 || retval != size)
 	{
 		Log("Failed to read file !");
 		if (SDL_GetError() == NULL)
@@ -82,6 +82,11 @@ void IFileReader::ReadBytes(void* data, size_t size)
 			m_endoffile = true;
 		}
 	}
+}
+
+bool IFileReader::IsEOF() const
+{
+	return m_endoffile;
 }
 
 void IFileReader::Seek(int offset, int type)
@@ -105,7 +110,7 @@ bool CMemoryFileReader::LoadFile(void* data, size_t size)
 	m_file = SDL_RWFromMem(data, size);
 	if (m_file == NULL)
 	{
-		Log("Failed to read file memory !");
+		Log("Failed to read file from memory !");
 		return false;
 	}
 	return true;
