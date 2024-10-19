@@ -1,7 +1,7 @@
 #pragma once
 #include "../global/types.h"
 
-void SetD3DMatrix(D3DMATRIX* mx, float* imx);
+void SetD3DMatrix(D3DMATRIX* mx, FMatrix* imx);
 LPD3DMATRIX D3DIdentityMatrix(LPD3DMATRIX matrix);
 void SaveD3DCameraMatrix();
 void S_InitD3DMatrix();

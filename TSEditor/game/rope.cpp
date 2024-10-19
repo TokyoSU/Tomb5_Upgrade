@@ -122,7 +122,6 @@ void vMul(PHD_VECTOR* v, long scale, PHD_VECTOR* d)
 void mCrossProduct(PHD_VECTOR* a, PHD_VECTOR* b, PHD_VECTOR* n)
 {
 	PHD_VECTOR t;
-
 	t.x = a->y * b->z - a->z * b->y;
 	t.y = a->z * b->x - a->x * b->z;
 	t.z = a->x * b->y - a->y * b->x;
@@ -131,20 +130,19 @@ void mCrossProduct(PHD_VECTOR* a, PHD_VECTOR* b, PHD_VECTOR* n)
 	n->z = t.z >> W2V_SHIFT;
 }
 
-void phd_GetMatrixAngles(long* m, short* dest)
+void phd_GetMatrixAngles(Matrix* m, short* dest)
 {
 	long sy, cy;
 	short roll, pitch, yaw;
 
-	pitch = (short)phd_atan(phd_sqrt(SQUARE(m[M22]) + SQUARE(m[M02])), m[M12]);
-
-	if (m[M12] >= 0 && pitch > 0 || m[M12] < 0 && pitch < 0)
+	pitch = (short)phd_atan(phd_sqrt(SQUARE(m->m22) + SQUARE(m->m02)), m->m12);
+	if (m->m12 >= 0 && pitch > 0 || m->m12 < 0 && pitch < 0)
 		pitch = -pitch;
-
-	yaw = (short)phd_atan(m[M22], m[M02]);
+	yaw = (short)phd_atan(m->m22, m->m02);
 	sy = phd_sin(yaw);
 	cy = phd_cos(yaw);
-	roll = (short)phd_atan(m[M00] * cy - m[M20] * sy, m[M21] * sy - m[M01] * cy);
+	roll = (short)phd_atan(m->m00 * cy - m->m20 * sy, m->m21 * sy - m->m01 * cy);
+
 	dest[0] = pitch;
 	dest[1] = yaw;
 	dest[2] = roll;
@@ -506,13 +504,12 @@ void AlignLaraToRope(ITEM_INFO* l)
 {
 	ROPE_STRUCT* rope;
 	PHD_VECTOR v, u, n, up, v1, v2, n2;
-	long* mptr;
+	Matrix* mptr;
 	short* frame;
 	long x, y, z, x1, y1, z1, i;
-	long temp[indices_count];
+	Matrix temp = {};
 	short xyz[3];
 	short ropeangle;
-
 	up.x = 4096;
 	up.y = 0;
 	up.z = 0;
@@ -559,25 +556,25 @@ void AlignLaraToRope(ITEM_INFO* l)
 	n.x >>= 2;
 	n.y >>= 2;
 	n.z >>= 2;
-	temp[M00] = n.x;
-	temp[M01] = u.x;
-	temp[M02] = v.x;
-	temp[M10] = n.y;
-	temp[M11] = u.y;
-	temp[M12] = v.y;
-	temp[M20] = n.z;
-	temp[M21] = u.z;
-	temp[M22] = v.z;
-	phd_GetMatrixAngles(temp, xyz);
+	temp.m00 = n.x;
+	temp.m01 = u.x;
+	temp.m02 = v.x;
+	temp.m10 = n.y;
+	temp.m11 = u.y;
+	temp.m12 = v.y;
+	temp.m20 = n.z;
+	temp.m21 = u.z;
+	temp.m22 = v.z;
+	phd_GetMatrixAngles(&temp, xyz);
 	l->pos.x_pos = rope->Position.x + (rope->MeshSegment[i].x >> 16);
 	l->pos.y_pos = rope->Position.y + (rope->MeshSegment[i].y >> 16) + lara.RopeOffset;
 	l->pos.z_pos = rope->Position.z + (rope->MeshSegment[i].z >> 16);
 	phd_PushUnitMatrix();
 	phd_RotYXZ(xyz[1], xyz[0], xyz[2]);
 	mptr = phd_mxptr;
-	l->pos.x_pos += -112 * mptr[2] >> W2V_SHIFT;
-	l->pos.y_pos += -112 * mptr[6] >> W2V_SHIFT;
-	l->pos.z_pos += -112 * mptr[10] >> W2V_SHIFT;
+	l->pos.x_pos += -112 * mptr->m02 >> W2V_SHIFT;
+	l->pos.y_pos += -112 * mptr->m12 >> W2V_SHIFT;
+	l->pos.z_pos += -112 * mptr->m22 >> W2V_SHIFT;
 	phd_PopMatrix();
 	l->pos.x_rot = xyz[0];
 	l->pos.y_rot = xyz[1];
@@ -656,9 +653,9 @@ void ProjectRopePoints(ROPE_STRUCT* Rope)
 		t.x = Rope->MeshSegment[n].x >> 16;
 		t.y = Rope->MeshSegment[n].y >> 16;
 		t.z = Rope->MeshSegment[n].z >> 16;
-		Output.x = (D3DVALUE) (t.x * phd_mxptr[M00] + t.y * phd_mxptr[M01] + t.z * phd_mxptr[M02] + phd_mxptr[M03]);
-		Output.y = (D3DVALUE) (t.x * phd_mxptr[M10] + t.y * phd_mxptr[M11] + t.z * phd_mxptr[M12] + phd_mxptr[M13]);
-		Output.z = (D3DVALUE) (t.x * phd_mxptr[M20] + t.y * phd_mxptr[M21] + t.z * phd_mxptr[M22] + phd_mxptr[M23]);
+		Output.x = (D3DVALUE) (t.x * phd_mxptr->m00 + t.y * phd_mxptr->m01 + t.z * phd_mxptr->m02 + phd_mxptr->m03);
+		Output.y = (D3DVALUE) (t.x * phd_mxptr->m10 + t.y * phd_mxptr->m11 + t.z * phd_mxptr->m12 + phd_mxptr->m13);
+		Output.z = (D3DVALUE) (t.x * phd_mxptr->m20 + t.y * phd_mxptr->m21 + t.z * phd_mxptr->m22 + phd_mxptr->m23);
 		zv = phd_persp / Output.z;
 		Rope->Coords[n][0] = long(Output.x * zv + sw);
 		Rope->Coords[n][1] = long(Output.y * zv + sh);

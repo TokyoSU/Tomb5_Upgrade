@@ -18,25 +18,21 @@
 #include "lara.h"
 
 static char LM[15] = { 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8 };
-
 short GlobalCollisionBounds[6];
 
 void TriggerLaraBlood()
 {
-	PHD_VECTOR pos;
-	long lp, node;
-
-	for (lp = 0, node = 1; lp < 15; lp++)
+	for (long lp = 0, node = 1; lp < 15; lp++)
 	{
 		if (lara_item->touch_bits & node)
 		{
+			PHD_VECTOR pos;
 			pos.x = (GetRandomControl() & 0x1F) - 16;
 			pos.y = (GetRandomControl() & 0x1F) - 16;
 			pos.z = (GetRandomControl() & 0x1F) - 16;
 			GetLaraJointPos(&pos, LM[lp]);
 			DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 7) + 8, short(GetRandomControl() << 1), lara_item->room_number);
 		}
-
 		node <<= 1;
 	}
 }
@@ -872,9 +868,9 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* laraitem)
 	pos.z_rot = item->pos.z_rot;
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	pos.x_pos = item->pos.x_pos + ((v->x * phd_mxptr[M00] + v->y * phd_mxptr[M01] + v->z * phd_mxptr[M02]) >> W2V_SHIFT);
-	pos.y_pos = item->pos.y_pos + ((v->x * phd_mxptr[M10] + v->y * phd_mxptr[M11] + v->z * phd_mxptr[M12]) >> W2V_SHIFT);
-	pos.z_pos = item->pos.z_pos + ((v->x * phd_mxptr[M20] + v->y * phd_mxptr[M21] + v->z * phd_mxptr[M22]) >> W2V_SHIFT);
+	pos.x_pos = item->pos.x_pos + ((v->x * phd_mxptr->m00 + v->y * phd_mxptr->m01 + v->z * phd_mxptr->m02) >> W2V_SHIFT);
+	pos.y_pos = item->pos.y_pos + ((v->x * phd_mxptr->m10 + v->y * phd_mxptr->m11 + v->z * phd_mxptr->m12) >> W2V_SHIFT);
+	pos.z_pos = item->pos.z_pos + ((v->x * phd_mxptr->m20 + v->y * phd_mxptr->m21 + v->z * phd_mxptr->m22) >> W2V_SHIFT);
 	phd_PopMatrix();
 
 	if (item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM)
@@ -1447,9 +1443,9 @@ long TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l)
 	pos.x = l->pos.x_pos - item->pos.x_pos;
 	pos.y = l->pos.y_pos - item->pos.y_pos;
 	pos.z = l->pos.z_pos - item->pos.z_pos;
-	x = (pos.x * phd_mxptr[M00] + pos.y * phd_mxptr[M10] + pos.z * phd_mxptr[M20]) >> W2V_SHIFT;
-	y = (pos.x * phd_mxptr[M01] + pos.y * phd_mxptr[M11] + pos.z * phd_mxptr[M21]) >> W2V_SHIFT;
-	z = (pos.x * phd_mxptr[M02] + pos.y * phd_mxptr[M12] + pos.z * phd_mxptr[M22]) >> W2V_SHIFT;
+	x = (pos.x * phd_mxptr->m00 + pos.y * phd_mxptr->m10 + pos.z * phd_mxptr->m20) >> W2V_SHIFT;
+	y = (pos.x * phd_mxptr->m01 + pos.y * phd_mxptr->m11 + pos.z * phd_mxptr->m21) >> W2V_SHIFT;
+	z = (pos.x * phd_mxptr->m02 + pos.y * phd_mxptr->m12 + pos.z * phd_mxptr->m22) >> W2V_SHIFT;
 	phd_PopMatrix();
 
 	return x >= bounds[0] && x <= bounds[1] && y >= bounds[2] && y <= bounds[3] && z >= bounds[4] && z <= bounds[5];
@@ -1465,9 +1461,9 @@ void AlignLaraPosition(PHD_VECTOR* pos, ITEM_INFO* item, ITEM_INFO* l)
 
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	x = item->pos.x_pos + ((pos->x * phd_mxptr[M00] + pos->y * phd_mxptr[M01] + pos->z * phd_mxptr[M02]) >> W2V_SHIFT);
-	y = item->pos.y_pos + ((pos->x * phd_mxptr[M10] + pos->y * phd_mxptr[M11] + pos->z * phd_mxptr[M12]) >> W2V_SHIFT);
-	z = item->pos.z_pos + ((pos->x * phd_mxptr[M20] + pos->y * phd_mxptr[M21] + pos->z * phd_mxptr[M22]) >> W2V_SHIFT);
+	x = item->pos.x_pos + ((pos->x * phd_mxptr->m00 + pos->y * phd_mxptr->m01 + pos->z * phd_mxptr->m02) >> W2V_SHIFT);
+	y = item->pos.y_pos + ((pos->x * phd_mxptr->m10 + pos->y * phd_mxptr->m11 + pos->z * phd_mxptr->m12) >> W2V_SHIFT);
+	z = item->pos.z_pos + ((pos->x * phd_mxptr->m20 + pos->y * phd_mxptr->m21 + pos->z * phd_mxptr->m22) >> W2V_SHIFT);
 	phd_PopMatrix();
 
 	l->pos.x_pos = x;

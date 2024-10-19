@@ -13,11 +13,11 @@ static long NumLaraSpheres;
 
 void GetJointAbsPositionMatrix(ITEM_INFO* item, float* matrix, long node)
 {
-	float* aMXPtr_bak;
-	float* aIMXPtr_bak;
+	FMatrix* aMXPtr_bak;
+	FMatrix* aIMXPtr_bak;
+	Matrix* phd_mxptr_bak;
+	Matrix* IMptr_bak;
 	long* bone;
-	long* phd_mxptr_bak;
-	long* IMptr_bak;
 	short* frmptr[2];
 	short* data;
 	short* rot;
@@ -73,18 +73,18 @@ void GetJointAbsPositionMatrix(ITEM_INFO* item, float* matrix, long node)
 		}
 
 		InterpolateMatrix();
-		matrix[M00] = aMXPtr[M00];
-		matrix[M01] = aMXPtr[M01];
-		matrix[M02] = aMXPtr[M02];
-		matrix[M03] = aMXPtr[M03];
-		matrix[M10] = aMXPtr[M10];
-		matrix[M11] = aMXPtr[M11];
-		matrix[M12] = aMXPtr[M12];
-		matrix[M13] = aMXPtr[M13];
-		matrix[M20] = aMXPtr[M20];
-		matrix[M21] = aMXPtr[M21];
-		matrix[M22] = aMXPtr[M22];
-		matrix[M23] = aMXPtr[M23];
+		matrix[M00] = aMXPtr->m00;
+		matrix[M01] = aMXPtr->m01;
+		matrix[M02] = aMXPtr->m02;
+		matrix[M03] = aMXPtr->m03;
+		matrix[M10] = aMXPtr->m10;
+		matrix[M11] = aMXPtr->m11;
+		matrix[M12] = aMXPtr->m12;
+		matrix[M13] = aMXPtr->m13;
+		matrix[M20] = aMXPtr->m20;
+		matrix[M21] = aMXPtr->m21;
+		matrix[M22] = aMXPtr->m22;
+		matrix[M23] = aMXPtr->m23;
 	}
 	else
 	{
@@ -116,18 +116,18 @@ void GetJointAbsPositionMatrix(ITEM_INFO* item, float* matrix, long node)
 			}
 		}
 
-		matrix[M00] = aMXPtr[M00];
-		matrix[M01] = aMXPtr[M01];
-		matrix[M02] = aMXPtr[M02];
-		matrix[M03] = aMXPtr[M03];
-		matrix[M10] = aMXPtr[M10];
-		matrix[M11] = aMXPtr[M11];
-		matrix[M12] = aMXPtr[M12];
-		matrix[M13] = aMXPtr[M13];
-		matrix[M20] = aMXPtr[M20];
-		matrix[M21] = aMXPtr[M21];
-		matrix[M22] = aMXPtr[M22];
-		matrix[M23] = aMXPtr[M23];
+		matrix[M00] = aMXPtr->m00;
+		matrix[M01] = aMXPtr->m01;
+		matrix[M02] = aMXPtr->m02;
+		matrix[M03] = aMXPtr->m03;
+		matrix[M10] = aMXPtr->m10;
+		matrix[M11] = aMXPtr->m11;
+		matrix[M12] = aMXPtr->m12;
+		matrix[M13] = aMXPtr->m13;
+		matrix[M20] = aMXPtr->m20;
+		matrix[M21] = aMXPtr->m21;
+		matrix[M22] = aMXPtr->m22;
+		matrix[M23] = aMXPtr->m23;
 	}
 
 	phd_mxptr = phd_mxptr_bak;
@@ -140,21 +140,19 @@ void InitInterpolate2(long frac, long rate)
 {
 	IM_rate = rate;
 	IM_frac = frac;
-
-	IMptr = &IMstack[384];
-	memcpy(&IMstack[384], phd_mxptr, 48u);
-
-	aIMXPtr = &aIFMStack[384];
-	memcpy(&aIFMStack[384], aMXPtr, 48u);
+	IMptr = &IMstack[20];
+	memcpy(&IMstack[20], phd_mxptr, sizeof(Matrix));
+	aIMXPtr = &aIFMStack[20];
+	memcpy(&aIFMStack[20], aMXPtr, sizeof(FMatrix));
 }
 
 void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 {
 	OBJECT_INFO* obj;
-	float* fmx;
-	float* fimx;
-	long* mx;
-	long* imx;
+	FMatrix* fmx;
+	FMatrix* fimx;
+	Matrix* mx;
+	Matrix* imx;
 	long* bone;
 	short* frm[2];
 	short* extra_rotation;
@@ -256,9 +254,9 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 		phd_TranslateRel(pos->x, pos->y, pos->z);
 	}
 
-	pos->x = item->pos.x_pos + (phd_mxptr[M03] >> W2V_SHIFT);
-	pos->y = item->pos.y_pos + (phd_mxptr[M13] >> W2V_SHIFT);
-	pos->z = item->pos.z_pos + (phd_mxptr[M23] >> W2V_SHIFT);
+	pos->x = item->pos.x_pos + (phd_mxptr->m03 >> W2V_SHIFT);
+	pos->y = item->pos.y_pos + (phd_mxptr->m13 >> W2V_SHIFT);
+	pos->z = item->pos.z_pos + (phd_mxptr->m23 >> W2V_SHIFT);
 	phd_mxptr = mx;
 	IMptr = imx;
 	aMXPtr = fmx;
@@ -285,9 +283,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 		y = item->pos.y_pos;
 		z = item->pos.z_pos;
 		phd_PushUnitMatrix();
-		phd_mxptr[M03] = 0;
-		phd_mxptr[M13] = 0;
-		phd_mxptr[M23] = 0;
+		phd_mxptr->m03 = 0;
+		phd_mxptr->m13 = 0;
+		phd_mxptr->m23 = 0;
 	}
 	else
 	{
@@ -317,9 +315,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	if (!(WorldSpace & 2))
 		phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 
-	ptr->x = x + (phd_mxptr[M03] >> W2V_SHIFT);
-	ptr->y = y + (phd_mxptr[M13] >> W2V_SHIFT);
-	ptr->z = z + (phd_mxptr[M23] >> W2V_SHIFT);
+	ptr->x = x + (phd_mxptr->m03 >> W2V_SHIFT);
+	ptr->y = y + (phd_mxptr->m13 >> W2V_SHIFT);
+	ptr->z = z + (phd_mxptr->m23 >> W2V_SHIFT);
 	ptr->r = meshp[3];
 	ptr++;
 	phd_PopMatrix();
@@ -357,9 +355,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 		if (!(WorldSpace & 2))
 			phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 
-		ptr->x = x + (phd_mxptr[M03] >> W2V_SHIFT);
-		ptr->y = y + (phd_mxptr[M13] >> W2V_SHIFT);
-		ptr->z = z + (phd_mxptr[M23] >> W2V_SHIFT);
+		ptr->x = x + (phd_mxptr->m03 >> W2V_SHIFT);
+		ptr->y = y + (phd_mxptr->m13 >> W2V_SHIFT);
+		ptr->z = z + (phd_mxptr->m23 >> W2V_SHIFT);
 		ptr->r = meshp[3];
 		ptr++;
 		phd_PopMatrix();

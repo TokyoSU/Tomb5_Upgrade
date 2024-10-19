@@ -119,18 +119,18 @@ static void DrawLara__1(ITEM_INFO* item, long mirror)
 
 	for (int i = 0; i < 15; i++)//skin
 	{
-		aMXPtr[M00] = lara_matrices[i * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[i * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[i * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[i * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[i * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[i * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[i * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[i * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[i * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[i * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[i * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[i * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[i * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[i * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[i * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[i * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[i * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[i * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[i * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[i * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[i * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[i * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[i * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[i * indices_count + M23];
 
 		if (LaraNodeUnderwater[i])
 			bLaraUnderWater = i;
@@ -177,18 +177,18 @@ static void DrawLara__1(ITEM_INFO* item, long mirror)
 				phd_PutPolygons(*meshpp, -1);
 			else
 			{
-				aMXPtr[M00] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M00];
-				aMXPtr[M01] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M01];
-				aMXPtr[M02] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M02];
-				aMXPtr[M03] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M03];
-				aMXPtr[M10] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M10];
-				aMXPtr[M11] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M11];
-				aMXPtr[M12] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M12];
-				aMXPtr[M13] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M13];
-				aMXPtr[M20] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M20];
-				aMXPtr[M21] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M21];
-				aMXPtr[M22] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M22];
-				aMXPtr[M23] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M23];
+				aMXPtr->m00 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M00];
+				aMXPtr->m01 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M01];
+				aMXPtr->m02 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M02];
+				aMXPtr->m03 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M03];
+				aMXPtr->m10 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M10];
+				aMXPtr->m11 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M11];
+				aMXPtr->m12 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M12];
+				aMXPtr->m13 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M13];
+				aMXPtr->m20 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M20];
+				aMXPtr->m21 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M21];
+				aMXPtr->m22 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M22];
+				aMXPtr->m23 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M23];
 				phd_PushMatrix();
 
 				v0.x = lara_matrices[SkinUseMatrix[i][0] * indices_count + M01];
@@ -229,52 +229,52 @@ static void DrawLara__1(ITEM_INFO* item, long mirror)
 		obj = &objects[LHolster];
 		meshpp = &meshes[obj->mesh_index];
 		meshpp += 8;
-		aMXPtr[M00] = lara_matrices[LMX_THIGH_L * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[LMX_THIGH_L * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[LMX_THIGH_L * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[LMX_THIGH_L * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[LMX_THIGH_L * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[LMX_THIGH_L * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[LMX_THIGH_L * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[LMX_THIGH_L * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[LMX_THIGH_L * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[LMX_THIGH_L * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[LMX_THIGH_L * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[LMX_THIGH_L * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[LMX_THIGH_L * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[LMX_THIGH_L * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[LMX_THIGH_L * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[LMX_THIGH_L * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[LMX_THIGH_L * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[LMX_THIGH_L * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[LMX_THIGH_L * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[LMX_THIGH_L * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[LMX_THIGH_L * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[LMX_THIGH_L * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[LMX_THIGH_L * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[LMX_THIGH_L * indices_count + M23];
 		phd_PutPolygons(*meshpp, -1);
 
 		obj = &objects[lara.holster];
 		meshpp = &meshes[obj->mesh_index];
 		meshpp += 16;
-		aMXPtr[M00] = lara_matrices[LMX_THIGH_R * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[LMX_THIGH_R * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[LMX_THIGH_R * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[LMX_THIGH_R * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[LMX_THIGH_R * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[LMX_THIGH_R * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[LMX_THIGH_R * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[LMX_THIGH_R * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[LMX_THIGH_R * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[LMX_THIGH_R * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[LMX_THIGH_R * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[LMX_THIGH_R * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[LMX_THIGH_R * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[LMX_THIGH_R * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[LMX_THIGH_R * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[LMX_THIGH_R * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[LMX_THIGH_R * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[LMX_THIGH_R * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[LMX_THIGH_R * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[LMX_THIGH_R * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[LMX_THIGH_R * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[LMX_THIGH_R * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[LMX_THIGH_R * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[LMX_THIGH_R * indices_count + M23];
 		phd_PutPolygons(*meshpp, -1);
 
 		if (lara.back_gun)//back gun
 		{
 			phd_PushMatrix();
-			aMXPtr[M00] = lara_matrices[LMX_TORSO * indices_count + M00];
-			aMXPtr[M01] = lara_matrices[LMX_TORSO * indices_count + M01];
-			aMXPtr[M02] = lara_matrices[LMX_TORSO * indices_count + M02];
-			aMXPtr[M03] = lara_matrices[LMX_TORSO * indices_count + M03];
-			aMXPtr[M10] = lara_matrices[LMX_TORSO * indices_count + M10];
-			aMXPtr[M11] = lara_matrices[LMX_TORSO * indices_count + M11];
-			aMXPtr[M12] = lara_matrices[LMX_TORSO * indices_count + M12];
-			aMXPtr[M13] = lara_matrices[LMX_TORSO * indices_count + M13];
-			aMXPtr[M20] = lara_matrices[LMX_TORSO * indices_count + M20];
-			aMXPtr[M21] = lara_matrices[LMX_TORSO * indices_count + M21];
-			aMXPtr[M22] = lara_matrices[LMX_TORSO * indices_count + M22];
-			aMXPtr[M23] = lara_matrices[LMX_TORSO * indices_count + M23];
+			aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
+			aMXPtr->m01 = lara_matrices[LMX_TORSO * indices_count + M01];
+			aMXPtr->m02 = lara_matrices[LMX_TORSO * indices_count + M02];
+			aMXPtr->m03 = lara_matrices[LMX_TORSO * indices_count + M03];
+			aMXPtr->m10 = lara_matrices[LMX_TORSO * indices_count + M10];
+			aMXPtr->m11 = lara_matrices[LMX_TORSO * indices_count + M11];
+			aMXPtr->m12 = lara_matrices[LMX_TORSO * indices_count + M12];
+			aMXPtr->m13 = lara_matrices[LMX_TORSO * indices_count + M13];
+			aMXPtr->m20 = lara_matrices[LMX_TORSO * indices_count + M20];
+			aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
+			aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
+			aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
 			bone = objects[lara.back_gun].bone_index;
 			phd_TranslateRel(bones[bone + 53], bones[bone + 54], bones[bone + 55]);
 			rot = objects[lara.back_gun].frame_base + 9;
@@ -319,18 +319,18 @@ static void DrawLara__4(ITEM_INFO* item, long mirror)
 
 	for (int i = 0; i < 15; i++)//skin
 	{
-		aMXPtr[M00] = lara_matrices[i * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[i * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[i * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[i * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[i * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[i * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[i * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[i * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[i * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[i * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[i * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[i * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[i * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[i * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[i * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[i * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[i * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[i * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[i * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[i * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[i * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[i * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[i * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[i * indices_count + M23];
 
 		if (LaraNodeUnderwater[i])
 			bLaraUnderWater = i;
@@ -380,18 +380,18 @@ static void DrawLara__4(ITEM_INFO* item, long mirror)
 		else
 		{
 			phd_PushMatrix();
-			aMXPtr[M00] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M00];
-			aMXPtr[M01] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M01];
-			aMXPtr[M02] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M02];
-			aMXPtr[M03] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M03];
-			aMXPtr[M10] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M10];
-			aMXPtr[M11] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M11];
-			aMXPtr[M12] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M12];
-			aMXPtr[M13] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M13];
-			aMXPtr[M20] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M20];
-			aMXPtr[M21] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M21];
-			aMXPtr[M22] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M22];
-			aMXPtr[M23] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M23];
+			aMXPtr->m00 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M00];
+			aMXPtr->m01 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M01];
+			aMXPtr->m02 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M02];
+			aMXPtr->m03 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M03];
+			aMXPtr->m10 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M10];
+			aMXPtr->m11 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M11];
+			aMXPtr->m12 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M12];
+			aMXPtr->m13 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M13];
+			aMXPtr->m20 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M20];
+			aMXPtr->m21 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M21];
+			aMXPtr->m22 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M22];
+			aMXPtr->m23 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M23];
 
 			v0.x = lara_matrices[SkinUseMatrix[i][0] * indices_count + M01];
 			v0.y = lara_matrices[SkinUseMatrix[i][0] * indices_count + M11];
@@ -429,18 +429,18 @@ static void DrawLara__4(ITEM_INFO* item, long mirror)
 	if (!(gfLevelFlags & GF_YOUNGLARA) && lara.back_gun)
 	{
 		phd_PushMatrix();
-		aMXPtr[M00] = lara_matrices[LMX_TORSO * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[LMX_TORSO * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[LMX_TORSO * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[LMX_TORSO * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[LMX_TORSO * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[LMX_TORSO * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[LMX_TORSO * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[LMX_TORSO * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[LMX_TORSO * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[LMX_TORSO * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[LMX_TORSO * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[LMX_TORSO * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[LMX_TORSO * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[LMX_TORSO * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[LMX_TORSO * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[LMX_TORSO * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[LMX_TORSO * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[LMX_TORSO * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[LMX_TORSO * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[LMX_TORSO * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
 		bone = objects[lara.back_gun].bone_index;
 		phd_TranslateRel(bones[bone + 53], bones[bone + 54], bones[bone + 55]);
 		rot = objects[lara.back_gun].frame_base + 9;
@@ -481,18 +481,18 @@ static void DrawLara__5(ITEM_INFO* item, long mirror)
 
 	for (int i = 0; i < 15; i++)//skin
 	{
-		aMXPtr[M00] = lara_matrices[i * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[i * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[i * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[i * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[i * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[i * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[i * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[i * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[i * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[i * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[i * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[i * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[i * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[i * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[i * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[i * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[i * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[i * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[i * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[i * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[i * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[i * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[i * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[i * indices_count + M23];
 
 		if (LaraNodeUnderwater[i])
 			bLaraUnderWater = i;
@@ -510,36 +510,36 @@ static void DrawLara__5(ITEM_INFO* item, long mirror)
 	meshpp = &meshes[obj->mesh_index];
 
 	phd_PushMatrix();
-	aMXPtr[M00] = lara_matrices[LMX_TORSO * indices_count + M00];
-	aMXPtr[M01] = lara_matrices[LMX_TORSO * indices_count + M01];
-	aMXPtr[M02] = lara_matrices[LMX_TORSO * indices_count + M02];
-	aMXPtr[M03] = lara_matrices[LMX_TORSO * indices_count + M03];
-	aMXPtr[M10] = lara_matrices[LMX_TORSO * indices_count + M10];
-	aMXPtr[M11] = lara_matrices[LMX_TORSO * indices_count + M11];
-	aMXPtr[M12] = lara_matrices[LMX_TORSO * indices_count + M12];
-	aMXPtr[M13] = lara_matrices[LMX_TORSO * indices_count + M13];
-	aMXPtr[M20] = lara_matrices[LMX_TORSO * indices_count + M20];
-	aMXPtr[M21] = lara_matrices[LMX_TORSO * indices_count + M21];
-	aMXPtr[M22] = lara_matrices[LMX_TORSO * indices_count + M22];
-	aMXPtr[M23] = lara_matrices[LMX_TORSO * indices_count + M23];
+	aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
+	aMXPtr->m01 = lara_matrices[LMX_TORSO * indices_count + M01];
+	aMXPtr->m02 = lara_matrices[LMX_TORSO * indices_count + M02];
+	aMXPtr->m03 = lara_matrices[LMX_TORSO * indices_count + M03];
+	aMXPtr->m10 = lara_matrices[LMX_TORSO * indices_count + M10];
+	aMXPtr->m11 = lara_matrices[LMX_TORSO * indices_count + M11];
+	aMXPtr->m12 = lara_matrices[LMX_TORSO * indices_count + M12];
+	aMXPtr->m13 = lara_matrices[LMX_TORSO * indices_count + M13];
+	aMXPtr->m20 = lara_matrices[LMX_TORSO * indices_count + M20];
+	aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
+	aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
+	aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
 	phd_TranslateRel(-80, -192, -160);
 	phd_RotX(subsuit.XRot);
 	phd_PutPolygons(*meshpp, -1);
 	phd_PopMatrix();
 
 	phd_PushMatrix();
-	aMXPtr[M00] = lara_matrices[LMX_TORSO * indices_count + M00];
-	aMXPtr[M01] = lara_matrices[LMX_TORSO * indices_count + M01];
-	aMXPtr[M02] = lara_matrices[LMX_TORSO * indices_count + M02];
-	aMXPtr[M03] = lara_matrices[LMX_TORSO * indices_count + M03];
-	aMXPtr[M10] = lara_matrices[LMX_TORSO * indices_count + M10];
-	aMXPtr[M11] = lara_matrices[LMX_TORSO * indices_count + M11];
-	aMXPtr[M12] = lara_matrices[LMX_TORSO * indices_count + M12];
-	aMXPtr[M13] = lara_matrices[LMX_TORSO * indices_count + M13];
-	aMXPtr[M20] = lara_matrices[LMX_TORSO * indices_count + M20];
-	aMXPtr[M21] = lara_matrices[LMX_TORSO * indices_count + M21];
-	aMXPtr[M22] = lara_matrices[LMX_TORSO * indices_count + M22];
-	aMXPtr[M23] = lara_matrices[LMX_TORSO * indices_count + M23];
+	aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
+	aMXPtr->m01 = lara_matrices[LMX_TORSO * indices_count + M01];
+	aMXPtr->m02 = lara_matrices[LMX_TORSO * indices_count + M02];
+	aMXPtr->m03 = lara_matrices[LMX_TORSO * indices_count + M03];
+	aMXPtr->m10 = lara_matrices[LMX_TORSO * indices_count + M10];
+	aMXPtr->m11 = lara_matrices[LMX_TORSO * indices_count + M11];
+	aMXPtr->m12 = lara_matrices[LMX_TORSO * indices_count + M12];
+	aMXPtr->m13 = lara_matrices[LMX_TORSO * indices_count + M13];
+	aMXPtr->m20 = lara_matrices[LMX_TORSO * indices_count + M20];
+	aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
+	aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
+	aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
 	phd_TranslateRel(80, -192, -160);
 	phd_RotX(subsuit.XRot);
 	phd_PutPolygons(*meshpp, -1);
@@ -579,18 +579,18 @@ static void DrawLara__6(ITEM_INFO* item, long mirror)
 
 	for (int i = 0; i < 15; i++)
 	{
-		aMXPtr[M00] = lara_matrices[i * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[i * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[i * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[i * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[i * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[i * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[i * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[i * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[i * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[i * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[i * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[i * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[i * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[i * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[i * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[i * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[i * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[i * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[i * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[i * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[i * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[i * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[i * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[i * indices_count + M23];
 
 		if (LaraNodeUnderwater[i])
 			bLaraUnderWater = i;
@@ -634,18 +634,18 @@ static void DrawLara__6(ITEM_INFO* item, long mirror)
 		else
 		{
 			phd_PushMatrix();
-			aMXPtr[M00] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M00];
-			aMXPtr[M01] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M01];
-			aMXPtr[M02] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M02];
-			aMXPtr[M03] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M03];
-			aMXPtr[M10] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M10];
-			aMXPtr[M11] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M11];
-			aMXPtr[M12] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M12];
-			aMXPtr[M13] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M13];
-			aMXPtr[M20] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M20];
-			aMXPtr[M21] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M21];
-			aMXPtr[M22] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M22];
-			aMXPtr[M23] = lara_matrices[SkinUseMatrix[i][1] * indices_count + M23];
+			aMXPtr->m00 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M00];
+			aMXPtr->m01 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M01];
+			aMXPtr->m02 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M02];
+			aMXPtr->m03 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M03];
+			aMXPtr->m10 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M10];
+			aMXPtr->m11 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M11];
+			aMXPtr->m12 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M12];
+			aMXPtr->m13 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M13];
+			aMXPtr->m20 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M20];
+			aMXPtr->m21 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M21];
+			aMXPtr->m22 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M22];
+			aMXPtr->m23 = lara_matrices[SkinUseMatrix[i][1] * indices_count + M23];
 
 			v0.x = lara_matrices[SkinUseMatrix[i][0] * indices_count + M01];
 			v0.y = lara_matrices[SkinUseMatrix[i][0] * indices_count + M11];
@@ -680,18 +680,18 @@ static void DrawLara__6(ITEM_INFO* item, long mirror)
 	if (lara.back_gun)
 	{
 		phd_PushMatrix();
-		aMXPtr[M00] = lara_matrices[LMX_TORSO * indices_count + M00];
-		aMXPtr[M01] = lara_matrices[LMX_TORSO * indices_count + M01];
-		aMXPtr[M02] = lara_matrices[LMX_TORSO * indices_count + M02];
-		aMXPtr[M03] = lara_matrices[LMX_TORSO * indices_count + M03];
-		aMXPtr[M10] = lara_matrices[LMX_TORSO * indices_count + M10];
-		aMXPtr[M11] = lara_matrices[LMX_TORSO * indices_count + M11];
-		aMXPtr[M12] = lara_matrices[LMX_TORSO * indices_count + M12];
-		aMXPtr[M13] = lara_matrices[LMX_TORSO * indices_count + M13];
-		aMXPtr[M20] = lara_matrices[LMX_TORSO * indices_count + M20];
-		aMXPtr[M21] = lara_matrices[LMX_TORSO * indices_count + M21];
-		aMXPtr[M22] = lara_matrices[LMX_TORSO * indices_count + M22];
-		aMXPtr[M23] = lara_matrices[LMX_TORSO * indices_count + M23];
+		aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
+		aMXPtr->m01 = lara_matrices[LMX_TORSO * indices_count + M01];
+		aMXPtr->m02 = lara_matrices[LMX_TORSO * indices_count + M02];
+		aMXPtr->m03 = lara_matrices[LMX_TORSO * indices_count + M03];
+		aMXPtr->m10 = lara_matrices[LMX_TORSO * indices_count + M10];
+		aMXPtr->m11 = lara_matrices[LMX_TORSO * indices_count + M11];
+		aMXPtr->m12 = lara_matrices[LMX_TORSO * indices_count + M12];
+		aMXPtr->m13 = lara_matrices[LMX_TORSO * indices_count + M13];
+		aMXPtr->m20 = lara_matrices[LMX_TORSO * indices_count + M20];
+		aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
+		aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
+		aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
 		bone = objects[lara.back_gun].bone_index;
 		phd_TranslateRel(bones[bone + 53], bones[bone + 54], bones[bone + 55]);
 		rot = objects[lara.back_gun].frame_base + 9;

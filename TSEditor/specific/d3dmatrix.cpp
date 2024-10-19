@@ -10,21 +10,25 @@ D3DMATRIX D3DInvCameraMatrix;
 
 static D3DMATRIX D3DMWorld;
 
-void SetD3DMatrix(D3DMATRIX* mx, float* imx)
+void SetD3DMatrix(D3DMATRIX* mx, FMatrix* imx)
 {
 	D3DIdentityMatrix(mx);
-	mx->_11 = imx[M00];
-	mx->_12 = imx[M10];
-	mx->_13 = imx[M20];
-	mx->_21 = imx[M01];
-	mx->_22 = imx[M11];
-	mx->_23 = imx[M21];
-	mx->_31 = imx[M02];
-	mx->_32 = imx[M12];
-	mx->_33 = imx[M22];
-	mx->_41 = imx[M03];
-	mx->_42 = imx[M13];
-	mx->_43 = imx[M23];
+
+	mx->_11 = imx->m00;
+	mx->_12 = imx->m10;
+	mx->_13 = imx->m20;
+
+	mx->_21 = imx->m01;
+	mx->_22 = imx->m11;
+	mx->_23 = imx->m21;
+
+	mx->_31 = imx->m02;
+	mx->_32 = imx->m12;
+	mx->_33 = imx->m22;
+
+	mx->_41 = imx->m03;
+	mx->_42 = imx->m13;
+	mx->_43 = imx->m23;
 }
 
 LPD3DMATRIX D3DIdentityMatrix(LPD3DMATRIX matrix)
@@ -51,18 +55,18 @@ LPD3DMATRIX D3DIdentityMatrix(LPD3DMATRIX matrix)
 void SaveD3DCameraMatrix()
 {
 	D3DIdentityMatrix(&D3DCameraMatrix);
-	D3DCameraMatrix._11 = aMXPtr[M00];
-	D3DCameraMatrix._12 = aMXPtr[M10];
-	D3DCameraMatrix._13 = aMXPtr[M20];
-	D3DCameraMatrix._21 = aMXPtr[M01];
-	D3DCameraMatrix._22 = aMXPtr[M11];
-	D3DCameraMatrix._23 = aMXPtr[M21];
-	D3DCameraMatrix._31 = aMXPtr[M02];
-	D3DCameraMatrix._32 = aMXPtr[M12];
-	D3DCameraMatrix._33 = aMXPtr[M22];
-	D3DCameraMatrix._41 = aMXPtr[M03];
-	D3DCameraMatrix._42 = aMXPtr[M13];
-	D3DCameraMatrix._43 = aMXPtr[M23];
+	D3DCameraMatrix._11 = aMXPtr->m00;
+	D3DCameraMatrix._12 = aMXPtr->m10;
+	D3DCameraMatrix._13 = aMXPtr->m20;
+	D3DCameraMatrix._21 = aMXPtr->m01;
+	D3DCameraMatrix._22 = aMXPtr->m11;
+	D3DCameraMatrix._23 = aMXPtr->m21;
+	D3DCameraMatrix._31 = aMXPtr->m02;
+	D3DCameraMatrix._32 = aMXPtr->m12;
+	D3DCameraMatrix._33 = aMXPtr->m22;
+	D3DCameraMatrix._41 = aMXPtr->m03;
+	D3DCameraMatrix._42 = aMXPtr->m13;
+	D3DCameraMatrix._43 = aMXPtr->m23;
 }
 
 void S_InitD3DMatrix()
@@ -74,7 +78,6 @@ void S_InitD3DMatrix()
 D3DVECTOR* D3DNormalise(D3DVECTOR* vec)
 {
 	float val;
-
 	if (vec->x != 0 || vec->y != 0 || vec->z != 0)
 	{
 		val = 1.0F / sqrt(SQUARE(vec->x) + SQUARE(vec->y) + SQUARE(vec->z));
@@ -82,7 +85,6 @@ D3DVECTOR* D3DNormalise(D3DVECTOR* vec)
 		vec->y = val * vec->y;
 		vec->z = val * vec->z;
 	}
-
 	return vec;
 }
 

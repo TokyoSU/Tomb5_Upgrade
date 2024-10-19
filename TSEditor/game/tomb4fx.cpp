@@ -621,9 +621,9 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags)
 			if (fx_number != NO_ITEM)
 			{
 				fx = &effects[fx_number];
-				fx->pos.x_pos = item->pos.x_pos + (phd_mxptr[M03] >> W2V_SHIFT);
-				fx->pos.y_pos = item->pos.y_pos + (phd_mxptr[M13] >> W2V_SHIFT);
-				fx->pos.z_pos = item->pos.z_pos + (phd_mxptr[M23] >> W2V_SHIFT);
+				fx->pos.x_pos = item->pos.x_pos + (phd_mxptr->m03 >> W2V_SHIFT);
+				fx->pos.y_pos = item->pos.y_pos + (phd_mxptr->m13 >> W2V_SHIFT);
+				fx->pos.z_pos = item->pos.z_pos + (phd_mxptr->m23 >> W2V_SHIFT);
 				fx->room_number = item->room_number;
 				fx->pos.x_rot = 0;
 				fx->pos.y_rot = 0;
@@ -707,9 +707,9 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags)
 			if (fx_number != NO_ITEM)
 			{
 				fx = &effects[fx_number];
-				fx->pos.x_pos = item->pos.x_pos + (phd_mxptr[M03] >> W2V_SHIFT);
-				fx->pos.y_pos = item->pos.y_pos + (phd_mxptr[M13] >> W2V_SHIFT);
-				fx->pos.z_pos = item->pos.z_pos + (phd_mxptr[M23] >> W2V_SHIFT);
+				fx->pos.x_pos = item->pos.x_pos + (phd_mxptr->m03 >> W2V_SHIFT);
+				fx->pos.y_pos = item->pos.y_pos + (phd_mxptr->m13 >> W2V_SHIFT);
+				fx->pos.z_pos = item->pos.z_pos + (phd_mxptr->m23 >> W2V_SHIFT);
 				fx->room_number = item->room_number;
 				fx->pos.x_rot = 0;
 				fx->pos.y_rot = 0;
@@ -807,18 +807,18 @@ void SetGunFlash(short weapon)
 	flash->on = 1;
 	phd_TranslateRel(0, y, z);
 	phd_RotX(xrot);
-	*(float*)(flash->mx + M00) = aMXPtr[M00];
-	*(float*)(flash->mx + M01) = aMXPtr[M01];
-	*(float*)(flash->mx + M02) = aMXPtr[M02];
-	*(float*)(flash->mx + M03) = aMXPtr[M03];
-	*(float*)(flash->mx + M10) = aMXPtr[M10];
-	*(float*)(flash->mx + M11) = aMXPtr[M11];
-	*(float*)(flash->mx + M12) = aMXPtr[M12];
-	*(float*)(flash->mx + M13) = aMXPtr[M13];
-	*(float*)(flash->mx + M20) = aMXPtr[M20];
-	*(float*)(flash->mx + M21) = aMXPtr[M21];
-	*(float*)(flash->mx + M22) = aMXPtr[M22];
-	*(float*)(flash->mx + M23) = aMXPtr[M23];
+	*(float*)(flash->mx + M00) = aMXPtr->m00;
+	*(float*)(flash->mx + M01) = aMXPtr->m01;
+	*(float*)(flash->mx + M02) = aMXPtr->m02;
+	*(float*)(flash->mx + M03) = aMXPtr->m03;
+	*(float*)(flash->mx + M10) = aMXPtr->m10;
+	*(float*)(flash->mx + M11) = aMXPtr->m11;
+	*(float*)(flash->mx + M12) = aMXPtr->m12;
+	*(float*)(flash->mx + M13) = aMXPtr->m13;
+	*(float*)(flash->mx + M20) = aMXPtr->m20;
+	*(float*)(flash->mx + M21) = aMXPtr->m21;
+	*(float*)(flash->mx + M22) = aMXPtr->m22;
+	*(float*)(flash->mx + M23) = aMXPtr->m23;
 }
 
 void DrawGunflashes()
@@ -841,18 +841,18 @@ void DrawGunflashes()
 		if (!flash->on)
 			break;
 
-		aMXPtr[M00] = *(float*)(flash->mx + M00);
-		aMXPtr[M01] = *(float*)(flash->mx + M01);
-		aMXPtr[M02] = *(float*)(flash->mx + M02);
-		aMXPtr[M03] = *(float*)(flash->mx + M03);
-		aMXPtr[M10] = *(float*)(flash->mx + M10);
-		aMXPtr[M11] = *(float*)(flash->mx + M11);
-		aMXPtr[M12] = *(float*)(flash->mx + M12);
-		aMXPtr[M13] = *(float*)(flash->mx + M13);
-		aMXPtr[M20] = *(float*)(flash->mx + M20);
-		aMXPtr[M21] = *(float*)(flash->mx + M21);
-		aMXPtr[M22] = *(float*)(flash->mx + M22);
-		aMXPtr[M23] = *(float*)(flash->mx + M23);
+		aMXPtr->m00 = *(float*)(flash->mx + M00);
+		aMXPtr->m01 = *(float*)(flash->mx + M01);
+		aMXPtr->m02 = *(float*)(flash->mx + M02);
+		aMXPtr->m03 = *(float*)(flash->mx + M03);
+		aMXPtr->m10 = *(float*)(flash->mx + M10);
+		aMXPtr->m11 = *(float*)(flash->mx + M11);
+		aMXPtr->m12 = *(float*)(flash->mx + M12);
+		aMXPtr->m13 = *(float*)(flash->mx + M13);
+		aMXPtr->m20 = *(float*)(flash->mx + M20);
+		aMXPtr->m21 = *(float*)(flash->mx + M21);
+		aMXPtr->m22 = *(float*)(flash->mx + M22);
+		aMXPtr->m23 = *(float*)(flash->mx + M23);
 		phd_RotZ(short(GetRandomDraw() << 1));
 		GlobalAmbient = 0xFF2F2F00;
 		phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], -1);
@@ -882,32 +882,32 @@ void trig_actor_gunflash(long* mx, PHD_VECTOR* pos)
 	p->on = 1;
 
 	phd_PushMatrix();
-	aMXPtr[M00] = *(float*)(mx + M00);
-	aMXPtr[M01] = *(float*)(mx + M01);
-	aMXPtr[M02] = *(float*)(mx + M02);
-	aMXPtr[M03] = *(float*)(mx + M03);
-	aMXPtr[M10] = *(float*)(mx + M10);
-	aMXPtr[M11] = *(float*)(mx + M11);
-	aMXPtr[M12] = *(float*)(mx + M12);
-	aMXPtr[M13] = *(float*)(mx + M13);
-	aMXPtr[M20] = *(float*)(mx + M20);
-	aMXPtr[M21] = *(float*)(mx + M21);
-	aMXPtr[M22] = *(float*)(mx + M22);
-	aMXPtr[M23] = *(float*)(mx + M23);
+	aMXPtr->m00 = *(float*)(mx + M00);
+	aMXPtr->m01 = *(float*)(mx + M01);
+	aMXPtr->m02 = *(float*)(mx + M02);
+	aMXPtr->m03 = *(float*)(mx + M03);
+	aMXPtr->m10 = *(float*)(mx + M10);
+	aMXPtr->m11 = *(float*)(mx + M11);
+	aMXPtr->m12 = *(float*)(mx + M12);
+	aMXPtr->m13 = *(float*)(mx + M13);
+	aMXPtr->m20 = *(float*)(mx + M20);
+	aMXPtr->m21 = *(float*)(mx + M21);
+	aMXPtr->m22 = *(float*)(mx + M22);
+	aMXPtr->m23 = *(float*)(mx + M23);
 	phd_TranslateRel(pos->x, pos->y, pos->z);
 	phd_RotX(-0x4000);
-	*(float*)(p->mx + M00) = aMXPtr[M00];
-	*(float*)(p->mx + M01) = aMXPtr[M01];
-	*(float*)(p->mx + M02) = aMXPtr[M02];
-	*(float*)(p->mx + M03) = aMXPtr[M03];
-	*(float*)(p->mx + M10) = aMXPtr[M10];
-	*(float*)(p->mx + M11) = aMXPtr[M11];
-	*(float*)(p->mx + M12) = aMXPtr[M12];
-	*(float*)(p->mx + M13) = aMXPtr[M13];
-	*(float*)(p->mx + M20) = aMXPtr[M20];
-	*(float*)(p->mx + M21) = aMXPtr[M21];
-	*(float*)(p->mx + M22) = aMXPtr[M22];
-	*(float*)(p->mx + M23) = aMXPtr[M23];
+	*(float*)(p->mx + M00) = aMXPtr->m00;
+	*(float*)(p->mx + M01) = aMXPtr->m01;
+	*(float*)(p->mx + M02) = aMXPtr->m02;
+	*(float*)(p->mx + M03) = aMXPtr->m03;
+	*(float*)(p->mx + M10) = aMXPtr->m10;
+	*(float*)(p->mx + M11) = aMXPtr->m11;
+	*(float*)(p->mx + M12) = aMXPtr->m12;
+	*(float*)(p->mx + M13) = aMXPtr->m13;
+	*(float*)(p->mx + M20) = aMXPtr->m20;
+	*(float*)(p->mx + M21) = aMXPtr->m21;
+	*(float*)(p->mx + M22) = aMXPtr->m22;
+	*(float*)(p->mx + M23) = aMXPtr->m23;
 	phd_PopMatrix();
 }
 

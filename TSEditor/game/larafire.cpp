@@ -810,17 +810,17 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 
 	if (best < 0)
 	{
-		bum_vdest.x = bum_vsrc.x + (20480 * phd_mxptr[M20] >> W2V_SHIFT);
-		bum_vdest.y = bum_vsrc.y + (20480 * phd_mxptr[M21] >> W2V_SHIFT);
-		bum_vdest.z = bum_vsrc.z + (20480 * phd_mxptr[M22] >> W2V_SHIFT);
+		bum_vdest.x = bum_vsrc.x + (20480 * phd_mxptr->m20 >> W2V_SHIFT);
+		bum_vdest.y = bum_vsrc.y + (20480 * phd_mxptr->m21 >> W2V_SHIFT);
+		bum_vdest.z = bum_vsrc.z + (20480 * phd_mxptr->m22 >> W2V_SHIFT);
 		GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1);
 		return -1;
 	}
 
 	savegame.Game.AmmoHits++;
-	bum_vdest.x = bum_vsrc.x + (bestdist * phd_mxptr[M20] >> W2V_SHIFT);
-	bum_vdest.y = bum_vsrc.y + (bestdist * phd_mxptr[M21] >> W2V_SHIFT);
-	bum_vdest.z = bum_vsrc.z + (bestdist * phd_mxptr[M22] >> W2V_SHIFT);
+	bum_vdest.x = bum_vsrc.x + (bestdist * phd_mxptr->m20 >> W2V_SHIFT);
+	bum_vdest.y = bum_vsrc.y + (bestdist * phd_mxptr->m21 >> W2V_SHIFT);
+	bum_vdest.z = bum_vsrc.z + (bestdist * phd_mxptr->m22 >> W2V_SHIFT);
 
 	if (!GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1))
 		HitTarget(target, &bum_vdest, winfo->damage, 0);

@@ -54,12 +54,12 @@ extern float f_boo;
 
 extern float fcossin_tbl[65536];
 
-extern float* aMXPtr;
-extern float aFMatrixStack[20 * indices_count];
+extern FMatrix* aMXPtr;
+extern FMatrix aFMatrixStack[20];
 
-extern long* phd_mxptr;
-extern long w2v_matrix[indices_count];
-extern long matrix_stack[20 * indices_count];
+extern Matrix* phd_mxptr;
+extern Matrix w2v_matrix;
+extern Matrix matrix_stack[20];
 
 extern long phd_winheight;
 extern long phd_winwidth;

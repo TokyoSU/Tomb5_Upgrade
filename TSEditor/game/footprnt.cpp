@@ -52,9 +52,9 @@ void AddFootprint(ITEM_INFO* item)
 
 static void ProjectTriPoints(FVECTOR pos, float& x, float& y, float& z)
 {
-	x = aMXPtr[M00] * pos.x + aMXPtr[M01] * pos.y + aMXPtr[M02] * pos.z + aMXPtr[M03];
-	y = aMXPtr[M10] * pos.x + aMXPtr[M11] * pos.y + aMXPtr[M12] * pos.z + aMXPtr[M13];
-	z = aMXPtr[M20] * pos.x + aMXPtr[M21] * pos.y + aMXPtr[M22] * pos.z + aMXPtr[M23];
+	x = aMXPtr->m00 * pos.x + aMXPtr->m01 * pos.y + aMXPtr->m02 * pos.z + aMXPtr->m03;
+	y = aMXPtr->m10 * pos.x + aMXPtr->m11 * pos.y + aMXPtr->m12 * pos.z + aMXPtr->m13;
+	z = aMXPtr->m20 * pos.x + aMXPtr->m21 * pos.y + aMXPtr->m22 * pos.z + aMXPtr->m23;
 }
 
 void S_DrawFootPrints()
@@ -100,8 +100,8 @@ void S_DrawFootPrints()
 			
 			for (int j = 0; j < 3; j++)
 			{
-				x = long(pos[j].x * aMXPtr[M00] + pos[j].z * aMXPtr[M02] + aMXPtr[M03]);
-				z = long(pos[j].x * aMXPtr[M20] + pos[j].z * aMXPtr[M22] + aMXPtr[M23]);
+				x = long(pos[j].x * aMXPtr->m00 + pos[j].z * aMXPtr->m02 + aMXPtr->m03);
+				z = long(pos[j].x * aMXPtr->m20 + pos[j].z * aMXPtr->m22 + aMXPtr->m23);
 
 				room_number = lara_item->room_number;
 				floor = GetFloor(x, print->y, z, &room_number);

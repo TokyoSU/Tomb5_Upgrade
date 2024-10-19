@@ -19,6 +19,7 @@
 #define	CLRB(clr)	((clr) & 0xFF)			//and 0xFF
 
 // Misc
+
 #define SCRIPT_TEXT(num)		(&gfStringWad[gfStringOffset[num]])
 #define NO_HEIGHT -32512
 #define	NO_ITEM	-1
@@ -37,6 +38,7 @@
 #define MAX_RIPPLES 128
 
 /*typedefs*/
+
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;
@@ -474,6 +476,42 @@ enum trigobj_types
 
 /*structs*/
 
+struct Matrix
+{
+	int m00;
+	int m01;
+	int m02;
+	int m03;
+
+	int m10;
+	int m11;
+	int m12;
+	int m13;
+
+	int m20;
+	int m21;
+	int m22;
+	int m23;
+};
+
+struct FMatrix
+{
+	float m00;
+	float m01;
+	float m02;
+	float m03;
+
+	float m10;
+	float m11;
+	float m12;
+	float m13;
+
+	float m20;
+	float m21;
+	float m22;
+	float m23;
+};
+
 struct KeyButton
 {
 	SDL_Scancode code;
@@ -555,12 +593,13 @@ struct PHD_VECTOR
 
 struct PHD_3DPOS
 {
-	long x_pos;
-	long y_pos;
-	long z_pos;
-	short x_rot;
-	short y_rot;
-	short z_rot;
+	long x_pos = 0;
+	long y_pos = 0;
+	long z_pos = 0;
+	short x_rot = 0;
+	short y_rot = 0;
+	short z_rot = 0;
+	PHD_3DPOS() = default;
 };
 
 struct SVECTOR

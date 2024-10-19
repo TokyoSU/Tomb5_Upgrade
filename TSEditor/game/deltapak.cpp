@@ -3232,9 +3232,9 @@ void GetJointAbsPositionCutSeq(ITEM_INFO* item, OBJECT_INFO* obj, short* rot, PH
 	phd_TranslateRel(rot[6], rot[7], rot[8]);
 	rotation1 = rot + 9;
 	gar_RotYXZsuperpack(&rotation1, 0);
-	pos->x = phd_mxptr[M03] >> W2V_SHIFT;
-	pos->y = phd_mxptr[M13] >> W2V_SHIFT;
-	pos->z = phd_mxptr[M23] >> W2V_SHIFT;
+	pos->x = phd_mxptr->m03 >> W2V_SHIFT;
+	pos->y = phd_mxptr->m13 >> W2V_SHIFT;
+	pos->z = phd_mxptr->m23 >> W2V_SHIFT;
 	pos->x += item->pos.x_pos;
 	pos->y += item->pos.y_pos;
 	pos->z += item->pos.z_pos;
@@ -3328,18 +3328,18 @@ void GrabActorMatrix(long actornum, ulong nodenum, long* matrixstash)
 
 	if (nodenum == bit)
 	{
-		*(float*)&matrixstash[M00] = aMXPtr[M00];
-		*(float*)&matrixstash[M01] = aMXPtr[M01];
-		*(float*)&matrixstash[M02] = aMXPtr[M02];
-		*(float*)&matrixstash[M03] = aMXPtr[M03];
-		*(float*)&matrixstash[M10] = aMXPtr[M10];
-		*(float*)&matrixstash[M11] = aMXPtr[M11];
-		*(float*)&matrixstash[M12] = aMXPtr[M12];
-		*(float*)&matrixstash[M13] = aMXPtr[M13];
-		*(float*)&matrixstash[M20] = aMXPtr[M20];
-		*(float*)&matrixstash[M21] = aMXPtr[M21];
-		*(float*)&matrixstash[M22] = aMXPtr[M22];
-		*(float*)&matrixstash[M23] = aMXPtr[M23];
+		*(float*)&matrixstash[M00] = aMXPtr->m00;
+		*(float*)&matrixstash[M01] = aMXPtr->m01;
+		*(float*)&matrixstash[M02] = aMXPtr->m02;
+		*(float*)&matrixstash[M03] = aMXPtr->m03;
+		*(float*)&matrixstash[M10] = aMXPtr->m10;
+		*(float*)&matrixstash[M11] = aMXPtr->m11;
+		*(float*)&matrixstash[M12] = aMXPtr->m12;
+		*(float*)&matrixstash[M13] = aMXPtr->m13;
+		*(float*)&matrixstash[M20] = aMXPtr->m20;
+		*(float*)&matrixstash[M21] = aMXPtr->m21;
+		*(float*)&matrixstash[M22] = aMXPtr->m22;
+		*(float*)&matrixstash[M23] = aMXPtr->m23;
 	}
 
 	for (int i = 0; i < obj->nmeshes - 1; i++, bone += 4)
@@ -3356,18 +3356,18 @@ void GrabActorMatrix(long actornum, ulong nodenum, long* matrixstash)
 
 		if (nodenum == bit)
 		{
-			*(float*)&matrixstash[M00] = aMXPtr[M00];
-			*(float*)&matrixstash[M01] = aMXPtr[M01];
-			*(float*)&matrixstash[M02] = aMXPtr[M02];
-			*(float*)&matrixstash[M03] = aMXPtr[M03];
-			*(float*)&matrixstash[M10] = aMXPtr[M10];
-			*(float*)&matrixstash[M11] = aMXPtr[M11];
-			*(float*)&matrixstash[M12] = aMXPtr[M12];
-			*(float*)&matrixstash[M13] = aMXPtr[M13];
-			*(float*)&matrixstash[M20] = aMXPtr[M20];
-			*(float*)&matrixstash[M21] = aMXPtr[M21];
-			*(float*)&matrixstash[M22] = aMXPtr[M22];
-			*(float*)&matrixstash[M23] = aMXPtr[M23];
+			*(float*)&matrixstash[M00] = aMXPtr->m00;
+			*(float*)&matrixstash[M01] = aMXPtr->m01;
+			*(float*)&matrixstash[M02] = aMXPtr->m02;
+			*(float*)&matrixstash[M03] = aMXPtr->m03;
+			*(float*)&matrixstash[M10] = aMXPtr->m10;
+			*(float*)&matrixstash[M11] = aMXPtr->m11;
+			*(float*)&matrixstash[M12] = aMXPtr->m12;
+			*(float*)&matrixstash[M13] = aMXPtr->m13;
+			*(float*)&matrixstash[M20] = aMXPtr->m20;
+			*(float*)&matrixstash[M21] = aMXPtr->m21;
+			*(float*)&matrixstash[M22] = aMXPtr->m22;
+			*(float*)&matrixstash[M23] = aMXPtr->m23;
 		}
 	}
 
@@ -3464,9 +3464,9 @@ void GetActorJointAbsPosition(long actornum, ulong nodenum, PHD_VECTOR* vec)
 	}
 
 	phd_TranslateRel(vec->x, vec->y, vec->z);
-	vec->x = phd_mxptr[M03] >> W2V_SHIFT;
-	vec->y = phd_mxptr[M13] >> W2V_SHIFT;
-	vec->z = phd_mxptr[M23] >> W2V_SHIFT;
+	vec->x = phd_mxptr->m03 >> W2V_SHIFT;
+	vec->y = phd_mxptr->m13 >> W2V_SHIFT;
+	vec->z = phd_mxptr->m23 >> W2V_SHIFT;
 	vec->x += item->pos.x_pos;
 	vec->y += item->pos.y_pos;
 	vec->z += item->pos.z_pos;

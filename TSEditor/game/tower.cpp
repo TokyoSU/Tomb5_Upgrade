@@ -901,9 +901,9 @@ void DrawSteelDoorLensFlare(ITEM_INFO* item)
 	dx = SteelDoorLensPos.x - item->pos.x_pos;
 	dy = SteelDoorLensPos.y - item->pos.y_pos;
 	dz = SteelDoorLensPos.z - item->pos.z_pos;
-	pos.x = aMXPtr[M00] * dx + aMXPtr[M01] * dy + aMXPtr[M02] * dz + aMXPtr[M03];
-	pos.y = aMXPtr[M10] * dx + aMXPtr[M11] * dy + aMXPtr[M12] * dz + aMXPtr[M13];
-	pos.z = aMXPtr[M20] * dx + aMXPtr[M21] * dy + aMXPtr[M22] * dz + aMXPtr[M23];
+	pos.x = aMXPtr->m00 * dx + aMXPtr->m01 * dy + aMXPtr->m02 * dz + aMXPtr->m03;
+	pos.y = aMXPtr->m10 * dx + aMXPtr->m11 * dy + aMXPtr->m12 * dz + aMXPtr->m13;
+	pos.z = aMXPtr->m20 * dx + aMXPtr->m21 * dy + aMXPtr->m22 * dz + aMXPtr->m23;
 	zv = f_persp / pos.z;
 	x = long(pos.x * zv + f_centerx);
 	y = long(pos.y * zv + f_centery);

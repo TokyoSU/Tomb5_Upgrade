@@ -694,9 +694,9 @@ void DrawPortalDoor(ITEM_INFO* item)
 		p = &points[i];
 		rgb = &portal->rgb[i];
 
-		fx = aMXPtr[M00] * p->x + aMXPtr[M01] * p->y + aMXPtr[M02] * p->z + aMXPtr[M03];
-		fy = aMXPtr[M10] * p->x + aMXPtr[M11] * p->y + aMXPtr[M12] * p->z + aMXPtr[M13];
-		fz = aMXPtr[M20] * p->x + aMXPtr[M21] * p->y + aMXPtr[M22] * p->z + aMXPtr[M23];
+		fx = aMXPtr->m00 * p->x + aMXPtr->m01 * p->y + aMXPtr->m02 * p->z + aMXPtr->m03;
+		fy = aMXPtr->m10 * p->x + aMXPtr->m11 * p->y + aMXPtr->m12 * p->z + aMXPtr->m13;
+		fz = aMXPtr->m20 * p->x + aMXPtr->m21 * p->y + aMXPtr->m22 * p->z + aMXPtr->m23;
 
 		zv = f_persp / fz;
 		v[i].sx = fx * zv + f_centerx;

@@ -32,8 +32,8 @@ void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds);
 void PrintRooms(short room_number);
 void DrawStaticObjects(short room_number);
 void InterpolateMatrix();
-void InterpolateArmMatrix(long* mx);
-void aInterpolateArmMatrix(float* mx);
+void InterpolateArmMatrix(Matrix* mx);
+void aInterpolateArmMatrix(FMatrix* mx);
 void DrawEffect(short fx_num);
 void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds);
 void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom);
@@ -41,10 +41,10 @@ void GetRoomBounds();
 
 extern STATIC_INFO static_objects[70];
 
-extern float* aIMXPtr;
-extern float aIFMStack[768];
-extern long* IMptr;
-extern long IMstack[768];
+extern FMatrix* aIMXPtr;
+extern FMatrix aIFMStack[40];
+extern Matrix* IMptr;
+extern Matrix IMstack[40];
 extern long IM_rate;
 extern long IM_frac;
 

@@ -39,10 +39,10 @@
 
 STATIC_INFO static_objects[70];
 
-float* aIMXPtr;
-float aIFMStack[768];
-long* IMptr;
-long IMstack[768];
+FMatrix* aIMXPtr;
+FMatrix aIFMStack[40];
+Matrix* IMptr;
+Matrix IMstack[40];
 long IM_rate;
 long IM_frac;
 
@@ -133,8 +133,8 @@ void phd_PushMatrix_I()
 
 void phd_RotY_I(short ang)
 {
-	float* amxptr;
-	long* mxptr;
+	FMatrix* amxptr;
+	Matrix* mxptr;
 
 	phd_RotY(ang);
 	mxptr = phd_mxptr;
@@ -148,8 +148,8 @@ void phd_RotY_I(short ang)
 
 void phd_RotX_I(short ang)
 {
-	float* amxptr;
-	long* mxptr;
+	FMatrix* amxptr;
+	Matrix* mxptr;
 
 	phd_RotX(ang);
 	mxptr = phd_mxptr;
@@ -163,8 +163,8 @@ void phd_RotX_I(short ang)
 
 void phd_RotZ_I(short ang)
 {
-	float* amxptr;
-	long* mxptr;
+	FMatrix* amxptr;
+	Matrix* mxptr;
 
 	phd_RotZ(ang);
 	mxptr = phd_mxptr;
@@ -178,8 +178,8 @@ void phd_RotZ_I(short ang)
 
 void phd_TranslateRel_I(long x, long y, long z)
 {
-	float* amxptr;
-	long* mxptr;
+	FMatrix* amxptr;
+	Matrix* mxptr;
 
 	phd_TranslateRel(x, y, z);
 	mxptr = phd_mxptr;
@@ -193,8 +193,8 @@ void phd_TranslateRel_I(long x, long y, long z)
 
 void phd_TranslateRel_ID(long x, long y, long z, long x2, long y2, long z2)
 {
-	float* amxptr;
-	long* mxptr;
+	FMatrix* amxptr;
+	Matrix* mxptr;
 
 	phd_TranslateRel(x, y, z);
 	mxptr = phd_mxptr;
@@ -208,8 +208,8 @@ void phd_TranslateRel_ID(long x, long y, long z, long x2, long y2, long z2)
 
 void phd_RotYXZ_I(short y, short x, short z)
 {
-	float* amxptr;
-	long* mxptr;
+	FMatrix* amxptr;
+	Matrix* mxptr;
 
 	phd_RotYXZ(y, x, z);
 	mxptr = phd_mxptr;
@@ -223,8 +223,8 @@ void phd_RotYXZ_I(short y, short x, short z)
 
 void gar_RotYXZsuperpack_I(short** pprot1, short** pprot2, long skip)
 {
-	float* amxptr;
-	long* mxptr;
+	FMatrix* amxptr;
+	Matrix* mxptr;
 
 	gar_RotYXZsuperpack(pprot1, skip);
 	mxptr = phd_mxptr;
@@ -289,26 +289,26 @@ void phd_PutPolygons_I(short* ptr, long clip)
 
 void aInterpolateMatrix()
 {
-	float* matrixp;
-	float* iMatrixp;
+	FMatrix* matrixp;
+	FMatrix* iMatrixp;
 
 	matrixp = aMXPtr;
 	iMatrixp = aIMXPtr;
 
 	if (IM_rate == 2)
 	{
-		matrixp[0] = (iMatrixp[0] + matrixp[0]) * 0.5F;
-		matrixp[1] = (iMatrixp[1] + matrixp[1]) * 0.5F;
-		matrixp[2] = (iMatrixp[2] + matrixp[2]) * 0.5F;
-		matrixp[3] = (iMatrixp[3] + matrixp[3]) * 0.5F;
-		matrixp[4] = (iMatrixp[4] + matrixp[4]) * 0.5F;
-		matrixp[5] = (iMatrixp[5] + matrixp[5]) * 0.5F;
-		matrixp[6] = (iMatrixp[6] + matrixp[6]) * 0.5F;
-		matrixp[7] = (iMatrixp[7] + matrixp[7]) * 0.5F;
-		matrixp[8] = (iMatrixp[8] + matrixp[8]) * 0.5F;
-		matrixp[9] = (iMatrixp[9] + matrixp[9]) * 0.5F;
-		matrixp[10] = (iMatrixp[10] + matrixp[10]) * 0.5F;
-		matrixp[11] = (iMatrixp[11] + matrixp[11]) * 0.5F;
+		matrixp->m00 = (iMatrixp->m00 + matrixp->m00) * 0.5F;
+		matrixp->m01 = (iMatrixp->m01 + matrixp->m01) * 0.5F;
+		matrixp->m02 = (iMatrixp->m02 + matrixp->m02) * 0.5F;
+		matrixp->m03 = (iMatrixp->m03 + matrixp->m03) * 0.5F;
+		matrixp->m10 = (iMatrixp->m10 + matrixp->m10) * 0.5F;
+		matrixp->m11 = (iMatrixp->m11 + matrixp->m11) * 0.5F;
+		matrixp->m12 = (iMatrixp->m12 + matrixp->m12) * 0.5F;
+		matrixp->m13 = (iMatrixp->m13 + matrixp->m13) * 0.5F;
+		matrixp->m20 = (iMatrixp->m20 + matrixp->m20) * 0.5F;
+		matrixp->m21 = (iMatrixp->m21 + matrixp->m21) * 0.5F;
+		matrixp->m22 = (iMatrixp->m22 + matrixp->m22) * 0.5F;
+		matrixp->m23 = (iMatrixp->m23 + matrixp->m23) * 0.5F;
 		return;
 	}
 
@@ -316,65 +316,65 @@ void aInterpolateMatrix()
 	{
 		if (IM_rate != 4)
 		{
-			matrixp[0] = iMatrixp[0] - (iMatrixp[0] - matrixp[0]) * 0.25F;
-			matrixp[1] = iMatrixp[1] - (iMatrixp[1] - matrixp[1]) * 0.25F;
-			matrixp[2] = iMatrixp[2] - (iMatrixp[2] - matrixp[2]) * 0.25F;
-			matrixp[3] = iMatrixp[3] - (iMatrixp[3] - matrixp[3]) * 0.25F;
-			matrixp[4] = iMatrixp[4] - (iMatrixp[4] - matrixp[4]) * 0.25F;
-			matrixp[5] = iMatrixp[5] - (iMatrixp[5] - matrixp[5]) * 0.25F;
-			matrixp[6] = iMatrixp[6] - (iMatrixp[6] - matrixp[6]) * 0.25F;
-			matrixp[7] = iMatrixp[7] - (iMatrixp[7] - matrixp[7]) * 0.25F;
-			matrixp[8] = iMatrixp[8] - (iMatrixp[8] - matrixp[8]) * 0.25F;
-			matrixp[9] = iMatrixp[9] - (iMatrixp[9] - matrixp[9]) * 0.25F;
-			matrixp[10] = iMatrixp[10] - (iMatrixp[10] - matrixp[10]) * 0.25F;
-			matrixp[11] = iMatrixp[11] - (iMatrixp[11] - matrixp[11]) * 0.25F;
+			matrixp->m00 = iMatrixp->m00 - (iMatrixp->m00 - matrixp->m00) * 0.25F;
+			matrixp->m01 = iMatrixp->m01 - (iMatrixp->m01 - matrixp->m01) * 0.25F;
+			matrixp->m02 = iMatrixp->m02 - (iMatrixp->m02 - matrixp->m02) * 0.25F;
+			matrixp->m03 = iMatrixp->m03 - (iMatrixp->m03 - matrixp->m03) * 0.25F;
+			matrixp->m10 = iMatrixp->m10 - (iMatrixp->m10 - matrixp->m10) * 0.25F;
+			matrixp->m11 = iMatrixp->m11 - (iMatrixp->m11 - matrixp->m11) * 0.25F;
+			matrixp->m12 = iMatrixp->m12 - (iMatrixp->m12 - matrixp->m12) * 0.25F;
+			matrixp->m13 = iMatrixp->m13 - (iMatrixp->m13 - matrixp->m13) * 0.25F;
+			matrixp->m20 = iMatrixp->m20 - (iMatrixp->m20 - matrixp->m20) * 0.25F;
+			matrixp->m21 = iMatrixp->m21 - (iMatrixp->m21 - matrixp->m21) * 0.25F;
+			matrixp->m22 = iMatrixp->m22 - (iMatrixp->m22 - matrixp->m22) * 0.25F;
+			matrixp->m23 = iMatrixp->m23 - (iMatrixp->m23 - matrixp->m23) * 0.25F;
 			return;
 		}
 
-		matrixp[0] = (iMatrixp[0] + matrixp[0]) * 0.5F;
-		matrixp[1] = (iMatrixp[1] + matrixp[1]) * 0.5F;
-		matrixp[2] = (iMatrixp[2] + matrixp[2]) * 0.5F;
-		matrixp[3] = (iMatrixp[3] + matrixp[3]) * 0.5F;
-		matrixp[4] = (iMatrixp[4] + matrixp[4]) * 0.5F;
-		matrixp[5] = (iMatrixp[5] + matrixp[5]) * 0.5F;
-		matrixp[6] = (iMatrixp[6] + matrixp[6]) * 0.5F;
-		matrixp[7] = (iMatrixp[7] + matrixp[7]) * 0.5F;
-		matrixp[8] = (iMatrixp[8] + matrixp[8]) * 0.5F;
-		matrixp[9] = (iMatrixp[9] + matrixp[9]) * 0.5F;
-		matrixp[10] = (iMatrixp[10] + matrixp[10]) * 0.5F;
-		matrixp[11] = (iMatrixp[11] + matrixp[11]) * 0.5F;
+		matrixp->m00 = (iMatrixp->m00 + matrixp->m00) * 0.5F;
+		matrixp->m01 = (iMatrixp->m01 + matrixp->m01) * 0.5F;
+		matrixp->m02 = (iMatrixp->m02 + matrixp->m02) * 0.5F;
+		matrixp->m03 = (iMatrixp->m03 + matrixp->m03) * 0.5F;
+		matrixp->m10 = (iMatrixp->m10 + matrixp->m10) * 0.5F;
+		matrixp->m11 = (iMatrixp->m11 + matrixp->m11) * 0.5F;
+		matrixp->m12 = (iMatrixp->m12 + matrixp->m12) * 0.5F;
+		matrixp->m13 = (iMatrixp->m13 + matrixp->m13) * 0.5F;
+		matrixp->m20 = (iMatrixp->m20 + matrixp->m20) * 0.5F;
+		matrixp->m21 = (iMatrixp->m21 + matrixp->m21) * 0.5F;
+		matrixp->m22 = (iMatrixp->m22 + matrixp->m22) * 0.5F;
+		matrixp->m23 = (iMatrixp->m23 + matrixp->m23) * 0.5F;
 		return;
 	}
 
 	if (IM_frac != 1)
 	{
-		matrixp[0] = iMatrixp[0] - (iMatrixp[0] - matrixp[0]) * 0.25F;
-		matrixp[1] = iMatrixp[1] - (iMatrixp[1] - matrixp[1]) * 0.25F;
-		matrixp[2] = iMatrixp[2] - (iMatrixp[2] - matrixp[2]) * 0.25F;
-		matrixp[3] = iMatrixp[3] - (iMatrixp[3] - matrixp[3]) * 0.25F;
-		matrixp[4] = iMatrixp[4] - (iMatrixp[4] - matrixp[4]) * 0.25F;
-		matrixp[5] = iMatrixp[5] - (iMatrixp[5] - matrixp[5]) * 0.25F;
-		matrixp[6] = iMatrixp[6] - (iMatrixp[6] - matrixp[6]) * 0.25F;
-		matrixp[7] = iMatrixp[7] - (iMatrixp[7] - matrixp[7]) * 0.25F;
-		matrixp[8] = iMatrixp[8] - (iMatrixp[8] - matrixp[8]) * 0.25F;
-		matrixp[9] = iMatrixp[9] - (iMatrixp[9] - matrixp[9]) * 0.25F;
-		matrixp[10] = iMatrixp[10] - (iMatrixp[10] - matrixp[10]) * 0.25F;
-		matrixp[11] = iMatrixp[11] - (iMatrixp[11] - matrixp[11]) * 0.25F;
+		matrixp->m00 = iMatrixp->m00 - (iMatrixp->m00 - matrixp->m00) * 0.25F;
+		matrixp->m01 = iMatrixp->m01 - (iMatrixp->m01 - matrixp->m01) * 0.25F;
+		matrixp->m02 = iMatrixp->m02 - (iMatrixp->m02 - matrixp->m02) * 0.25F;
+		matrixp->m03 = iMatrixp->m03 - (iMatrixp->m03 - matrixp->m03) * 0.25F;
+		matrixp->m10 = iMatrixp->m10 - (iMatrixp->m10 - matrixp->m10) * 0.25F;
+		matrixp->m11 = iMatrixp->m11 - (iMatrixp->m11 - matrixp->m11) * 0.25F;
+		matrixp->m12 = iMatrixp->m12 - (iMatrixp->m12 - matrixp->m12) * 0.25F;
+		matrixp->m13 = iMatrixp->m13 - (iMatrixp->m13 - matrixp->m13) * 0.25F;
+		matrixp->m20 = iMatrixp->m20 - (iMatrixp->m20 - matrixp->m20) * 0.25F;
+		matrixp->m21 = iMatrixp->m21 - (iMatrixp->m21 - matrixp->m21) * 0.25F;
+		matrixp->m22 = iMatrixp->m22 - (iMatrixp->m22 - matrixp->m22) * 0.25F;
+		matrixp->m23 = iMatrixp->m23 - (iMatrixp->m23 - matrixp->m23) * 0.25F;
 		return;
 	}
 
-	matrixp[0] += (iMatrixp[0] - matrixp[0]) * 0.25F;
-	matrixp[1] += (iMatrixp[1] - matrixp[1]) * 0.25F;
-	matrixp[2] += (iMatrixp[2] - matrixp[2]) * 0.25F;
-	matrixp[3] += (iMatrixp[3] - matrixp[3]) * 0.25F;
-	matrixp[4] += (iMatrixp[4] - matrixp[4]) * 0.25F;
-	matrixp[5] += (iMatrixp[5] - matrixp[5]) * 0.25F;
-	matrixp[6] += (iMatrixp[6] - matrixp[6]) * 0.25F;
-	matrixp[7] += (iMatrixp[7] - matrixp[7]) * 0.25F;
-	matrixp[8] += (iMatrixp[8] - matrixp[8]) * 0.25F;
-	matrixp[9] += (iMatrixp[9] - matrixp[9]) * 0.25F;
-	matrixp[10] += (iMatrixp[10] - matrixp[10]) * 0.25F;
-	matrixp[11] += (iMatrixp[11] - matrixp[11]) * 0.25F;
+	matrixp->m00 += (iMatrixp->m00 - matrixp->m00) * 0.25F;
+	matrixp->m01 += (iMatrixp->m01 - matrixp->m01) * 0.25F;
+	matrixp->m02 += (iMatrixp->m02 - matrixp->m02) * 0.25F;
+	matrixp->m03 += (iMatrixp->m03 - matrixp->m03) * 0.25F;
+	matrixp->m10 += (iMatrixp->m10 - matrixp->m10) * 0.25F;
+	matrixp->m11 += (iMatrixp->m11 - matrixp->m11) * 0.25F;
+	matrixp->m12 += (iMatrixp->m12 - matrixp->m12) * 0.25F;
+	matrixp->m13 += (iMatrixp->m13 - matrixp->m13) * 0.25F;
+	matrixp->m20 += (iMatrixp->m20 - matrixp->m20) * 0.25F;
+	matrixp->m21 += (iMatrixp->m21 - matrixp->m21) * 0.25F;
+	matrixp->m22 += (iMatrixp->m22 - matrixp->m22) * 0.25F;
+	matrixp->m23 += (iMatrixp->m23 - matrixp->m23) * 0.25F;
 }
 
 long DrawPhaseGame()
@@ -520,19 +520,19 @@ void UpdateSkyLightning()
 
 void CalculateObjectLighting(ITEM_INFO* item, short* frame)
 {
-	long x, y, z;
-
 	if (item->shade >= 0)
-		S_CalculateStaticMeshLight(item->pos.x_pos,item->pos.y_pos,item->pos.z_pos, item->shade & 0x7FFF, &room[item->room_number]);
+	{
+		S_CalculateStaticMeshLight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->shade & 0x7FFF, &room[item->room_number]);
+	}
 	else
 	{
 		phd_PushUnitMatrix();
 		phd_SetTrans(0, 0, 0);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 		phd_TranslateRel((frame[0] + frame[1]) >> 1, (frame[2] + frame[3]) >> 1, (frame[4] + frame[5]) >> 1);
-		x = item->pos.x_pos + (phd_mxptr[3] >> W2V_SHIFT);
-		y = item->pos.y_pos + (phd_mxptr[7] >> W2V_SHIFT);
-		z = item->pos.z_pos + (phd_mxptr[11] >> W2V_SHIFT);
+		long x = item->pos.x_pos + (phd_mxptr->m03 >> W2V_SHIFT);
+		long y = item->pos.y_pos + (phd_mxptr->m13 >> W2V_SHIFT);
+		long z = item->pos.z_pos + (phd_mxptr->m23 >> W2V_SHIFT);
 		phd_PopMatrix();
 		current_item = item;
 		item->il.item_pos.x = x;
@@ -564,7 +564,7 @@ void DrawAnimatingItem(ITEM_INFO* item)
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
-	if (obj->object_mip && (obj + 1)->loaded && phd_mxptr[M23] >> 16 > obj->object_mip)
+	if (obj->object_mip && (obj + 1)->loaded && phd_mxptr->m23 >> 16 > obj->object_mip)
 		obj++;
 
 	calc_animating_item_clip_window(item, frm[0]);
@@ -823,35 +823,35 @@ void DrawRooms(short current_room)
 
 			if (lara.right_arm.flash_gun)
 			{
-				aMXPtr[M00] = lara_matrices[LMX_HAND_R * indices_count + M00];
-				aMXPtr[M01] = lara_matrices[LMX_HAND_R * indices_count + M01];
-				aMXPtr[M02] = lara_matrices[LMX_HAND_R * indices_count + M02];
-				aMXPtr[M03] = lara_matrices[LMX_HAND_R * indices_count + M03];
-				aMXPtr[M10] = lara_matrices[LMX_HAND_R * indices_count + M10];
-				aMXPtr[M11] = lara_matrices[LMX_HAND_R * indices_count + M11];
-				aMXPtr[M12] = lara_matrices[LMX_HAND_R * indices_count + M12];
-				aMXPtr[M13] = lara_matrices[LMX_HAND_R * indices_count + M13];
-				aMXPtr[M20] = lara_matrices[LMX_HAND_R * indices_count + M20];
-				aMXPtr[M21] = lara_matrices[LMX_HAND_R * indices_count + M21];
-				aMXPtr[M22] = lara_matrices[LMX_HAND_R * indices_count + M22];
-				aMXPtr[M23] = lara_matrices[LMX_HAND_R * indices_count + M23];
+				aMXPtr->m00 = lara_matrices[LMX_HAND_R * indices_count + M00];
+				aMXPtr->m01 = lara_matrices[LMX_HAND_R * indices_count + M01];
+				aMXPtr->m02 = lara_matrices[LMX_HAND_R * indices_count + M02];
+				aMXPtr->m03 = lara_matrices[LMX_HAND_R * indices_count + M03];
+				aMXPtr->m10 = lara_matrices[LMX_HAND_R * indices_count + M10];
+				aMXPtr->m11 = lara_matrices[LMX_HAND_R * indices_count + M11];
+				aMXPtr->m12 = lara_matrices[LMX_HAND_R * indices_count + M12];
+				aMXPtr->m13 = lara_matrices[LMX_HAND_R * indices_count + M13];
+				aMXPtr->m20 = lara_matrices[LMX_HAND_R * indices_count + M20];
+				aMXPtr->m21 = lara_matrices[LMX_HAND_R * indices_count + M21];
+				aMXPtr->m22 = lara_matrices[LMX_HAND_R * indices_count + M22];
+				aMXPtr->m23 = lara_matrices[LMX_HAND_R * indices_count + M23];
 				SetGunFlash(lara.gun_type);
 			}
 
 			if (lara.left_arm.flash_gun)
 			{
-				aMXPtr[M00] = lara_matrices[LMX_HAND_L * indices_count + M00];
-				aMXPtr[M01] = lara_matrices[LMX_HAND_L * indices_count + M01];
-				aMXPtr[M02] = lara_matrices[LMX_HAND_L * indices_count + M02];
-				aMXPtr[M03] = lara_matrices[LMX_HAND_L * indices_count + M03];
-				aMXPtr[M10] = lara_matrices[LMX_HAND_L * indices_count + M10];
-				aMXPtr[M11] = lara_matrices[LMX_HAND_L * indices_count + M11];
-				aMXPtr[M12] = lara_matrices[LMX_HAND_L * indices_count + M12];
-				aMXPtr[M13] = lara_matrices[LMX_HAND_L * indices_count + M13];
-				aMXPtr[M20] = lara_matrices[LMX_HAND_L * indices_count + M20];
-				aMXPtr[M21] = lara_matrices[LMX_HAND_L * indices_count + M21];
-				aMXPtr[M22] = lara_matrices[LMX_HAND_L * indices_count + M22];
-				aMXPtr[M23] = lara_matrices[LMX_HAND_L * indices_count + M23];
+				aMXPtr->m00 = lara_matrices[LMX_HAND_L * indices_count + M00];
+				aMXPtr->m01 = lara_matrices[LMX_HAND_L * indices_count + M01];
+				aMXPtr->m02 = lara_matrices[LMX_HAND_L * indices_count + M02];
+				aMXPtr->m03 = lara_matrices[LMX_HAND_L * indices_count + M03];
+				aMXPtr->m10 = lara_matrices[LMX_HAND_L * indices_count + M10];
+				aMXPtr->m11 = lara_matrices[LMX_HAND_L * indices_count + M11];
+				aMXPtr->m12 = lara_matrices[LMX_HAND_L * indices_count + M12];
+				aMXPtr->m13 = lara_matrices[LMX_HAND_L * indices_count + M13];
+				aMXPtr->m20 = lara_matrices[LMX_HAND_L * indices_count + M20];
+				aMXPtr->m21 = lara_matrices[LMX_HAND_L * indices_count + M21];
+				aMXPtr->m22 = lara_matrices[LMX_HAND_L * indices_count + M22];
+				aMXPtr->m23 = lara_matrices[LMX_HAND_L * indices_count + M23];
 				SetGunFlash(lara.gun_type);
 			}
 
@@ -1182,27 +1182,15 @@ void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds)
 
 	for (int i = 0; i < 8; i++)
 	{
-		x = (pos[i].x * phd_mxptr[M00] + pos[i].y * phd_mxptr[M01] + pos[i].z * phd_mxptr[M02]) >> W2V_SHIFT;
-		y = (pos[i].x * phd_mxptr[M10] + pos[i].y * phd_mxptr[M11] + pos[i].z * phd_mxptr[M12]) >> W2V_SHIFT;
-		z = (pos[i].x * phd_mxptr[M20] + pos[i].y * phd_mxptr[M21] + pos[i].z * phd_mxptr[M22]) >> W2V_SHIFT;
-
-		if (x < xMin)
-			xMin = (short)x;
-
-		if (x > xMax)
-			xMax = (short)x;
-
-		if (y < yMin)
-			yMin = (short)y;
-
-		if (y > yMax)
-			yMax = (short)y;
-
-		if (z < zMin)
-			zMin = (short)z;
-
-		if (z > zMax)
-			zMax = (short)z;
+		x = (pos[i].x * phd_mxptr->m00 + pos[i].y * phd_mxptr->m01 + pos[i].z * phd_mxptr->m02) >> W2V_SHIFT;
+		y = (pos[i].x * phd_mxptr->m10 + pos[i].y * phd_mxptr->m11 + pos[i].z * phd_mxptr->m12) >> W2V_SHIFT;
+		z = (pos[i].x * phd_mxptr->m20 + pos[i].y * phd_mxptr->m21 + pos[i].z * phd_mxptr->m22) >> W2V_SHIFT;
+		if (x < xMin) xMin = (short)x;
+		if (x > xMax) xMax = (short)x;
+		if (y < yMin) yMin = (short)y;
+		if (y > yMax) yMax = (short)y;
+		if (z < zMin) zMin = (short)z;
+		if (z > zMax) zMax = (short)z;
 	}
 
 	rotatedBounds[0] = xMin;
@@ -1267,7 +1255,7 @@ void DrawStaticObjects(short room_number)
 
 			if (mip)
 			{
-				if (phd_mxptr[M23] >> 15 > (mip & 0xFFFC) << 8)
+				if (phd_mxptr->m23 >> 15 > (mip & 0xFFFC) << 8)
 					n++;
 			}
 
@@ -1287,112 +1275,112 @@ void InterpolateMatrix()
 
 	if (IM_rate == 2 || (IM_frac == 2 && IM_rate == 4))
 	{
-		phd_mxptr[M00] += (IMptr[M00] - phd_mxptr[M00]) >> 1;
-		phd_mxptr[M01] += (IMptr[M01] - phd_mxptr[M01]) >> 1;
-		phd_mxptr[M02] += (IMptr[M02] - phd_mxptr[M02]) >> 1;
-		phd_mxptr[M03] += (IMptr[M03] - phd_mxptr[M03]) >> 1;
-		phd_mxptr[M10] += (IMptr[M10] - phd_mxptr[M10]) >> 1;
-		phd_mxptr[M11] += (IMptr[M11] - phd_mxptr[M11]) >> 1;
-		phd_mxptr[M12] += (IMptr[M12] - phd_mxptr[M12]) >> 1;
-		phd_mxptr[M13] += (IMptr[M13] - phd_mxptr[M13]) >> 1;
-		phd_mxptr[M20] += (IMptr[M20] - phd_mxptr[M20]) >> 1;
-		phd_mxptr[M21] += (IMptr[M21] - phd_mxptr[M21]) >> 1;
-		phd_mxptr[M22] += (IMptr[M22] - phd_mxptr[M22]) >> 1;
-		phd_mxptr[M23] += (IMptr[M23] - phd_mxptr[M23]) >> 1;
+		phd_mxptr->m00 += (IMptr->m00 - phd_mxptr->m00) >> 1;
+		phd_mxptr->m01 += (IMptr->m01 - phd_mxptr->m01) >> 1;
+		phd_mxptr->m02 += (IMptr->m02 - phd_mxptr->m02) >> 1;
+		phd_mxptr->m03 += (IMptr->m03 - phd_mxptr->m03) >> 1;
+		phd_mxptr->m10 += (IMptr->m10 - phd_mxptr->m10) >> 1;
+		phd_mxptr->m11 += (IMptr->m11 - phd_mxptr->m11) >> 1;
+		phd_mxptr->m12 += (IMptr->m12 - phd_mxptr->m12) >> 1;
+		phd_mxptr->m13 += (IMptr->m13 - phd_mxptr->m13) >> 1;
+		phd_mxptr->m20 += (IMptr->m20 - phd_mxptr->m20) >> 1;
+		phd_mxptr->m21 += (IMptr->m21 - phd_mxptr->m21) >> 1;
+		phd_mxptr->m22 += (IMptr->m22 - phd_mxptr->m22) >> 1;
+		phd_mxptr->m23 += (IMptr->m23 - phd_mxptr->m23) >> 1;
 	}
 	else if (IM_frac == 1)
 	{
-		phd_mxptr[M00] += (IMptr[M00] - phd_mxptr[M00]) >> 2;
-		phd_mxptr[M01] += (IMptr[M01] - phd_mxptr[M01]) >> 2;
-		phd_mxptr[M02] += (IMptr[M02] - phd_mxptr[M02]) >> 2;
-		phd_mxptr[M03] += (IMptr[M03] - phd_mxptr[M03]) >> 2;
-		phd_mxptr[M10] += (IMptr[M10] - phd_mxptr[M10]) >> 2;
-		phd_mxptr[M11] += (IMptr[M11] - phd_mxptr[M11]) >> 2;
-		phd_mxptr[M12] += (IMptr[M12] - phd_mxptr[M12]) >> 2;
-		phd_mxptr[M13] += (IMptr[M13] - phd_mxptr[M13]) >> 2;
-		phd_mxptr[M20] += (IMptr[M20] - phd_mxptr[M20]) >> 2;
-		phd_mxptr[M21] += (IMptr[M21] - phd_mxptr[M21]) >> 2;
-		phd_mxptr[M22] += (IMptr[M22] - phd_mxptr[M22]) >> 2;
-		phd_mxptr[M23] += (IMptr[M23] - phd_mxptr[M23]) >> 2;
+		phd_mxptr->m00 += (IMptr->m00 - phd_mxptr->m00) >> 2;
+		phd_mxptr->m01 += (IMptr->m01 - phd_mxptr->m01) >> 2;
+		phd_mxptr->m02 += (IMptr->m02 - phd_mxptr->m02) >> 2;
+		phd_mxptr->m03 += (IMptr->m03 - phd_mxptr->m03) >> 2;
+		phd_mxptr->m10 += (IMptr->m10 - phd_mxptr->m10) >> 2;
+		phd_mxptr->m11 += (IMptr->m11 - phd_mxptr->m11) >> 2;
+		phd_mxptr->m12 += (IMptr->m12 - phd_mxptr->m12) >> 2;
+		phd_mxptr->m13 += (IMptr->m13 - phd_mxptr->m13) >> 2;
+		phd_mxptr->m20 += (IMptr->m20 - phd_mxptr->m20) >> 2;
+		phd_mxptr->m21 += (IMptr->m21 - phd_mxptr->m21) >> 2;
+		phd_mxptr->m22 += (IMptr->m22 - phd_mxptr->m22) >> 2;
+		phd_mxptr->m23 += (IMptr->m23 - phd_mxptr->m23) >> 2;
 	}
 	else
 	{
-		phd_mxptr[M00] = IMptr[M00] - ((IMptr[M00] - phd_mxptr[M00]) >> 2);
-		phd_mxptr[M01] = IMptr[M01] - ((IMptr[M01] - phd_mxptr[M01]) >> 2);
-		phd_mxptr[M02] = IMptr[M02] - ((IMptr[M02] - phd_mxptr[M02]) >> 2);
-		phd_mxptr[M03] = IMptr[M03] - ((IMptr[M03] - phd_mxptr[M03]) >> 2);
-		phd_mxptr[M10] = IMptr[M10] - ((IMptr[M10] - phd_mxptr[M10]) >> 2);
-		phd_mxptr[M11] = IMptr[M11] - ((IMptr[M11] - phd_mxptr[M11]) >> 2);
-		phd_mxptr[M12] = IMptr[M12] - ((IMptr[M12] - phd_mxptr[M12]) >> 2);
-		phd_mxptr[M13] = IMptr[M13] - ((IMptr[M13] - phd_mxptr[M13]) >> 2);
-		phd_mxptr[M20] = IMptr[M20] - ((IMptr[M20] - phd_mxptr[M20]) >> 2);
-		phd_mxptr[M21] = IMptr[M21] - ((IMptr[M21] - phd_mxptr[M21]) >> 2);
-		phd_mxptr[M22] = IMptr[M22] - ((IMptr[M22] - phd_mxptr[M22]) >> 2);
-		phd_mxptr[M23] = IMptr[M23] - ((IMptr[M23] - phd_mxptr[M23]) >> 2);
+		phd_mxptr->m00 = IMptr->m00 - ((IMptr->m00 - phd_mxptr->m00) >> 2);
+		phd_mxptr->m01 = IMptr->m01 - ((IMptr->m01 - phd_mxptr->m01) >> 2);
+		phd_mxptr->m02 = IMptr->m02 - ((IMptr->m02 - phd_mxptr->m02) >> 2);
+		phd_mxptr->m03 = IMptr->m03 - ((IMptr->m03 - phd_mxptr->m03) >> 2);
+		phd_mxptr->m10 = IMptr->m10 - ((IMptr->m10 - phd_mxptr->m10) >> 2);
+		phd_mxptr->m11 = IMptr->m11 - ((IMptr->m11 - phd_mxptr->m11) >> 2);
+		phd_mxptr->m12 = IMptr->m12 - ((IMptr->m12 - phd_mxptr->m12) >> 2);
+		phd_mxptr->m13 = IMptr->m13 - ((IMptr->m13 - phd_mxptr->m13) >> 2);
+		phd_mxptr->m20 = IMptr->m20 - ((IMptr->m20 - phd_mxptr->m20) >> 2);
+		phd_mxptr->m21 = IMptr->m21 - ((IMptr->m21 - phd_mxptr->m21) >> 2);
+		phd_mxptr->m22 = IMptr->m22 - ((IMptr->m22 - phd_mxptr->m22) >> 2);
+		phd_mxptr->m23 = IMptr->m23 - ((IMptr->m23 - phd_mxptr->m23) >> 2);
 	}
 }
 
-void InterpolateArmMatrix(long* mx)
+void InterpolateArmMatrix(Matrix* mx)
 {
-	phd_mxptr[M00] = mx[M00];
-	phd_mxptr[M01] = mx[M01];
-	phd_mxptr[M02] = mx[M02];
-	phd_mxptr[M10] = mx[M10];
-	phd_mxptr[M11] = mx[M11];
-	phd_mxptr[M12] = mx[M12];
-	phd_mxptr[M20] = mx[M20];
-	phd_mxptr[M21] = mx[M21];
-	phd_mxptr[M22] = mx[M22];
+	phd_mxptr->m00 = mx->m00;
+	phd_mxptr->m01 = mx->m01;
+	phd_mxptr->m02 = mx->m02;
+	phd_mxptr->m10 = mx->m10;
+	phd_mxptr->m11 = mx->m11;
+	phd_mxptr->m12 = mx->m12;
+	phd_mxptr->m20 = mx->m20;
+	phd_mxptr->m21 = mx->m21;
+	phd_mxptr->m22 = mx->m22;
 
 	if (IM_rate == 2 || (IM_frac == 2 && IM_rate == 4))
 	{
-		phd_mxptr[M03] = (phd_mxptr[M03] + IMptr[M03]) >> 1;
-		phd_mxptr[M13] = (phd_mxptr[M13] + IMptr[M13]) >> 1;
-		phd_mxptr[M23] = (phd_mxptr[M23] + IMptr[M23]) >> 1;
+		phd_mxptr->m03 = (phd_mxptr->m03 + IMptr->m03) >> 1;
+		phd_mxptr->m13 = (phd_mxptr->m13 + IMptr->m13) >> 1;
+		phd_mxptr->m23 = (phd_mxptr->m23 + IMptr->m23) >> 1;
 	}
 	else if (IM_frac == 1)
 	{
-		phd_mxptr[M03] += (IMptr[M03] - phd_mxptr[M03]) >> 2;
-		phd_mxptr[M13] += (IMptr[M13] - phd_mxptr[M13]) >> 2;
-		phd_mxptr[M23] += (IMptr[M23] - phd_mxptr[M23]) >> 2;
+		phd_mxptr->m03 += (IMptr->m03 - phd_mxptr->m03) >> 2;
+		phd_mxptr->m13 += (IMptr->m13 - phd_mxptr->m13) >> 2;
+		phd_mxptr->m23 += (IMptr->m23 - phd_mxptr->m23) >> 2;
 	}
 	else
 	{
-		phd_mxptr[M03] = IMptr[M03] - ((IMptr[M03] - phd_mxptr[M03]) >> 2);
-		phd_mxptr[M13] = IMptr[M13] - ((IMptr[M13] - phd_mxptr[M13]) >> 2);
-		phd_mxptr[M23] = IMptr[M23] - ((IMptr[M23] - phd_mxptr[M23]) >> 2);
+		phd_mxptr->m03 = IMptr->m03 - ((IMptr->m03 - phd_mxptr->m03) >> 2);
+		phd_mxptr->m13 = IMptr->m13 - ((IMptr->m13 - phd_mxptr->m13) >> 2);
+		phd_mxptr->m23 = IMptr->m23 - ((IMptr->m23 - phd_mxptr->m23) >> 2);
 	}
 }
 
-void aInterpolateArmMatrix(float* mx)
+void aInterpolateArmMatrix(FMatrix* mx)
 {
-	aMXPtr[M00] = mx[M00];
-	aMXPtr[M01] = mx[M01];
-	aMXPtr[M02] = mx[M02];
-	aMXPtr[M10] = mx[M10];
-	aMXPtr[M11] = mx[M11];
-	aMXPtr[M12] = mx[M12];
-	aMXPtr[M20] = mx[M20];
-	aMXPtr[M21] = mx[M21];
-	aMXPtr[M22] = mx[M22];
+	aMXPtr->m00 = mx->m00;
+	aMXPtr->m01 = mx->m01;
+	aMXPtr->m02 = mx->m02;
+	aMXPtr->m10 = mx->m10;
+	aMXPtr->m11 = mx->m11;
+	aMXPtr->m12 = mx->m12;
+	aMXPtr->m20 = mx->m20;
+	aMXPtr->m21 = mx->m21;
+	aMXPtr->m22 = mx->m22;
 
 	if (IM_rate == 2 || (IM_frac == 2 && IM_rate == 4))
 	{
-		aMXPtr[M03] = (aMXPtr[M03] + aIMXPtr[M03]) * 0.5F;
-		aMXPtr[M13] = (aMXPtr[M13] + aIMXPtr[M13]) * 0.5F;
-		aMXPtr[M23] = (aMXPtr[M23] + aIMXPtr[M23]) * 0.5F;
+		aMXPtr->m03 = (aMXPtr->m03 + aIMXPtr->m03) * 0.5F;
+		aMXPtr->m13 = (aMXPtr->m13 + aIMXPtr->m13) * 0.5F;
+		aMXPtr->m23 = (aMXPtr->m23 + aIMXPtr->m23) * 0.5F;
 	}
 	else if (IM_frac == 1)
 	{
-		aMXPtr[M03] += (aIMXPtr[M03] - aMXPtr[M03]) * 0.25F;
-		aMXPtr[M13] += (aIMXPtr[M13] - aMXPtr[M13]) * 0.25F;
-		aMXPtr[M23] += (aIMXPtr[M23] - aMXPtr[M23]) * 0.25F;
+		aMXPtr->m03 += (aIMXPtr->m03 - aMXPtr->m03) * 0.25F;
+		aMXPtr->m13 += (aIMXPtr->m13 - aMXPtr->m13) * 0.25F;
+		aMXPtr->m23 += (aIMXPtr->m23 - aMXPtr->m23) * 0.25F;
 	}
 	else
 	{
-		aMXPtr[M03] = aIMXPtr[M03] - ((aIMXPtr[M03] - aMXPtr[M03]) * 0.25F);
-		aMXPtr[M13] = aIMXPtr[M13] - ((aIMXPtr[M13] - aMXPtr[M13]) * 0.25F);
-		aMXPtr[M23] = aIMXPtr[M23] - ((aIMXPtr[M23] - aMXPtr[M23]) * 0.25F);
+		aMXPtr->m03 = aIMXPtr->m03 - ((aIMXPtr->m03 - aMXPtr->m03) * 0.25F);
+		aMXPtr->m13 = aIMXPtr->m13 - ((aIMXPtr->m13 - aMXPtr->m13) * 0.25F);
+		aMXPtr->m23 = aIMXPtr->m23 - ((aIMXPtr->m23 - aMXPtr->m23) * 0.25F);
 	}
 }
 
@@ -1410,7 +1398,7 @@ void DrawEffect(short fx_num)
 		phd_PushMatrix();
 		phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 
-		if (phd_mxptr[M23] > phd_znear && phd_mxptr[M23] < phd_zfar)
+		if (phd_mxptr->m23 > phd_znear && phd_mxptr->m23 < phd_zfar)
 		{
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 
@@ -1450,9 +1438,9 @@ void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds)
 
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	phd_mxptr[M03] = 0;
-	phd_mxptr[M13] = 0;
-	phd_mxptr[M23] = 0;
+	phd_mxptr->m03 = 0;
+	phd_mxptr->m13 = 0;
+	phd_mxptr->m23 = 0;
 	mRotBoundingBoxNoPersp(bounds, rotatedBounds);
 	phd_PopMatrix();
 
@@ -1585,9 +1573,9 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom)
 
 	for (int i = 0; i < 4; i++, v++, door += 3)
 	{
-		v->x = aMXPtr[M00] * door[0] + aMXPtr[M01] * door[1] + aMXPtr[M02] * door[2] + aMXPtr[M03];
-		v->y = aMXPtr[M10] * door[0] + aMXPtr[M11] * door[1] + aMXPtr[M12] * door[2] + aMXPtr[M13];
-		v->z = aMXPtr[M20] * door[0] + aMXPtr[M21] * door[1] + aMXPtr[M22] * door[2] + aMXPtr[M23];
+		v->x = aMXPtr->m00 * door[0] + aMXPtr->m01 * door[1] + aMXPtr->m02 * door[2] + aMXPtr->m03;
+		v->y = aMXPtr->m10 * door[0] + aMXPtr->m11 * door[1] + aMXPtr->m12 * door[2] + aMXPtr->m13;
+		v->z = aMXPtr->m20 * door[0] + aMXPtr->m21 * door[1] + aMXPtr->m22 * door[2] + aMXPtr->m23;
 		x = v->x;
 		y = v->y;
 		z = v->z;
@@ -1775,7 +1763,7 @@ void GetRoomBounds()
 
 				if (p->normal[0])
 				{
-					x = r->x + p->v1[0] - w2v_matrix[M03];
+					x = r->x + p->v1[0] - w2v_matrix.m03;
 
 					if (x && (x ^ p->normal[0]) < 0)
 						SetRoomBounds(door, rn, r);
@@ -1785,7 +1773,7 @@ void GetRoomBounds()
 
 				if (p->normal[1])
 				{
-					y = r->y + p->v1[1] - w2v_matrix[M13];
+					y = r->y + p->v1[1] - w2v_matrix.m13;
 
 					if (y && (y ^ p->normal[1]) < 0)
 						SetRoomBounds(door, rn, r);
@@ -1795,7 +1783,7 @@ void GetRoomBounds()
 
 				if (p->normal[2])
 				{
-					z = r->z + p->v1[2] - w2v_matrix[M23];
+					z = r->z + p->v1[2] - w2v_matrix.m23;
 
 					if (z && (z ^ p->normal[2]) < 0)
 						SetRoomBounds(door, rn, r);
