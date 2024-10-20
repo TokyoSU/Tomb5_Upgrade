@@ -1892,6 +1892,8 @@ struct DXPTR
 	LPDIRECTDRAWSURFACE4 lpZBuffer;
 	LPDIRECT3DVIEWPORT3 lpViewport;
 	LPDIRECTSOUND lpDS;
+	LPDIRECTINPUT8 lpDirectInput;
+	LPDIRECTINPUTDEVICE8 Keyboard;
 	ulong dwRenderWidth;
 	ulong dwRenderHeight;
 	RECT rViewport;
@@ -1899,14 +1901,6 @@ struct DXPTR
 	long Flags;
 	ulong WindowStyle;
 	long CoopLevel;
-#if (DIRECTINPUT_VERSION >= 0x800)
-	LPDIRECTINPUT8 lpDirectInput;
-	LPDIRECTINPUTDEVICE8 Keyboard;
-#else
-	IDirectInput7* lpDirectInput;
-	IDirectInputDevice7* Keyboard;
-	IDirectInputDevice7* Joystick;
-#endif
 	HWND hWnd;
 	volatile long InScene;
 	volatile long WaitAtBeginScene;

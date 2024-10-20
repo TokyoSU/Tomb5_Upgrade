@@ -16,6 +16,7 @@ public:
 	void Hide();
 
 	void Center();
+	void Resize(int width, int height);
 
 	bool IsOpened() const;
 	HWND GetHandle() const;

@@ -184,7 +184,9 @@ HRESULT __stdcall DXEnumDisplayModes(DDSURFACEDESC2* lpDDSurfaceDesc2, LPVOID lp
 	memcpy(&DM->ddsd, lpDDSurfaceDesc2, sizeof(DM->ddsd));
 
 	if (DM->bPalette)
+	{
 		Log("%d x %d - %d Bit - Palette", DM->w, DM->h, DM->bpp);
+	}
 	else
 	{
 		DXBitMask2ShiftCnt(lpDDSurfaceDesc2->ddpfPixelFormat.dwRBitMask, &DM->rshift, &DM->rbpp);
@@ -569,10 +571,8 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd)
 		CoopLevel = DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT | DDSCL_EXCLUSIVE;
 	else
 		CoopLevel = DDSCL_NORMAL;
-
 	if (Flags & DXF_FPUSETUP)
 		CoopLevel |= DDSCL_FPUSETUP;
-
 	G_dxptr->CoopLevel = CoopLevel;
 
 	if (!DXSetCooperativeLevel(G_dxptr->lpDD, hWnd, CoopLevel))
@@ -583,8 +583,13 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd)
 
 	if (Flags & DXF_FULLSCREEN)
 	{
-		dm = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].DisplayModes[G_dxinfo->nDisplayMode];
-		DXSetVideoMode(G_dxptr->lpDD, dm->w, dm->h, dm->bpp);
+		DXSetVideoMode(G_dxptr->lpDD, w, h, bpp);
+	}
+	else
+	{
+
+		g_Window.Resize(w, h);
+		g_Window.Center();
 	}
 
 	memset(&desc, 0, sizeof(DDSURFACEDESC2));

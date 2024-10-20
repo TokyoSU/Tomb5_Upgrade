@@ -279,17 +279,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	g_Config.Initialize();
 	g_Window.Initialize(hInstance);
-	if (g_Window.CheckIfInstanceAlreadyRunning()) {
-		exit(EXIT_SUCCESS);
-	}
 
 	LoadGameflow();
 	WinProcessCommandLine(lpCmdLine);
 
 	g_Window.Create(640, 480, "Tomb Raider Chronicles", "Tomb5:Class");
+	if (g_Window.CheckIfInstanceAlreadyRunning()) {
+		exit(EXIT_SUCCESS);
+	}
 
 	DXGetInfo(&App.DXInfo, g_Window.GetHandle());
-
 	if (start_setup || !LoadSettings())
 	{
 		if (!SetupDialog())

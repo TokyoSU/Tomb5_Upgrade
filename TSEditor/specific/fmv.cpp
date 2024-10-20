@@ -102,14 +102,7 @@ long PlayFmv(long num)
 	if (!g_Window.IsOpened())
 		return 0;
 
-	/*
-	if ((1 << num) & FmvSceneTriggered)
-		return 1;
-
-	FmvSceneTriggered |= 1 << num;
-	*/
 	S_CDStop();
-
 	if (fmvs_disabled)
 		return 0;
 
