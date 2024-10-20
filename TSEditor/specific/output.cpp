@@ -1031,20 +1031,16 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACE4 surf, HBITMAP hbm, long x, long y, lon
 		return E_FAIL;
 
 	surf->Restore();
-	hdc = CreateCompatibleDC(0);
 
-	if (!hdc)
+	hdc = CreateCompatibleDC(0);
+	if (hdc == NULL)
 		OutputDebugString("createcompatible dc failed\n");
 
 	SelectObject(hdc, hbm);
 	GetObject(hbm, sizeof(BITMAP), &bitmap);
 
-	if (!dx)
-		dx = bitmap.bmWidth;
-
-	if (!dy)
-		dy = bitmap.bmHeight;
-
+	if (dx <= 0) dx = bitmap.bmWidth;
+	if (dy <= 0) dy = bitmap.bmHeight;
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
 	surf->GetSurfaceDesc(&desc);
