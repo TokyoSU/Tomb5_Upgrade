@@ -14,7 +14,7 @@ public:
 
 	void Show();
 	void Hide();
-
+	void Raise();
 	void Center();
 	void Resize(int width, int height);
 

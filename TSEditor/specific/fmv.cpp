@@ -24,51 +24,43 @@ static double m_lastTime = 0.0;
 static double m_frameRate = 30.0; // Default value for framerate.
 static plm_t* m_file = NULL;
 static uint8_t* m_rgb_old = NULL;
-static uint8_t* m_rgb_newsize = NULL;
 static const char* m_fileName = NULL;
 
 static void FMV_VideoDecodeCallback(plm_t* self, plm_frame_t* frame, void* user)
 {
+	LPDIRECTDRAWSURFACE4 pBackBuffer = G_dxptr->lpBackBuffer;
 	DDSURFACEDESC2 surfDesc = {};
 	surfDesc.dwSize = sizeof(DDSURFACEDESC2);
-	if (!DXAttempt(App.dx.lpBackBuffer->Lock(0, &surfDesc, DDLOCK_NOSYSLOCK, NULL)))
-	{
-		// Return if the surface is NULL.
-		if (surfDesc.lpSurface == NULL)
-		{
-			DXAttempt(App.dx.lpBackBuffer->Unlock(0)); // Since we know DXAttempt returned TRUE, we can unlock freely.
-			return;
-		}
-	}
-
+	if (DXAttempt(pBackBuffer->Lock(0, &surfDesc, DDLOCK_NOSYSLOCK, NULL)))
+		return;
+	
 	// If it's the same size, just copy it.
 	// Else resample the texture to the correct size.
+	plm_frame_to_bgra(frame, m_rgb_old, frame->width * 4);
+	double scaleWidth = (double)G_dxptr->dwRenderWidth / (double)frame->width;
+	double scaleHeight = (double)G_dxptr->dwRenderHeight / (double)frame->height;
 	uint8_t* pSurf = (uint8_t*)surfDesc.lpSurface;
-	if (G_dxptr->dwRenderWidth == frame->width && G_dxptr->dwRenderHeight == frame->height)
+	if (pSurf == NULL)
 	{
-		plm_frame_to_bgra(frame, pSurf, frame->width * 4);
+		DXAttempt(pBackBuffer->Unlock(0));
+		return;
 	}
-	else
+
+	for (ulong cy = 0; cy < G_dxptr->dwRenderHeight; cy++)
 	{
-		plm_frame_to_bgra(frame, m_rgb_old, frame->width * 4);
-		double scaleWidth = (double)G_dxptr->dwRenderWidth / (double)frame->width;
-		double scaleHeight = (double)G_dxptr->dwRenderHeight / (double)frame->height;
-		for (ulong cy = 0; cy < G_dxptr->dwRenderHeight; cy++)
+		for (ulong cx = 0; cx < G_dxptr->dwRenderWidth; cx++)
 		{
-			for (ulong cx = 0; cx < G_dxptr->dwRenderWidth; cx++)
-			{
-				ulong pixel = (cy * (G_dxptr->dwRenderWidth * 4)) + (cx * 4);
-				ulong nearestMatch = (((int)(cy / scaleHeight) * (frame->width * 4)) + ((int)(cx / scaleWidth) * 4));
-				pSurf[pixel + 0] = m_rgb_old[nearestMatch + 0];
-				pSurf[pixel + 1] = m_rgb_old[nearestMatch + 1];
-				pSurf[pixel + 2] = m_rgb_old[nearestMatch + 2];
-				pSurf[pixel + 3] = m_rgb_old[nearestMatch + 3];
-			}
+			ulong pixel = (cy * (G_dxptr->dwRenderWidth * 4)) + (cx * 4);
+			ulong nearestMatch = (((int)(cy / scaleHeight) * (frame->width * 4)) + ((int)(cx / scaleWidth) * 4));
+			pSurf[pixel + 0] = m_rgb_old[nearestMatch + 0];
+			pSurf[pixel + 1] = m_rgb_old[nearestMatch + 1];
+			pSurf[pixel + 2] = m_rgb_old[nearestMatch + 2];
+			pSurf[pixel + 3] = m_rgb_old[nearestMatch + 3];
 		}
 	}
 	
-	DXAttempt(App.dx.lpBackBuffer->Unlock(0));
-	S_DumpScreenFrame();
+	DXAttempt(pBackBuffer->Unlock(0));
+	DXShowFrame();
 }
 
 static void FMV_AudioDecodeCallback(plm_t* self, plm_samples_t* samples, void* user)
@@ -81,16 +73,13 @@ long PlayFmv(long num)
 {
 	char name[80], path[80];
 
-	if (fmvs_disabled)
-		return 0;
-	if (!g_Window.IsOpened())
+	if (fmvs_disabled || !g_Window.IsOpened())
 		return 0;
 
 	S_CDStop();
 	sprintf(name, "movie\\fmv%01d.mpg", num);
 	memset(path, 0, sizeof(path));
 	strcat(path, name);
-
 	Log("PlayFMV %s", path);
 
 	App.fmv = TRUE;
@@ -104,8 +93,7 @@ long PlayFmv(long num)
 	int width = plm_get_width(m_file);
 	int height = plm_get_height(m_file);
 	int samplerate = plm_get_samplerate(m_file);
-	m_rgb_old = (uint8_t*)malloc(sizeof(uint8_t) * width * height * 4);
-	m_rgb_newsize = (uint8_t*)malloc(sizeof(uint8_t) * G_dxptr->dwRenderWidth * G_dxptr->dwRenderHeight * 4);
+	m_rgb_old = (uint8_t*)malloc(width * height * 4);
 	m_frameRate = plm_get_framerate(m_file);
 	m_fileName = path;
 
@@ -139,9 +127,9 @@ long PlayFmv(long num)
 	while (!plm_has_ended(m_file))
 	{
 		g_Window.Update();
-		if (App.dx.WaitAtBeginScene)
+		if (G_dxptr->WaitAtBeginScene)
 			continue;
-		if (input & IN_OPTION || input & IN_DRAW || !g_Window.IsOpened())
+		if ((input & IN_OPTION) || (input & IN_DRAW) || !g_Window.IsOpened())
 			break;
 		double current_time = double(SDL_GetTicks()) / 1000.0;
 		double elapsed_time = current_time - m_lastTime;
@@ -153,7 +141,6 @@ long PlayFmv(long num)
 		S_UpdateInput();
 	}
 
-	SafeFree(m_rgb_newsize);
 	SafeFree(m_rgb_old);
 
 	if (m_audioDevice != NULL)

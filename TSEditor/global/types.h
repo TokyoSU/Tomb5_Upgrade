@@ -1892,8 +1892,6 @@ struct DXPTR
 	LPDIRECTDRAWSURFACE4 lpZBuffer;
 	LPDIRECT3DVIEWPORT3 lpViewport;
 	LPDIRECTSOUND lpDS;
-	LPDIRECTINPUT8 lpDirectInput;
-	LPDIRECTINPUTDEVICE8 Keyboard;
 	ulong dwRenderWidth;
 	ulong dwRenderHeight;
 	RECT rViewport;

@@ -249,20 +249,10 @@ void WinProcessCommandLine(LPSTR cmd)
 void WinClose()
 {
 	Log(__FUNCTION__);
-
 	SaveSettings();
-
-	if (G_dxptr != NULL)
-	{
-		DXAttempt(G_dxptr->Keyboard->Unacquire());
-		SafeRelease(G_dxptr->Keyboard, "Keyboard");
-		SafeRelease(G_dxptr->lpDirectInput, "DirectInput");
-	}
-
 	DXFreeInfo(&App.DXInfo);
 	DXClose();
 	DestroyAcceleratorTable(App.hAccel);
-	
 	g_Window.Release();
 }
 

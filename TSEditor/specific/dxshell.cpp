@@ -455,7 +455,8 @@ HRESULT DXShowFrame()
 
 	if (G_dxptr->Flags & DXF_WINDOWED)
 		return DXAttempt(G_dxptr->lpPrimaryBuffer->Blt(&G_dxptr->rScreen, G_dxptr->lpBackBuffer, &G_dxptr->rViewport, DDBLT_WAIT, NULL));
-	return DXAttempt(G_dxptr->lpPrimaryBuffer->Flip(0, DDFLIP_WAIT));
+	else
+		return DXAttempt(G_dxptr->lpPrimaryBuffer->Flip(NULL, DDFLIP_WAIT));
 }
 
 void DXMove(long x, long y)
@@ -477,9 +478,9 @@ void DXClose()
 		return;
 	SafeRelease(G_dxptr->lpViewport, "Viewport");
 	SafeRelease(G_dxptr->lpD3DDevice, "Direct3DDevice");
-	SafeRelease(G_dxptr->lpZBuffer, "ZBuffer");
 	SafeRelease(G_dxptr->lpBackBuffer, "BackBuffer");
 	SafeRelease(G_dxptr->lpPrimaryBuffer, "PrimaryBuffer");
+	SafeRelease(G_dxptr->lpZBuffer, "ZBuffer");
 	if (!(G_dxptr->Flags & DXF_NOFREE))
 	{
 		SafeRelease(G_dxptr->lpD3D, "Direct3D");
@@ -582,6 +583,12 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd)
 		G_dxptr->rViewport.left = 0;
 		G_dxptr->rViewport.right = dm->w;
 		G_dxptr->rViewport.bottom = dm->h;
+		G_dxptr->rScreen.top = 0;
+		G_dxptr->rScreen.left = 0;
+		G_dxptr->rScreen.right = dm->w;
+		G_dxptr->rScreen.bottom = dm->h;
+		ClientToScreen(hWnd, (LPPOINT)&G_dxptr->rScreen);
+		ClientToScreen(hWnd, (LPPOINT)&G_dxptr->rScreen.right);
 	}
 	else
 	{
@@ -991,44 +998,6 @@ long DXUpdateJoystick()
 
 void DXInitInput(HWND hwnd, HINSTANCE hinstance)
 {
-	LPDIRECTINPUT8 dinput;
-	LPDIRECTINPUTDEVICE8 Keyboard;
-
-#if (DIRECTINPUT_VERSION >= 0x800)
-	DXAttempt(DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&dinput, 0));
-	dinput->QueryInterface(IID_IDirectInput8, (void**)&G_dxptr->lpDirectInput);
-#else
-	DXAttempt(DirectInputCreate(hinstance, DIRECTINPUT_VERSION, &dinput, 0));
-	dinput->QueryInterface(IID_IDirectInput2, (void**)&G_dxptr->lpDirectInput);
-#endif
-
-	if (dinput)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "DirectInput", dinput, dinput->Release());
-		dinput = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "DirectInput");
-
-	DXAttempt(G_dxptr->lpDirectInput->CreateDevice(GUID_SysKeyboard, &Keyboard, 0));
-#if (DIRECTINPUT_VERSION >= 0x800)
-	Keyboard->QueryInterface(IID_IDirectInputDevice8, (void**)&G_dxptr->Keyboard);
-#else
-	Keyboard->QueryInterface(IID_IDirectInputDevice2, (void**)&G_dxptr->Keyboard);
-#endif
-
-	if (Keyboard)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "Keyboard", Keyboard, Keyboard->Release());
-		Keyboard = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "Keyboard");
-
-	DXAttempt(G_dxptr->Keyboard->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND));
-	DXAttempt(G_dxptr->Keyboard->SetDataFormat(&c_dfDIKeyboard));
-	DXAttempt(G_dxptr->Keyboard->Acquire());
-	memset(keymap, 0, sizeof(keymap));
 }
 
 const char* DXGetErrorString(HRESULT hr)
