@@ -12,7 +12,7 @@ CWindow g_Window;
 bool CWindow::Initialize(HINSTANCE hinstance)
 {
 	App.hInstance = hinstance;
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) < 0)
 	{
 		Log("Failed to initialize SDL2, Error: %s", SDL_GetError());
 		return false;
@@ -134,15 +134,12 @@ void CWindow::UpdateWindow()
 			keymap[evts.key.keysym.scancode] = 0;
 			break;
 		case SDL_WINDOWEVENT:
-			if (App.fmv)
-				break;
 			switch (evts.window.event)
 			{
 			case SDL_WINDOWEVENT_FOCUS_GAINED:
 				Log("SDL_WINDOWEVENT_FOCUS_GAINED");
 				if (App.SetupComplete)
 				{
-					//ResumeThread(MainThread.handle);
 					App.dx.WaitAtBeginScene = FALSE;
 					Log("Game Thread Resumed");
 				}
@@ -151,11 +148,7 @@ void CWindow::UpdateWindow()
 				Log("SDL_WINDOWEVENT_FOCUS_LOST");
 				if (App.SetupComplete)
 				{
-					Log("HangGameThread");
-					while (App.dx.InScene) {};
 					App.dx.WaitAtBeginScene = TRUE;
-					while (!App.dx.InScene) {};
-					//SuspendThread(MainThread.handle);
 					Log("Game Thread Suspended");
 				}
 				break;

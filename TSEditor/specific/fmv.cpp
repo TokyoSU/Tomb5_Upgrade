@@ -15,177 +15,163 @@
 #include "LoadSave.h"
 #include "setupdlg.h"
 #include "window.h"
+#define PL_MPEG_IMPLEMENTATION
+#include "../tomb5/pl_mpeg.h"
+#include "output.h"
 
-#define GET_DLL_PROC(dll, proc, n) \
-{ \
-	*(FARPROC *)&(proc) = GetProcAddress((dll), n); \
-	if(!proc) throw #proc; \
-}
+static SDL_AudioDeviceID m_audioDevice = NULL;
+static double m_lastTime = 0.0;
+static double m_frameRate = 30.0; // Default value for framerate.
+static plm_t* m_file = NULL;
+static uint8_t* m_rgb_old = NULL;
+static uint8_t* m_rgb_newsize = NULL;
+static const char* m_fileName = NULL;
 
-static void(__stdcall* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
-static void(__stdcall* BinkOpenDirectSound)(ulong);
-static void(__stdcall* BinkSetSoundSystem)(LPVOID, LPDIRECTSOUND);
-static LPVOID(__stdcall* BinkOpen)(char*, ulong);
-static long(__stdcall* BinkDDSurfaceType)(LPDIRECTDRAWSURFACE4);
-static long(__stdcall* BinkDoFrame)(BINK_STRUCT*);
-static void(__stdcall* BinkNextFrame)(BINK_STRUCT*);
-static long(__stdcall* BinkWait)(BINK_STRUCT*);
-static void(__stdcall* BinkClose)(BINK_STRUCT*);
-static HMODULE hBinkW32;
-
-static long nFmvFrames[9] = { 880, 1826, 3869, 3112, 1903, 1973, 3200, 2799, 1725 };
-
-static BINK_STRUCT* Bink;
-static LPDIRECTDRAWSURFACE4 BinkSurface;
-static long BinkSurfaceType;
-
-bool LoadBinkStuff()
+static void FMV_VideoDecodeCallback(plm_t* self, plm_frame_t* frame, void* user)
 {
-	hBinkW32 = LoadLibrary("binkw32.dll");
-
-	if (!hBinkW32)
-		return 0;
-
-	try
+	DDSURFACEDESC2 surfDesc = {};
+	surfDesc.dwSize = sizeof(DDSURFACEDESC2);
+	if (!DXAttempt(App.dx.lpBackBuffer->Lock(0, &surfDesc, DDLOCK_NOSYSLOCK, NULL)))
 	{
-		GET_DLL_PROC(hBinkW32, BinkCopyToBuffer, "_BinkCopyToBuffer@28");
-		GET_DLL_PROC(hBinkW32, BinkOpenDirectSound, "_BinkOpenDirectSound@4");
-		GET_DLL_PROC(hBinkW32, BinkSetSoundSystem, "_BinkSetSoundSystem@8");
-		GET_DLL_PROC(hBinkW32, BinkOpen, "_BinkOpen@8");
-		GET_DLL_PROC(hBinkW32, BinkDDSurfaceType, "_BinkDDSurfaceType@4");
-		GET_DLL_PROC(hBinkW32, BinkDoFrame, "_BinkDoFrame@4");
-		GET_DLL_PROC(hBinkW32, BinkNextFrame, "_BinkNextFrame@4");
-		GET_DLL_PROC(hBinkW32, BinkWait, "_BinkWait@4");
-		GET_DLL_PROC(hBinkW32, BinkClose, "_BinkClose@4");
-	}
-	catch (LPCTSTR)
-	{
-		FreeLibrary(hBinkW32);
-		hBinkW32 = 0;
-		return 0;
+		// Return if the surface is NULL.
+		if (surfDesc.lpSurface == NULL)
+		{
+			DXAttempt(App.dx.lpBackBuffer->Unlock(0)); // Since we know DXAttempt returned TRUE, we can unlock freely.
+			return;
+		}
 	}
 
-	return 1;
-}
-
-void FreeBinkStuff()
-{
-	if (hBinkW32)
+	// If it's the same size, just copy it.
+	// Else resample the texture to the correct size.
+	uint8_t* pSurf = (uint8_t*)surfDesc.lpSurface;
+	if (G_dxptr->dwRenderWidth == frame->width && G_dxptr->dwRenderHeight == frame->height)
 	{
-		FreeLibrary(hBinkW32);
-		hBinkW32 = 0;
+		plm_frame_to_bgra(frame, pSurf, frame->width * 4);
 	}
+	else
+	{
+		plm_frame_to_bgra(frame, m_rgb_old, frame->width * 4);
+		double scaleWidth = (double)G_dxptr->dwRenderWidth / (double)frame->width;
+		double scaleHeight = (double)G_dxptr->dwRenderHeight / (double)frame->height;
+		for (ulong cy = 0; cy < G_dxptr->dwRenderHeight; cy++)
+		{
+			for (ulong cx = 0; cx < G_dxptr->dwRenderWidth; cx++)
+			{
+				ulong pixel = (cy * (G_dxptr->dwRenderWidth * 4)) + (cx * 4);
+				ulong nearestMatch = (((int)(cy / scaleHeight) * (frame->width * 4)) + ((int)(cx / scaleWidth) * 4));
+				pSurf[pixel + 0] = m_rgb_old[nearestMatch + 0];
+				pSurf[pixel + 1] = m_rgb_old[nearestMatch + 1];
+				pSurf[pixel + 2] = m_rgb_old[nearestMatch + 2];
+				pSurf[pixel + 3] = m_rgb_old[nearestMatch + 3];
+			}
+		}
+	}
+	
+	DXAttempt(App.dx.lpBackBuffer->Unlock(0));
+	S_DumpScreenFrame();
 }
 
-void ShowBinkFrame()
+static void FMV_AudioDecodeCallback(plm_t* self, plm_samples_t* samples, void* user)
 {
-	DDSURFACEDESC2 surf;
-
-	memset(&surf, 0, sizeof(surf));
-	surf.dwSize = sizeof(DDSURFACEDESC2);
-	DXAttempt(BinkSurface->Lock(0, &surf, DDLOCK_NOSYSLOCK, 0));
-	BinkCopyToBuffer(Bink, surf.lpSurface, surf.lPitch, Bink->num, 0, 0, BinkSurfaceType);
-	DXAttempt(BinkSurface->Unlock(0));
-
-	if (App.dx.Flags & DXF_WINDOWED)
-		DXShowFrame();
+	int size = sizeof(float) * samples->count * 2;
+	SDL_QueueAudio(m_audioDevice, samples->interleaved, size);
 }
 
 long PlayFmv(long num)
 {
-	DXDISPLAYMODE* modes;
-	DXDISPLAYMODE* current;
-	long dm, rm, ndms;
-	char name[80];
-	char path[80];
+	char name[80], path[80];
 
+	if (fmvs_disabled)
+		return 0;
 	if (!g_Window.IsOpened())
 		return 0;
 
 	S_CDStop();
-	if (fmvs_disabled)
-		return 0;
-
-	sprintf(name, "movie\\fmv%01d.bik", num);
+	sprintf(name, "movie\\fmv%01d.mpg", num);
 	memset(path, 0, sizeof(path));
 	strcat(path, name);
+
 	Log("PlayFMV %s", path);
-	App.fmv = 1;
-	modes = G_dxinfo->DDInfo[App.DXInfo.nDD].D3DDevices[App.DXInfo.nD3D].DisplayModes;
-	rm = 0;
-	dm = App.DXInfo.nDisplayMode;
-	current = &modes[dm];
 
-	if (current->bpp != 16 || current->w != 640 || current->h != 480)
+	App.fmv = TRUE;
+	m_file = plm_create_with_filename(path);
+	if (m_file == NULL)
 	{
-		ndms = G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].nDisplayModes;
-
-		for (int i = 0; i < ndms; i++, modes++)
-		{
-			if (modes->bpp == 16 && modes->w == 640 && modes->h == 480)
-			{
-				App.DXInfo.nDisplayMode = i;
-				break;
-			}
-		}
-
-		DXChangeVideoMode();
-		HWInitialise();
-		ClearSurfaces();
-		rm = 1;
+		Log("Failed to play fmv at path: <%s>, file possibly not exist ?", path);
+		return 0;
 	}
 
-	Bink = 0;
-	BinkSetSoundSystem(BinkOpenDirectSound, App.dx.lpDS);
-	Bink = (BINK_STRUCT*)BinkOpen(path, 0);
+	int width = plm_get_width(m_file);
+	int height = plm_get_height(m_file);
+	int samplerate = plm_get_samplerate(m_file);
+	m_rgb_old = (uint8_t*)malloc(sizeof(uint8_t) * width * height * 4);
+	m_rgb_newsize = (uint8_t*)malloc(sizeof(uint8_t) * G_dxptr->dwRenderWidth * G_dxptr->dwRenderHeight * 4);
+	m_frameRate = plm_get_framerate(m_file);
+	m_fileName = path;
 
-	if (App.dx.Flags & DXF_WINDOWED)
-		BinkSurface = App.dx.lpBackBuffer;
+	plm_set_loop(m_file, FALSE);
+	plm_set_audio_enabled(m_file, TRUE);
+	plm_set_audio_stream(m_file, 0);
+
+	// Setup the audio player.
+	if (plm_get_num_audio_streams(m_file) > 0) {
+		SDL_AudioSpec audio_spec;
+		SDL_memset(&audio_spec, 0, sizeof(audio_spec));
+		audio_spec.freq = samplerate;
+		audio_spec.format = AUDIO_F32;
+		audio_spec.channels = 2;
+		audio_spec.samples = 4096;
+		m_audioDevice = SDL_OpenAudioDevice(NULL, FALSE, &audio_spec, NULL, NULL);
+		if (m_audioDevice == NULL)
+			Log("Failed to setup audio for FMV, Error: %s", SDL_GetError());
+		SDL_PauseAudioDevice(m_audioDevice, FALSE);
+		plm_set_audio_lead_time(m_file, (double)audio_spec.samples / (double)samplerate);
+	}
 	else
-		BinkSurface = App.dx.lpPrimaryBuffer;
-
-	BinkSurfaceType = BinkDDSurfaceType(BinkSurface);
-
-	if (Bink)
 	{
-		Log("Entering Bink Loop");
-		BinkDoFrame(Bink);
+		Log("Failed to setup audio for FMV: %s, No audio stream found !", path);
+	}
+
+	plm_set_video_decode_callback(m_file, FMV_VideoDecodeCallback, NULL);
+	plm_set_audio_decode_callback(m_file, FMV_AudioDecodeCallback, NULL);
+
+	S_UpdateInput();
+	while (!plm_has_ended(m_file))
+	{
+		g_Window.Update();
+		if (App.dx.WaitAtBeginScene)
+			continue;
+		if (input & IN_OPTION || input & IN_DRAW || !g_Window.IsOpened())
+			break;
+		double current_time = double(SDL_GetTicks()) / 1000.0;
+		double elapsed_time = current_time - m_lastTime;
+		if (elapsed_time > 1.0 / m_frameRate) {
+			elapsed_time = 1.0 / m_frameRate;
+		}
+		m_lastTime = current_time;
+		plm_decode(m_file, elapsed_time);
 		S_UpdateInput();
-
-		for (int i = 0; i != nFmvFrames[num]; i++)
-		{
-			if (input & IN_OPTION || input & IN_DRAW || !g_Window.IsOpened())
-				break;
-			BinkNextFrame(Bink);
-			while (BinkWait(Bink));
-			ShowBinkFrame();
-			BinkDoFrame(Bink);
-			S_UpdateInput();
-		}
-
-
-		BinkClose(Bink);
-		Bink = 0;
 	}
-	else
+
+	SafeFree(m_rgb_newsize);
+	SafeFree(m_rgb_old);
+
+	if (m_audioDevice != NULL)
 	{
-		Log("FAILED TO CREATE BINK OBJECT");
+		SDL_CloseAudioDevice(m_audioDevice);
+		m_audioDevice = NULL;
 	}
 
-	if (rm)
+	if (m_file != NULL)
 	{
-		App.DXInfo.nDisplayMode = dm;
-		DXChangeVideoMode();
-		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
-		InitFont();
-		S_InitD3DMatrix();
-		aSetViewMatrix();
+		plm_destroy(m_file);
+		m_file = NULL;
 	}
 
-	DXChangeOutputFormat(sfx_frequencies[SoundQuality], 1);
 	HWInitialise();
 	ClearSurfaces();
-	App.fmv = 0;
+
+	App.fmv = FALSE;
 	return 0;
 }
 
@@ -223,6 +209,5 @@ long PlayFmvNow(long num, long u)
 		PlayFmv(8);
 		break;
 	}
-
 	return 0;
 }

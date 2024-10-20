@@ -569,7 +569,7 @@ void InitFont()
 		CharDef[i].YOffset = yoff;
 	}
 
-	font_height = GetFixedScale(28);
+	font_height = GetRenderScale(28);
 	default_font_height = font_height;
 }
 

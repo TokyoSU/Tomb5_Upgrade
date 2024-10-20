@@ -56,8 +56,8 @@ void S_DrawPickup(short object_number)
 	phd_LookAt(0, 1024, 0, 100, 0, 200, 0);
 	aSetViewMatrix();
 
-	x = phd_winwidth - GetFixedScale(80) + PickupX;
-	y = phd_winheight - GetFixedScale(75);
+	x = phd_winwidth - GetRenderScale(80) + PickupX;
+	y = phd_winheight - GetRenderScale(75);
 	DrawThreeDeeObject2D(x, y, convert_obj_to_invobj(object_number), 128, 0, (GnFrameCounter & 0x7F) << 9, 0, 0, 1);
 }
 
@@ -723,7 +723,7 @@ void RenderLoadPic()
 	InitialisePickUpDisplay();
 
 	x = phd_centerx;
-	y = phd_winheight - GetFixedScale(37);
+	y = phd_winheight - GetRenderScale(37);
 
 	do
 	{
@@ -1054,7 +1054,6 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACE4 surf, HBITMAP hbm, long x, long y, lon
 	if (!(App.dx.Flags & DXF_HWR))
 	{
 		surf = App.dx.lpPrimaryBuffer;
-
 		if (App.dx.Flags & DXF_WINDOWED)
 		{
 			l = App.dx.rScreen.left;
@@ -1063,7 +1062,6 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACE4 surf, HBITMAP hbm, long x, long y, lon
 	}
 
 	result = surf->GetDC(&hdc2);
-
 	if (result == DD_OK)
 	{
 		StretchBlt(hdc2, l, t, desc.dwWidth, desc.dwHeight, hdc, x, y, dx, dy, SRCCOPY);
@@ -2390,13 +2388,27 @@ void phd_PutPolygonsSpcEnvmap(short* objptr, long clipstatus)
 	}
 }
 
-long GetFixedScale(long unit)
+long GetRenderScale(long unit)
 {
-	long w, h, x, y;
+	long w = 640;
+	long h = 480;
+	long x = (phd_winwidth > w) ? MulDiv(phd_winwidth, unit, w) : unit;
+	long y = (phd_winheight > h) ? MulDiv(phd_winheight, unit, h) : unit;
+	return min(x, y);
+}
 
-	w = 640;
-	h = 480;
-	x = (phd_winwidth > w) ? MulDiv(phd_winwidth, unit, w) : unit;
-	y = (phd_winheight > h) ? MulDiv(phd_winheight, unit, h) : unit;
-	return x < y ? x : y;
+long GetRenderHeightDownscaled() {
+	return phd_winheight * 0x10000 / GetRenderScale(0x10000);
+}
+
+long GetRenderWidthDownscaled() {
+	return phd_winwidth * 0x10000 / GetRenderScale(0x10000);
+}
+
+long GetRenderHeight() {
+	return phd_winheight;
+}
+
+long GetRenderWidth() {
+	return phd_winwidth;
 }

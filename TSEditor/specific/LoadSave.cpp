@@ -142,8 +142,8 @@ long DoLoadSave(long LoadSave)
 		if (pSave->valid)
 		{
 			wsprintf(string, "%03d", pSave->num);
-			PrintString(GetFixedScale(10), f, color, string, 0);
-			PrintString(GetFixedScale(60), f, color, name, 0);
+			PrintString(GetRenderScale(10), f, color, string, 0);
+			PrintString(GetRenderScale(60), f, color, name, 0);
 			wsprintf(string, "%d %s %02d:%02d:%02d", pSave->days, SCRIPT_TEXT(TXT_days), pSave->hours, pSave->minutes, pSave->seconds);
 			PrintString(phd_centerx - long((float)phd_winwidth / 640.0F * -135.0), f, color, string, 0);
 		}
@@ -322,7 +322,7 @@ void DoOptions()
 
 		PrintString(phd_centerx >> 2, font_height, sel & 1 ? 1 : 2, SCRIPT_TEXT(TXT_Control_Method), 0);
 
-		font_height = GetFixedScale(27);
+		font_height = GetRenderScale(27);
 
 		if (ControlMethod == CMT_Keyboard)
 		{

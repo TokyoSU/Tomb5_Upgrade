@@ -580,10 +580,10 @@ struct GAME_VECTOR
 
 struct PHD_VECTOR
 {
-	long x;
-	long y;
-	long z;
-	PHD_VECTOR() {}
+	long x = 0;
+	long y = 0;
+	long z = 0;
+	PHD_VECTOR() = default;
 	PHD_VECTOR(long _x, long _y, long _z) {
 		x = _x;
 		y = _y;

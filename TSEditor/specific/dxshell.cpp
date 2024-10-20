@@ -44,11 +44,6 @@ Uint8 keymap[SDL_NUM_SCANCODES];
 
 static char tga_header[18] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 1, 0, 1, 16, 0 };
 
-void DXReadKeyboard()
-{
-
-}
-
 void DXBitMask2ShiftCnt(ulong mask, uchar* shift, uchar* count)
 {
 	uchar i;
@@ -459,82 +454,36 @@ HRESULT DXShowFrame()
 		return 0;
 
 	if (G_dxptr->Flags & DXF_WINDOWED)
-		return DXAttempt(G_dxptr->lpPrimaryBuffer->Blt(&G_dxptr->rScreen, G_dxptr->lpBackBuffer, &G_dxptr->rViewport, DDBLT_WAIT, 0));
-	else
-		return DXAttempt(G_dxptr->lpPrimaryBuffer->Flip(0, DDFLIP_WAIT));
+		return DXAttempt(G_dxptr->lpPrimaryBuffer->Blt(&G_dxptr->rScreen, G_dxptr->lpBackBuffer, &G_dxptr->rViewport, DDBLT_WAIT, NULL));
+	return DXAttempt(G_dxptr->lpPrimaryBuffer->Flip(0, DDFLIP_WAIT));
 }
 
 void DXMove(long x, long y)
 {
 	Log("DXMove : x %d y %d", x, y);
 	if (G_dxptr != NULL && !(G_dxptr->Flags & DXF_FULLSCREEN))
-		SetRect(&G_dxptr->rScreen, x, y, x + G_dxptr->dwRenderWidth, y + G_dxptr->dwRenderHeight);
+	{
+		G_dxptr->rScreen.left = x;
+		G_dxptr->rScreen.top = y;
+		G_dxptr->rScreen.right = x + G_dxptr->dwRenderWidth;
+		G_dxptr->rScreen.bottom = y + G_dxptr->dwRenderHeight;
+	}
 }
 
 void DXClose()
 {
 	Log(__FUNCTION__);
-
-	if (!G_dxptr)
+	if (G_dxptr == NULL)
 		return;
-
-	if (G_dxptr->lpViewport)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "Viewport", G_dxptr->lpViewport, G_dxptr->lpViewport->Release());
-		G_dxptr->lpViewport = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "Viewport");
-
-	if (G_dxptr->lpD3DDevice)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "Direct3DDevice", G_dxptr->lpD3DDevice, G_dxptr->lpD3DDevice->Release());
-		G_dxptr->lpD3DDevice = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "Direct3DDevice");
-
-	if (G_dxptr->lpZBuffer)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "Z Buffer", G_dxptr->lpZBuffer, G_dxptr->lpZBuffer->Release());
-		G_dxptr->lpZBuffer = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "Z Buffer");
-
-	if (G_dxptr->lpBackBuffer)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "Back Buffer", G_dxptr->lpBackBuffer, G_dxptr->lpBackBuffer->Release());
-		G_dxptr->lpBackBuffer = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "Back Buffer");
-
-	if (G_dxptr->lpPrimaryBuffer)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "Primary Buffer", G_dxptr->lpPrimaryBuffer, G_dxptr->lpPrimaryBuffer->Release());
-		G_dxptr->lpPrimaryBuffer = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "Primary Buffer");
-
+	SafeRelease(G_dxptr->lpViewport, "Viewport");
+	SafeRelease(G_dxptr->lpD3DDevice, "Direct3DDevice");
+	SafeRelease(G_dxptr->lpZBuffer, "ZBuffer");
+	SafeRelease(G_dxptr->lpBackBuffer, "BackBuffer");
+	SafeRelease(G_dxptr->lpPrimaryBuffer, "PrimaryBuffer");
 	if (!(G_dxptr->Flags & DXF_NOFREE))
 	{
-		if (G_dxptr->lpDD)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "DirectDraw", G_dxptr->lpDD, G_dxptr->lpDD->Release());
-			G_dxptr->lpDD = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "DirectDraw");
-
-		if (G_dxptr->lpD3D)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Direct3D", G_dxptr->lpD3D, G_dxptr->lpD3D->Release());
-			G_dxptr->lpD3D = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Direct3D");
+		SafeRelease(G_dxptr->lpD3D, "Direct3D");
+		SafeRelease(G_dxptr->lpDD, "DirectDraw");
 	}
 }
 
@@ -557,7 +506,6 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd)
 		flag = 1;
 
 	DXClose();
-
 	if (!flag)
 	{
 		if (!DXDDCreate(G_dxinfo->DDInfo[G_dxinfo->nDD].lpGuid, (void**)&G_dxptr->lpDD) || !DXD3DCreate(G_dxptr->lpDD, (void**)&G_dxptr->lpD3D))
@@ -1019,17 +967,17 @@ void DXFreeInfo(DXINFO* dxinfo)
 		for (int j = 0; j < DDInfo->nD3DDevices; j++)
 		{
 			d3d = &DDInfo->D3DDevices[j];
-			free(d3d->DisplayModes);
-			free(d3d->TextureInfos);
-			free(d3d->ZBufferInfos);
+			SafeFree(d3d->DisplayModes);
+			SafeFree(d3d->TextureInfos);
+			SafeFree(d3d->ZBufferInfos);
 		}
 
-		free(DDInfo->D3DDevices);
-		free(DDInfo->DisplayModes);
+		SafeFree(DDInfo->D3DDevices);
+		SafeFree(DDInfo->DisplayModes);
 	}
 
-	free(dxinfo->DDInfo);
-	free(dxinfo->DSInfo);
+	SafeFree(dxinfo->DDInfo);
+	SafeFree(dxinfo->DSInfo);
 }
 
 long DXUpdateJoystick()

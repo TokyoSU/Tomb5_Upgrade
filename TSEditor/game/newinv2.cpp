@@ -1399,7 +1399,7 @@ void draw_current_object_list(long ringnum)
 		}
 
 		x = xoff + phd_centerx + i * OBJLIST_SPACING;
-		y = ringnum == RING_INVENTORY ? GetFixedScale(84) : GetFixedScale(380);
+		y = ringnum == RING_INVENTORY ? GetRenderScale(84) : GetRenderScale(380);
 		DrawThreeDeeObject2D(x, y, rings[ringnum]->current_object_list[n].invitem, shade, 0, yrot, 0, rings[ringnum]->current_object_list[n].bright, 0);
 
 		n++;
@@ -1893,8 +1893,8 @@ void draw_ammo_selector()
 				PrintString(phd_centerx, phd_centery + 3 * font_height - 9, 8, cunter, FF_CENTER);
 		}
 		
-		x = xpos + GetFixedScale(80);
-		y = GetFixedScale(380);
+		x = xpos + GetRenderScale(80);
+		y = GetRenderScale(380);
 		DrawThreeDeeObject2D(x, y, invitem, ammo_selector_fade_val, 0, yrot, 0, (i == current_ammo_type[0]) ? 0 : 1, 0);
 		xpos += OBJLIST_SPACING;
 	}
@@ -2868,9 +2868,9 @@ void do_keypad_mode()
 	objme->meshbits = meshbits;
 
 	x = phd_centerx;
-	y = phd_centery + GetFixedScale(16);
+	y = phd_centery + GetRenderScale(16);
 	DrawThreeDeeObject2D(x, y, INV_PUZZLE_HOLE8, 128, 0x8000, 0x4000, 0x4000, 0, 0);
-	PrintString(x, y - GetFixedScale(64), 6, SCRIPT_TEXT(TXT_keypad), FF_CENTER);
+	PrintString(x, y - GetRenderScale(64), 6, SCRIPT_TEXT(TXT_keypad), FF_CENTER);
 
 	buf[0] = '-';
 	buf[1] = '-';
@@ -2881,7 +2881,7 @@ void do_keypad_mode()
 	for (int i = 0; i < keypadnuminputs; i++)
 		buf[i] = keypadinputs[i] + '0';
 
-	PrintString(x, y + GetFixedScale(128), 1, buf, FF_CENTER);
+	PrintString(x, y + GetRenderScale(128), 1, buf, FF_CENTER);
 
 	if (keypadpause)
 	{
@@ -2974,7 +2974,7 @@ void do_examine_mode()
 
 	objme->scale1 = 300;
 	x = phd_centerx;
-	y = GetFixedScale(256);
+	y = GetRenderScale(256);
 	DrawThreeDeeObject2D(x, y, invitem, examine_mode, 0x8000, 0x4000, 0x4000, 96, 0);
 	objme->scale1 = scale;
 

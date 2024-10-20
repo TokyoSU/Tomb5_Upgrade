@@ -391,8 +391,6 @@ long S_UpdateInput()
 	debounce = SetDebounce;
 
 	DXUpdateJoystick();
-	DXReadKeyboard();
-
 	if (ControlMethod == CMT_Joystick)
 		joy_fire = ReadJoystick(joy_x, joy_y);
 

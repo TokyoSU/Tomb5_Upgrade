@@ -967,7 +967,7 @@ void SuperShowLogo()
 	tex.v3 = 1.0F - (1.0F / 256.0F);
 	tex.u4 = 1.0F / 256.0F;
 	tex.v4 = 1.0F - (1.0F / 256.0F);
-	w = (float)GetFixedScale(256);
+	w = (float)GetRenderScale(256);
 	x = phd_centerx - w;
 	y = phd_winymin + w;
 
@@ -1145,7 +1145,7 @@ void DoRain()
 			}
 
 			rptr->xv = (GetRandomDraw() & 7) - 4;
-			rptr->yv = uchar((GetRandomDraw() & 3) + GetFixedScale(8));
+			rptr->yv = uchar((GetRandomDraw() & 3) + GetRenderScale(8));
 			rptr->zv = (GetRandomDraw() & 7) - 4;
 			rptr->room_number = IsRoomOutsideNo;
 			rptr->life = 64 - rptr->yv;
@@ -1325,7 +1325,7 @@ void DoRain()
 			*clip-- = clipFlag;
 
 			if (!clip[0] && !clip[1])
-				AddPolyLine(v, &tex, (float)GetFixedScale(1));
+				AddPolyLine(v, &tex, (float)GetRenderScale(1));
 		}
 	}
 
@@ -1925,7 +1925,7 @@ void S_DrawSparks()
 			v[1].color = c1;
 			v[1].specular = 0xFF000000;
 
-			AddPolyLine(v, &tex, (float)GetFixedScale(1));
+			AddPolyLine(v, &tex, (float)GetRenderScale(1));
 		}
 	}
 
@@ -2683,7 +2683,7 @@ void DrawDrips()
 		XY[1] = long(vec.y * zv + f_centery);
 		Z[0] = (long)vec.z;
 
-		pos[1] -= GetFixedScale(drip->Yvel >> 6);
+		pos[1] -= GetRenderScale(drip->Yvel >> 6);
 
 		if (room[drip->RoomNumber].flags & ROOM_NOT_INSIDE)
 		{
@@ -2744,7 +2744,7 @@ void DrawDrips()
 			clipflags[1] = 0;
 			clipflags[2] = 0;
 			clipflags[3] = 0;
-			AddPolyLine(v, &tex, (float)GetFixedScale(1));
+			AddPolyLine(v, &tex, (float)GetRenderScale(1));
 		}
 	}
 
@@ -2873,7 +2873,7 @@ void DoUwEffect()
 			size = 16;
 
 		size = (size * 0x2AAB) >> 15;
-		size = GetFixedScale(size) >> 1;
+		size = GetRenderScale(size) >> 1;
 
 		if ((p->yv & 7) == 7)
 		{
@@ -5186,7 +5186,7 @@ void DrawLaserSightSprite()
 		sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 14];
 	}
 
-	size = GetFixedScale(size);
+	size = GetRenderScale(size);
 	x1 = long(pos.x - size);
 	x2 = long(pos.x + size);
 	y1 = long(pos.y - size);

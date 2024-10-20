@@ -417,7 +417,7 @@ long TitleOptions()
 	{
 	case 1://select level menu
 
-		font_height = GetFixedScale(36);
+		font_height = GetRenderScale(36);
 		y = font_height;
 		PrintString(phd_centerx, font_height, 6, SCRIPT_TEXT(TXT_Select_Level), FF_CENTER);
 		y += font_height;
@@ -500,7 +500,7 @@ long TitleOptions()
 		SuperShowLogo();
 		Chris_Menu = 0;
 
-		font_height = GetFixedScale(36);
+		font_height = GetRenderScale(36);
 		PrintString(phd_centerx, phd_winymax - 4 * font_height, (selection & 1) ? 1 : 2, SCRIPT_TEXT(TXT_New_Game), FF_CENTER);
 		PrintString(phd_centerx, phd_winymax - 3 * font_height, (selection & 2) ? 1 : 2, SCRIPT_TEXT(TXT_Load_Game), FF_CENTER);
 		PrintString(phd_centerx, phd_winymax - 2 * font_height, (selection & 4) ? 1 : 2, SCRIPT_TEXT(TXT_Options), FF_CENTER);

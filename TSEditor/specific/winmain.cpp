@@ -261,7 +261,6 @@ void WinClose()
 
 	DXFreeInfo(&App.DXInfo);
 	DXClose();
-	FreeBinkStuff();
 	DestroyAcceleratorTable(App.hAccel);
 	
 	g_Window.Release();
@@ -302,11 +301,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	g_Window.Show();
 
-	if (!fmvs_disabled && !LoadBinkStuff())
-	{
-		Log("Failed to load Bink, disabling FMVs.");
-		fmvs_disabled = true;
-	}
+	if (fmvs_disabled)
+		Log("Disabling FMVs.");
 
 	App.dx.WaitAtBeginScene = FALSE;
 	App.dx.InScene = FALSE;

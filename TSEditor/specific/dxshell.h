@@ -29,7 +29,6 @@ BOOL __stdcall DXEnumDirectSound(LPGUID lpGuid, LPCSTR lpcstrDescription, LPCSTR
 long DXGetInfo(DXINFO* dxinfo, HWND hwnd);
 void DXFreeInfo(DXINFO* dxinfo);
 long DXUpdateJoystick();
-void DXReadKeyboard();
 void DXInitInput(HWND hwnd, HINSTANCE hinstance);
 const char* DXGetErrorString(HRESULT hr);
 const char* DIGetErrorString(HRESULT hr);

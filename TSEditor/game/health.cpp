@@ -172,7 +172,7 @@ void InitialisePickUpDisplay()
 	for (int i = 0; i < 8; i++)
 		pickups[i].life = -1;
 
-	PickupX = GetFixedScale(128);
+	PickupX = GetRenderScale(128);
 	FullPickupX = PickupX;
 	PickupVel = 0;
 	CurrentPickup = 0;
