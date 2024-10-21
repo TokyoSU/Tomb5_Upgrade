@@ -1835,7 +1835,7 @@ struct DXD3DDEVICE
 	char About[256];
 	LPGUID lpGuid;
 	GUID Guid;
-	D3DDEVICEDESC DeviceDesc;
+	D3DDEVICEDESC7 DeviceDesc;
 	long bHardware;
 	long nDisplayModes;
 	DXDISPLAYMODE* DisplayModes;
@@ -1852,7 +1852,7 @@ struct DXDIRECTDRAWINFO
 	LPGUID lpGuid;
 	GUID Guid;
 	DDCAPS DDCaps;
-	DDDEVICEIDENTIFIER DDIdentifier;
+	DDDEVICEIDENTIFIER2 DDIdentifier;
 	long nDisplayModes;
 	DXDISPLAYMODE* DisplayModes;
 	long nD3DDevices;
@@ -1884,14 +1884,14 @@ struct DXINFO
 
 struct DXPTR
 {
-	LPDIRECTDRAW4 lpDD;
-	LPDIRECT3D3 lpD3D;
-	LPDIRECT3DDEVICE3 lpD3DDevice;
-	LPDIRECTDRAWSURFACE4 lpPrimaryBuffer;
-	LPDIRECTDRAWSURFACE4 lpBackBuffer;
-	LPDIRECTDRAWSURFACE4 lpZBuffer;
+	LPDIRECTDRAW7 lpDD;
+	LPDIRECT3D7 lpD3D;
+	LPDIRECT3DDEVICE7 lpD3DDevice;
+	LPDIRECTDRAWSURFACE7 lpPrimaryBuffer;
+	LPDIRECTDRAWSURFACE7 lpBackBuffer;
+	LPDIRECTDRAWSURFACE7 lpZBuffer;
 	LPDIRECT3DVIEWPORT3 lpViewport;
-	LPDIRECTSOUND lpDS;
+	LPDIRECTSOUND8 lpDS;
 	ulong dwRenderWidth;
 	ulong dwRenderHeight;
 	RECT rViewport;
@@ -1910,8 +1910,6 @@ struct WINAPP
 	HINSTANCE hInstance;
 	DXINFO DXInfo;
 	DXPTR dx;
-	LPDIRECT3DMATERIAL3 GlobalMaterial;
-	D3DMATERIALHANDLE GlobalMaterialHandle;
 	HACCEL hAccel;
 	float fps;
 	long StartFlags;
@@ -2430,14 +2428,12 @@ struct D3DTLBUMPVERTEX
 
 struct DXTEXTURE
 {
-	LPDIRECT3DTEXTURE2 tex;
-	LPDIRECTDRAWSURFACE4 surface;
+	LPDIRECTDRAWSURFACE7 surface;
 };
 
 struct TEXTURE
 {
-	LPDIRECT3DTEXTURE2 tex;
-	LPDIRECTDRAWSURFACE4 surface;
+	LPDIRECTDRAWSURFACE7 surface;
 	ulong xoff;
 	ulong yoff;
 	ulong width;

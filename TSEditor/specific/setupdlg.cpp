@@ -108,7 +108,7 @@ static void InitD3DDevice(HWND dlg, HWND hwnd)
 
 static void InitDDDevice(HWND dlg, HWND hwnd)
 {
-	DDDEVICEIDENTIFIER* id;
+	DDDEVICEIDENTIFIER2* id;
 	char buffer[256];
 
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);

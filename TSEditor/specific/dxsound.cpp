@@ -120,7 +120,7 @@ bool DXSetOutputFormat()
 bool DXDSCreate()
 {
 	Log(__FUNCTION__);
-	DXAttempt(DirectSoundCreate(G_dxinfo->DSInfo[G_dxinfo->nDS].lpGuid, &App.dx.lpDS, 0));
+	DXAttempt(DirectSoundCreate8(G_dxinfo->DSInfo[G_dxinfo->nDS].lpGuid, &App.dx.lpDS, NULL));
 	DXAttempt(App.dx.lpDS->SetCooperativeLevel(g_Window.GetHandle(), DSSCL_EXCLUSIVE));
 	DXSetOutputFormat();
 	sound_active = true;

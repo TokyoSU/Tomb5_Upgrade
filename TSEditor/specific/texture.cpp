@@ -8,10 +8,10 @@
 TEXTURE Textures[64];
 long nTextures;
 
-LPDIRECTDRAWSURFACE4 CreateTexturePage(long w, long h, long MipMapCount, long* pSrc, rgbfunc RGBM, long format)
+LPDIRECTDRAWSURFACE7 CreateTexturePage(long w, long h, long MipMapCount, long* pSrc, rgbfunc RGBM, long format)
 {
 	DXTEXTUREINFO* tex;
-	LPDIRECTDRAWSURFACE4 tSurf;
+	LPDIRECTDRAWSURFACE7 tSurf;
 	DDSURFACEDESC2 desc;
 	long* lS;
 	long* lD;
@@ -120,21 +120,6 @@ void FreeTextures()
 	for (int i = 0; i < nTextures; i++)
 	{
 		tex = &Textures[i];
-
-		if (tex->tex)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Texture", tex->tex, tex->tex->Release());
-			tex->tex = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Texture");
-
-		if (tex->surface)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Surface", tex->surface, tex->surface->Release());
-			tex->surface = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Surface");
+		SafeRelease(tex->surface, "Surface");
 	}
 }

@@ -1018,8 +1018,9 @@ long aCheckMeshClip(MESH_DATA* mesh)
 	return 2;
 }
 
-HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACE4 surf, HBITMAP hbm, long x, long y, long dx, long dy)
+HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACE7 surf, HBITMAP hbm, long x, long y, long dx, long dy)
 {
+	Log(__FUNCTION__);
 	HDC hdc;
 	HDC hdc2;
 	BITMAP bitmap;
@@ -1034,7 +1035,10 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACE4 surf, HBITMAP hbm, long x, long y, lon
 
 	hdc = CreateCompatibleDC(0);
 	if (hdc == NULL)
-		OutputDebugString("createcompatible dc failed\n");
+	{
+		Log("CreateCompatibleDC failed\n");
+		return E_FAIL;
+	}
 
 	SelectObject(hdc, hbm);
 	GetObject(hbm, sizeof(BITMAP), &bitmap);
@@ -1068,26 +1072,25 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACE4 surf, HBITMAP hbm, long x, long y, lon
 	return result;
 }
 
-HRESULT _LoadBitmap(LPDIRECTDRAWSURFACE4 surf, LPCSTR name)
+HRESULT _LoadBitmap(LPDIRECTDRAWSURFACE7 surf, LPCSTR name)
 {
+	Log(__FUNCTION__);
 	HBITMAP hBitmap;
 	HRESULT result;
 
-	hBitmap = (HBITMAP)LoadImage(GetModuleHandle(0), name, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+	hBitmap = (HBITMAP)LoadImage(App.hInstance, name, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+	if (hBitmap == NULL)
+		hBitmap = (HBITMAP)LoadImage(NULL, name, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 
-	if (!hBitmap)
-		hBitmap = (HBITMAP)LoadImage(0, name, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-
-	if (!hBitmap)
+	if (hBitmap == NULL)
 	{
-		OutputDebugString("handle is null\n");
+		Log("LoadImage Handle is null\n");
 		return E_FAIL;
 	}
 
 	result = DDCopyBitmap(surf, hBitmap, 0, 0, 0, 0);
-
 	if (result != DD_OK)
-		OutputDebugString("ddcopybitmap failed\n");
+		Log("ddcopybitmap failed\n");
 
 	DeleteObject(hBitmap);
 	return result;

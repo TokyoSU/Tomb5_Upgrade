@@ -37,8 +37,8 @@ const char* DDSCL_TEXT[11] =
 
 DXPTR* G_dxptr;
 DXINFO* G_dxinfo;
-LPDIRECTDRAW4 G_ddraw;
-LPDIRECT3D3 G_d3d;
+LPDIRECTDRAW7 G_ddraw;
+LPDIRECT3D7 G_d3d;
 HWND G_hwnd;
 Uint8 keymap[SDL_NUM_SCANCODES];
 
@@ -90,47 +90,34 @@ void* AddStruct(void* p, long num, long size)
 	return ptr;
 }
 
-long DXDDCreate(LPGUID pGuid, void** pDD4)
+long DXDDCreate(LPGUID pGuid, void** pDD7)
 {
 	LPDIRECTDRAW pDD;
-
 	Log(__FUNCTION__);
-
 	if (DXAttempt(DirectDrawCreate(pGuid, &pDD, 0)) != DD_OK)
 	{
 		Log("DXDDCreate Failed");
 		return 0;
 	}
-
-	DXAttempt(pDD->QueryInterface(IID_IDirectDraw4, pDD4));
-
-	if (pDD)
-	{
-		Log("Released %s @ %x - RefCnt = %d", "DirectDraw", pDD, pDD->Release());
-		pDD = 0;
-	}
-	else
-		Log("%s Attempt To Release NULL Ptr", "DirectDraw");
-
+	DXAttempt(pDD->QueryInterface(IID_IDirectDraw7, pDD7));
+	SafeRelease(pDD, "DDraw");
 	Log("DXDDCreate Successful");
 	return 1;
 }
 
-long DXD3DCreate(LPDIRECTDRAW4 pDD4, void** pD3D)
+long DXD3DCreate(LPDIRECTDRAW7 pDD7, void** pD3D7)
 {
 	Log(__FUNCTION__);
-
-	if (DXAttempt(pDD4->QueryInterface(IID_IDirect3D3, pD3D)) != DD_OK)
+	if (DXAttempt(pDD7->QueryInterface(IID_IDirect3D7, pD3D7)) != DD_OK)
 	{
 		Log("DXD3DCreate Failed");
 		return 0;
 	}
-
 	Log("DXD3DCreate Successful");
 	return 1;
 }
 
-long DXSetCooperativeLevel(LPDIRECTDRAW4 pDD4, HWND hwnd, long flags)
+long DXSetCooperativeLevel(LPDIRECTDRAW7 pDD7, HWND hwnd, long flags)
 {
 	char* ptr;
 	char buf[1024];
@@ -138,7 +125,7 @@ long DXSetCooperativeLevel(LPDIRECTDRAW4 pDD4, HWND hwnd, long flags)
 	strcpy(buf, "DXSetCooperativeLevel - ");
 	ptr = &buf[strlen(buf)];
 
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < _countof(DDSCL_FLAGS); i++)
 	{
 		if (DDSCL_FLAGS[i] & flags)
 		{
@@ -152,7 +139,7 @@ long DXSetCooperativeLevel(LPDIRECTDRAW4 pDD4, HWND hwnd, long flags)
 	*(ptr - 1) = '\0';
 	Log(buf);
 
-	if (DXAttempt(pDD4->SetCooperativeLevel(hwnd, flags)) != DD_OK)
+	if (DXAttempt(pDD7->SetCooperativeLevel(hwnd, flags)) != DD_OK)
 		return 0;
 
 	return 1;
@@ -163,7 +150,6 @@ HRESULT __stdcall DXEnumDisplayModes(DDSURFACEDESC2* lpDDSurfaceDesc2, LPVOID lp
 	DXDIRECTDRAWINFO* DDInfo;
 	DXDISPLAYMODE* DM;
 	long nDisplayModes;
-
 	if (lpDDSurfaceDesc2->ddpfPixelFormat.dwRGBBitCount != 32)
 		return DDENUMRET_OK;
 
@@ -199,7 +185,6 @@ HRESULT __stdcall DXEnumZBufferFormats(LPDDPIXELFORMAT lpDDPixFmt, LPVOID lpCont
 	DXD3DDEVICE* d3d;
 	DXZBUFFERINFO* zbuffer;
 	long nZBufferInfos;
-
 	d3d = (DXD3DDEVICE*)lpContext;
 	nZBufferInfos = d3d->nZBufferInfos;
 	d3d->ZBufferInfos = (DXZBUFFERINFO*)AddStruct(d3d->ZBufferInfos, nZBufferInfos, sizeof(DXZBUFFERINFO));
@@ -300,75 +285,42 @@ long BPPToDDBD(long BPP)
 	}
 }
 
-long DXCreateD3DDevice(LPDIRECT3D3 d3d, GUID guid, LPDIRECTDRAWSURFACE4 surf, LPDIRECT3DDEVICE3* device)
+long DXCreateD3DDevice(LPDIRECT3D7 d3d, GUID guid, LPDIRECTDRAWSURFACE7 surf, LPDIRECT3DDEVICE7* device)
 {
 	Log(__FUNCTION__);
-
-	if (DXAttempt(d3d->CreateDevice(guid, surf, device, 0)) != DD_OK)
+	if (DXAttempt(d3d->CreateDevice(guid, surf, device)) != DD_OK)
 	{
 		Log("DXCreateD3DDevice Failed");
 		return 0;
 	}
-
 	Log("DXCreateD3DDevice Successful");
 	return 1;
 }
 
-long DXSetVideoMode(LPDIRECTDRAW4 dd, long dwWidth, long dwHeight, long dwBPP)
+long DXSetVideoMode(LPDIRECTDRAW7 dd, long dwWidth, long dwHeight, long dwBPP)
 {
 	Log(__FUNCTION__);
 	Log("SetDisplayMode - %dx%dx%d", dwWidth, dwHeight, dwBPP);
-
 	if (DXAttempt(dd->SetDisplayMode(dwWidth, dwHeight, dwBPP, 0, 0)) != DD_OK)
 		return 0;
-
 	return 1;
 }
 
-long DXCreateSurface(LPDIRECTDRAW4 dd, LPDDSURFACEDESC2 desc, LPDIRECTDRAWSURFACE4* surf)
+long DXCreateSurface(LPDIRECTDRAW7 dd, LPDDSURFACEDESC2 desc, LPDIRECTDRAWSURFACE7* surf)
 {
 	Log(__FUNCTION__);
-
 	if (DXAttempt(dd->CreateSurface(desc, surf, 0)) == DD_OK)
 		return 1;
-
 	Log("DXCreateSurface Failed");
 	return 0;
 }
 
-long DXCreateViewport(LPDIRECT3D3 d3d, LPDIRECT3DDEVICE3 device, long w, long h, LPDIRECT3DVIEWPORT3* viewport)
+long DXCreateViewport(LPDIRECT3D7 d3d, LPDIRECT3DDEVICE7 device, long w, long h, LPDIRECT3DVIEWPORT3* viewport)
 {
-	D3DVIEWPORT2 vp2;
-
-	Log(__FUNCTION__);
-
-	if (DXAttempt(d3d->CreateViewport(viewport, 0)) != DD_OK)
-		return 0;
-
-	if (DXAttempt(device->AddViewport(*viewport)) != DD_OK)
-		return 0;
-
-	memset(&vp2, 0, sizeof(D3DVIEWPORT2));
-	vp2.dwSize = sizeof(D3DVIEWPORT2);
-	vp2.dvClipWidth = (float)w;
-	vp2.dvClipHeight = (float)h;
-	vp2.dwX = 0;
-	vp2.dwY = 0;
-	vp2.dvClipX = 0;
-	vp2.dvClipY = 0;
-	vp2.dvMinZ = 0;
-	vp2.dvMaxZ = 1.0F;
-	vp2.dwWidth = w;
-	vp2.dwHeight = h;
-
-	if (DXAttempt((*viewport)->SetViewport2(&vp2)) != DD_OK)
-		return 0;
-
-	DXAttempt(device->SetCurrentViewport(*viewport));
 	return 1;
 }
 
-void DXSaveScreen(LPDIRECTDRAWSURFACE4 surf, const char* name)
+void DXSaveScreen(LPDIRECTDRAWSURFACE7 surf, const char* name)
 {
 	FILE* file;
 	DDSURFACEDESC2 desc;
@@ -502,7 +454,6 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd)
 	G_dxptr = dxptr;
 	G_dxptr->Flags = Flags;
 	G_dxptr->hWnd = hWnd;
-
 	if (Flags & DXF_NOFREE)
 		flag = 1;
 
@@ -717,13 +668,13 @@ long DXToggleFullScreen()
 	return 1;
 }
 
-HRESULT __stdcall DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR lpDeviceName, LPD3DDEVICEDESC lpHWDesc, LPD3DDEVICEDESC lpHELDesc, LPVOID lpContext)
+HRESULT CALLBACK DXEnumDirect3D(LPSTR lpDeviceDescription, LPSTR lpDeviceName, LPD3DDEVICEDESC7 lpDeviceDesc, LPVOID lpContext)
 {
 	DXDIRECTDRAWINFO* ddi;
 	DXD3DDEVICE* device;
-	LPDIRECT3DDEVICE3 d3dDevice;
+	LPDIRECT3DDEVICE7 d3dDevice;
 	DXDISPLAYMODE* dm;
-	LPDIRECTDRAWSURFACE4 surf;
+	LPDIRECTDRAWSURFACE7 surf;
 	DDSURFACEDESC2 desc;
 	long nD3DDevices;
 
@@ -731,34 +682,15 @@ HRESULT __stdcall DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR
 	nD3DDevices = ddi->nD3DDevices;
 	ddi->D3DDevices = (DXD3DDEVICE*)AddStruct(ddi->D3DDevices, nD3DDevices, sizeof(DXD3DDEVICE));
 	device = &ddi->D3DDevices[nD3DDevices];
-
-	if (lpGuid)
-	{
-		device->lpGuid = &device->Guid;
-		device->Guid = *lpGuid;
-	}
-	else
-		device->lpGuid = 0;
+	device->Guid = lpDeviceDesc->deviceGUID;
+	device->lpGuid = &device->Guid;
 
 	lstrcpy(device->About, lpDeviceDescription);
 	lstrcpy(device->Name, lpDeviceName);
 	Log("Found - %s", lpDeviceDescription);
 
-	if (lpHWDesc->dwFlags)
-	{
-		device->bHardware = 1;
-		memcpy(&device->DeviceDesc, lpHWDesc, sizeof(D3DDEVICEDESC));
-	}
-	else
-	{
-		device->bHardware = 0;
-		memcpy(&device->DeviceDesc, lpHELDesc, sizeof(D3DDEVICEDESC));
-
-		if (!App.mmx)
-			strcpy(device->About, "Core Design Hardware Card Emulation");
-		else
-			strcpy(device->About, "Core Design MMX Hardware Card Emulation");
-	}
+	device->bHardware = TRUE;
+	memcpy(&device->DeviceDesc, lpDeviceDesc, sizeof(D3DDEVICEDESC7));
 
 	Log("Finding Compatible Display Modes");
 	device->nDisplayModes = 0;

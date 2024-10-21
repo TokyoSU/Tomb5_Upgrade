@@ -28,7 +28,7 @@ static const char* m_fileName = NULL;
 
 static void FMV_VideoDecodeCallback(plm_t* self, plm_frame_t* frame, void* user)
 {
-	LPDIRECTDRAWSURFACE4 pBackBuffer = G_dxptr->lpBackBuffer;
+	LPDIRECTDRAWSURFACE7 pBackBuffer = G_dxptr->lpBackBuffer;
 	DDSURFACEDESC2 surfDesc = {};
 	surfDesc.dwSize = sizeof(DDSURFACEDESC2);
 	if (DXAttempt(pBackBuffer->Lock(0, &surfDesc, DDLOCK_NOSYSLOCK, NULL)))

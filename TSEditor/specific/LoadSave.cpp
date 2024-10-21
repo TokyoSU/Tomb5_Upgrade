@@ -40,7 +40,7 @@ char MonoScreenOn;
 static long SpecialFeaturesNum = -1;
 static long NumSpecialFeatures;
 
-static LPDIRECTDRAWSURFACE4 screen_surface;
+static LPDIRECTDRAWSURFACE7 screen_surface;
 static SAVEFILE_INFO SaveGames[15];
 static char SpecialFeaturesPage[5];
 
@@ -909,61 +909,41 @@ static void CustomBlt(DDSURFACEDESC2* dst, ulong dstX, ulong dstY, DDSURFACEDESC
 	}
 }
 
-void ConvertSurfaceToTextures(LPDIRECTDRAWSURFACE4 surface)
+void ConvertSurfaceToTextures(LPDIRECTDRAWSURFACE7 surface)
 {
 	DDSURFACEDESC2 tSurf;
 	DDSURFACEDESC2 uSurf;
 	RECT r;
 	ushort* pTexture;
 	ushort* pSrc;
-
 	memset(&tSurf, 0, sizeof(tSurf));
 	tSurf.dwSize = sizeof(DDSURFACEDESC2);
 	surface->Lock(0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 	pSrc = (ushort*)tSurf.lpSurface;
 	MonoScreen.surface = CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, 0, NULL, RGBM_Mono, -1);
-
 	memset(&uSurf, 0, sizeof(uSurf));
 	uSurf.dwSize = sizeof(DDSURFACEDESC2);
 	MonoScreen.surface->Lock(0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 	pTexture = (ushort*)uSurf.lpSurface;
-
 	r.left = 0;
 	r.top = 0;
 	r.right = tSurf.dwWidth;
 	r.bottom = tSurf.dwHeight;
 	CustomBlt(&uSurf, 0, 0, &tSurf, &r);
-
 	MonoScreen.surface->Unlock(0);
-	DXAttempt(MonoScreen.surface->QueryInterface(IID_IDirect3DTexture2, (void**)&MonoScreen.tex));
 	surface->Unlock(0);
 }
 
 void FreeMonoScreen()
 {
-	if (MonoScreenOn == 1)
+	if (MonoScreenOn)
 	{
-		if (MonoScreen.surface)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Mono Screen Surface", MonoScreen.surface, MonoScreen.surface->Release());
-			MonoScreen.surface = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Mono Screen Surface");
-
-		if (MonoScreen.tex)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Mono Screen Texture", MonoScreen.tex, MonoScreen.tex->Release());
-			MonoScreen.tex = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Mono Screen Texture");
+		SafeRelease(MonoScreen.surface, "MonoSurface");
 	}
-
-	MonoScreenOn = 0;
+	MonoScreenOn = false;
 }
 
-void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long tU, long tV, long tW, long tH, long c0, long c1, long c2, long c3)
+void S_DrawTile(long x, long y, long w, long h, LPDIRECTDRAWSURFACE7 t, long tU, long tV, long tW, long tH, long c0, long c1, long c2, long c3)
 {
 	D3DTLBUMPVERTEX v[4];
 	D3DTLBUMPVERTEX tri[3];
@@ -1044,7 +1024,7 @@ void S_DisplayMonoScreen()
 				col = 0xFFFFFF80;
 		}
 
-		S_DrawTile(0, 0, phd_winxmax, phd_winymax, MonoScreen.tex, 0, 0, 256, 256, col, col, col, col);
+		S_DrawTile(0, 0, phd_winxmax, phd_winymax, MonoScreen.surface, 0, 0, 256, 256, col, col, col, col);
 	}
 }
 
