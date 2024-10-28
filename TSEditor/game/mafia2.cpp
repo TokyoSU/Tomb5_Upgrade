@@ -67,12 +67,12 @@ void MafiaControl(short item_number)
 	floor = GetFloor(x, y, z, &room_number);
 	farheight = GetHeight(floor, x, y, z);
 
-	if (item->box_number == lara_item->box_number || y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
+	if (item->box_number == LaraItem->box_number || y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
 		jump_ahead = 0;
 	else
 		jump_ahead = 1;
 
-	if (item->box_number == lara_item->box_number || y >= nearheight - 384 || y >= midheight - 384 || y >= farheight + 256 || y <= farheight - 256)
+	if (item->box_number == LaraItem->box_number || y >= nearheight - 384 || y >= midheight - 384 || y >= farheight + 256 || y <= farheight - 256)
 		long_jump_ahead = 0;
 	else
 		long_jump_ahead = 1;
@@ -114,30 +114,30 @@ void MafiaControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(mafia);
 		else
-			mafia->enemy = lara_item;
+			mafia->enemy = LaraItem;
 
-		if (mafia->enemy == lara_item)
+		if (mafia->enemy == LaraItem)
 		{
 			lara_info.angle = info.angle;
 			lara_info.distance = info.distance;
 		}
 		else
 		{
-			x = lara_item->pos.x_pos - item->pos.x_pos;
-			z = lara_item->pos.z_pos - item->pos.z_pos;
+			x = LaraItem->pos.x_pos - item->pos.x_pos;
+			z = LaraItem->pos.z_pos - item->pos.z_pos;
 			lara_info.angle = short(phd_atan(z, x) - item->pos.y_rot);
 			lara_info.distance = SQUARE(z) + SQUARE(x);
 		}
 
-		mood = mafia->enemy != lara_item;
+		mood = mafia->enemy != LaraItem;
 
 		GetCreatureMood(item, &info, mood);
 		CreatureMood(item, &info, mood);
 		angle = CreatureTurn(item, mafia->maximum_turn);
 
-		if ((lara_info.distance < 0x400000 && lara_item->speed > 20 || item->hit_status || TargetVisible(item, &lara_info)) && !(item->ai_bits & FOLLOW))
+		if ((lara_info.distance < 0x400000 && LaraItem->speed > 20 || item->hit_status || TargetVisible(item, &lara_info)) && !(item->ai_bits & FOLLOW))
 		{
-			mafia->enemy = lara_item;
+			mafia->enemy = LaraItem;
 			AlertAllGuards(item_number);
 		}
 

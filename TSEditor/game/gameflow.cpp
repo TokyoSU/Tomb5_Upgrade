@@ -393,7 +393,7 @@ long TitleOptions()
 			return ret;
 		}
 
-		input = 0;
+		KeyInput = 0;
 		dbinput = 0;
 	}
 
@@ -679,7 +679,7 @@ void DoTitle(uchar name, uchar audio)
 	}
 	
 	bUseSpotCam = 1;
-	lara_item->mesh_bits = 0;
+	LaraItem->mesh_bits = 0;
 	gfGameMode = 1;
 	gfLevelComplete = 0;
 	nframes = 2;
@@ -714,7 +714,7 @@ void DoTitle(uchar name, uchar audio)
 	if (gfStatus != 4 && tomb5.tr4_loadscreens)
 		RenderLoadPic();
 
-	input = 0;
+	KeyInput = 0;
 }
 
 long do_dels_cutseq_selector()
@@ -888,7 +888,7 @@ void DoLevel(uchar Name, uchar Audio)
 
 		if (gfStatus && !gamestatus)
 		{
-			if (lara_item->hit_points < 0)
+			if (LaraItem->hit_points < 0)
 			{
 				gamestatus = gfStatus;
 				SetFade(0, 255);
@@ -921,9 +921,9 @@ void DoLevel(uchar Name, uchar Audio)
 	num_fmvs = 0;
 	fmv_to_play[0] = 0;
 	fmv_to_play[1] = 0;
-	lara.examine1 = 0;
-	lara.examine2 = 0;
-	lara.examine3 = 0;
+	Lara.examine1 = 0;
+	Lara.examine2 = 0;
+	Lara.examine3 = 0;
 
 	if (tomb5.tr4_loadscreens)
 		RenderLoadPic();
@@ -934,7 +934,7 @@ void DoLevel(uchar Name, uchar Audio)
 		bDoCredits = 1;
 	}
 
-	input = 0;
+	KeyInput = 0;
 	reset_flag = 0;
 }
 

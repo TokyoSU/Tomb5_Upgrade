@@ -62,7 +62,7 @@ void InitObjectLighting(ITEM_INFO* item)
 
 	InitDynamicLighting(item);
 
-	if (item == lara_item && bLaraInWater)
+	if (item == LaraItem && bLaraInWater)
 	{
 		if (bLaraUnderWater < 0)
 		{

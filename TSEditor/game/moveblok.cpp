@@ -82,12 +82,12 @@ void MovableBlock(short item_number)
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
-	quadrant = ushort(lara_item->pos.y_rot + 0x2000) / 0x4000;
+	quadrant = ushort(LaraItem->pos.y_rot + 0x2000) / 0x4000;
 
-	switch (lara_item->anim_number)
+	switch (LaraItem->anim_number)
 	{
 	case ANIM_PUSH:
-		frame = lara_item->frame_number;
+		frame = LaraItem->frame_number;
 		base = anims[ANIM_PUSH].frame_base;
 
 		if ((frame >= base + 30 && frame <= base + 67) || (frame >= base + 78 && frame <= base + 125) || (frame >= base + 140 && frame <= base + 160))
@@ -106,7 +106,7 @@ void MovableBlock(short item_number)
 		switch (quadrant)
 		{
 		case NORTH:
-			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
+			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&LaraItem->item_flags[2];
 
 			if (abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos < offset)
 				item->pos.z_pos = offset;
@@ -114,7 +114,7 @@ void MovableBlock(short item_number)
 			break;
 
 		case EAST:
-			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
+			offset = pos.x + *(long*)item->item_flags - *(long*)LaraItem->item_flags;
 
 			if (abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos < offset)
 				item->pos.x_pos = offset;
@@ -122,7 +122,7 @@ void MovableBlock(short item_number)
 			break;
 
 		case SOUTH:
-			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
+			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&LaraItem->item_flags[2];
 
 			if (abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos > offset)
 				item->pos.z_pos = offset;
@@ -130,7 +130,7 @@ void MovableBlock(short item_number)
 			break;
 
 		case WEST:
-			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
+			offset = pos.x + *(long*)item->item_flags - *(long*)LaraItem->item_flags;
 
 			if (abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos > offset)
 				item->pos.x_pos = offset;
@@ -139,18 +139,18 @@ void MovableBlock(short item_number)
 		}
 
 
-		if (lara_item->frame_number == anims[lara_item->anim_number].frame_end - 1)
+		if (LaraItem->frame_number == anims[LaraItem->anim_number].frame_end - 1)
 		{
-			if (!(input & IN_ACTION))
-				lara_item->goal_anim_state = AS_STOP;
+			if (!(KeyInput & IN_ACTION))
+				LaraItem->goal_anim_state = AS_STOP;
 			else if (!TestBlockPush(item, 1024, quadrant))
-				lara_item->goal_anim_state = AS_STOP;
+				LaraItem->goal_anim_state = AS_STOP;
 		}
 
 		break;
 
 	case ANIM_PULL:
-		frame = lara_item->frame_number;
+		frame = LaraItem->frame_number;
 		base = anims[ANIM_PULL].frame_base;
 
 		if ((frame >= base + 40 && frame <= base + 122) || (frame >= base + 130 && frame <= base + 170))
@@ -169,7 +169,7 @@ void MovableBlock(short item_number)
 		switch (quadrant)
 		{
 		case NORTH:
-			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
+			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&LaraItem->item_flags[2];
 
 			if (abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos > offset)
 				item->pos.z_pos = offset;
@@ -177,7 +177,7 @@ void MovableBlock(short item_number)
 			break;
 
 		case EAST:
-			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
+			offset = pos.x + *(long*)item->item_flags - *(long*)LaraItem->item_flags;
 
 			if (abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos > offset)
 				item->pos.x_pos = offset;
@@ -185,7 +185,7 @@ void MovableBlock(short item_number)
 			break;
 
 		case SOUTH:
-			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
+			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&LaraItem->item_flags[2];
 
 			if (abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos < offset)
 				item->pos.z_pos = offset;
@@ -193,7 +193,7 @@ void MovableBlock(short item_number)
 			break;
 
 		case WEST:
-			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
+			offset = pos.x + *(long*)item->item_flags - *(long*)LaraItem->item_flags;
 
 			if (abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos < offset)
 				item->pos.x_pos = offset;
@@ -201,19 +201,19 @@ void MovableBlock(short item_number)
 			break;
 		}
 
-		if (lara_item->frame_number == anims[lara_item->anim_number].frame_end - 1)
+		if (LaraItem->frame_number == anims[LaraItem->anim_number].frame_end - 1)
 		{
-			if (!(input & IN_ACTION))
-				lara_item->goal_anim_state = AS_STOP;
+			if (!(KeyInput & IN_ACTION))
+				LaraItem->goal_anim_state = AS_STOP;
 			else if (!TestBlockPull(item, 1024, quadrant))
-				lara_item->goal_anim_state = AS_STOP;
+				LaraItem->goal_anim_state = AS_STOP;
 		}
 
 		break;
 
 	case 417:
 	case 418:
-		frame = lara_item->frame_number;
+		frame = LaraItem->frame_number;
 
 		if (frame == anims[417].frame_base || frame == anims[418].frame_base)
 		{
@@ -221,7 +221,7 @@ void MovableBlock(short item_number)
 			item->pos.z_pos = (item->pos.z_pos & -512) | 512;
 		}
 
-		if (frame == anims[lara_item->anim_number].frame_end)
+		if (frame == anims[LaraItem->anim_number].frame_end)
 		{
 			room_number = item->room_number;
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number);
@@ -251,9 +251,9 @@ void MovableBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	if (item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);
 
-	if (input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status &&
-		lara.gun_status == LG_NO_ARMS && item->status == ITEM_INACTIVE && item->trigger_flags >= 0 ||
-		(lara.IsMoving && lara.GeneralPtr == (void*)item_number))
+	if (KeyInput & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status &&
+		Lara.gun_status == LG_NO_ARMS && item->status == ITEM_INACTIVE && item->trigger_flags >= 0 ||
+		(Lara.IsMoving && Lara.GeneralPtr == (void*)item_number))
 	{
 		room_number = l->room_number;
 		GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number);
@@ -281,37 +281,37 @@ void MovableBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					l->frame_number = anims[ANIM_PPREADY].frame_base;
 					l->current_anim_state = AS_PPREADY;
 					l->goal_anim_state = AS_PPREADY;
-					lara.IsMoving = 0;
-					lara.gun_status = LG_HANDS_BUSY;
-					lara.CornerX = (long)item;
+					Lara.IsMoving = 0;
+					Lara.gun_status = LG_HANDS_BUSY;
+					Lara.CornerX = (long)item;
 				}
 				else
-					lara.GeneralPtr = (void*)item_number;
+					Lara.GeneralPtr = (void*)item_number;
 			}
-			else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+			else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 			{
-				lara.IsMoving = 0;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_NO_ARMS;
 			}
 
 			item->pos.y_rot = yrot;
 		}
 	}
-	else if (l->current_anim_state == AS_PPREADY && l->frame_number == anims[ANIM_PPREADY].frame_base + 19 && (ITEM_INFO*)lara.CornerX == item)
+	else if (l->current_anim_state == AS_PPREADY && l->frame_number == anims[ANIM_PPREADY].frame_base + 19 && (ITEM_INFO*)Lara.CornerX == item)
 	{
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
 		quadrant = ushort(l->pos.y_rot + 0x2000) / 0x4000;
 
-		if (input & IN_FORWARD)
+		if (KeyInput & IN_FORWARD)
 		{
 			if (!TestBlockPush(item, 1024, quadrant))
 				return;
 
 			l->goal_anim_state = AS_PUSHBLOCK;
 		}
-		else if (input & IN_BACK)
+		else if (KeyInput & IN_BACK)
 		{
 			if (!TestBlockPull(item, 1024, quadrant))
 				return;
@@ -323,10 +323,10 @@ void MovableBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 		AddActiveItem(item_number);
 		item->status = ITEM_ACTIVE;
-		lara.head_y_rot = 0;
-		lara.head_x_rot = 0;
-		lara.torso_y_rot = 0;
-		lara.torso_x_rot = 0;
+		Lara.head_y_rot = 0;
+		Lara.head_x_rot = 0;
+		Lara.torso_y_rot = 0;
+		Lara.torso_x_rot = 0;
 		GetLaraJointPos(&pos, LMX_HAND_L);
 		*(long*)&l->item_flags[0] = pos.x;
 		*(long*)&l->item_flags[2] = pos.z;
@@ -475,10 +475,10 @@ long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
 	if (floor->ceiling << 8 > y - 762)
 		return 0;
 
-	x = lara_item->pos.x_pos + destx;
-	y = lara_item->pos.y_pos;
-	z = lara_item->pos.z_pos + destz;
-	room_number = lara_item->room_number;
+	x = LaraItem->pos.x_pos + destx;
+	y = LaraItem->pos.y_pos;
+	z = LaraItem->pos.z_pos + destz;
+	room_number = LaraItem->room_number;
 	GetFloor(x, y, z, &room_number);
 	r = &room[room_number];
 	rx = (x - r->x) >> 10;
@@ -487,13 +487,13 @@ long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
 	if (r->floor[rx * r->x_size + rz].stopper)
 		return 0;
 
-	rx = lara_item->pos.x_pos;
-	rz = lara_item->pos.z_pos;
-	lara_item->pos.x_pos = x;
-	lara_item->pos.z_pos = z;
+	rx = LaraItem->pos.x_pos;
+	rz = LaraItem->pos.z_pos;
+	LaraItem->pos.x_pos = x;
+	LaraItem->pos.z_pos = z;
 	itemlist = (ITEM_INFO**)&tsv_buffer[0];
-	GetCollidedObjects(lara_item, 256, 1, itemlist, 0, 0);
-	lara_item->pos.x_pos = rx;
-	lara_item->pos.z_pos = rz;
+	GetCollidedObjects(LaraItem, 256, 1, itemlist, 0, 0);
+	LaraItem->pos.x_pos = rx;
+	LaraItem->pos.z_pos = rz;
 	return !*itemlist || *itemlist == item;
 }

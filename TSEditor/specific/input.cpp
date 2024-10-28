@@ -192,7 +192,7 @@ SDL_Scancode layout[LAY_Count][LAYK_Count] =
 };
 bool conflict[LAYK_Count];
 
-long input;
+long KeyInput;
 long dbinput;
 long inputBusy;
 long joystick_read;
@@ -220,12 +220,12 @@ static void DoWeaponHotkey()
 	short state;
 	bool goin;
 
-	if (!lara_item)
+	if (!LaraItem)
 		goin = 0;
 	else
 	{
-		state = lara_item->current_anim_state;
-		goin = !(gfLevelFlags & GF_YOUNGLARA) && (lara.water_status == LW_ABOVE_WATER || lara.water_status == LW_WADE) && !bDisableLaraControl &&
+		state = LaraItem->current_anim_state;
+		goin = !(gfLevelFlags & GF_YOUNGLARA) && (Lara.water_status == LW_ABOVE_WATER || Lara.water_status == LW_WADE) && !bDisableLaraControl &&
 			(state != AS_ALL4S && state != AS_CRAWL && state != AS_ALL4TURNL && state != AS_ALL4TURNR && state != AS_CRAWLBACK &&
 				state != AS_CRAWL2HANG && state != AS_DUCK && state != AS_DUCKROTL && state != AS_DUCKROTR);
 	}
@@ -237,50 +237,50 @@ static void DoWeaponHotkey()
 	{
 		if (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR)
 		{
-			if (!(lara.pistols_type_carried & W_PRESENT))
+			if (!(Lara.pistols_type_carried & W_PRESENT))
 				return;
 
-			lara.request_gun_type = WEAPON_PISTOLS;
+			Lara.request_gun_type = WEAPON_PISTOLS;
 
-			if (lara.gun_status == LG_NO_ARMS && lara.gun_type == WEAPON_PISTOLS)
-				lara.gun_status = LG_DRAW_GUNS;
+			if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_PISTOLS)
+				Lara.gun_status = LG_DRAW_GUNS;
 		}
 		else
 		{
-			if (!(lara.hk_type_carried & W_PRESENT))
+			if (!(Lara.hk_type_carried & W_PRESENT))
 				return;
 
-			lara.request_gun_type = WEAPON_HK;
+			Lara.request_gun_type = WEAPON_HK;
 
-			if (lara.gun_type == WEAPON_HK)
+			if (Lara.gun_type == WEAPON_HK)
 			{
-				if (lara.gun_status == LG_NO_ARMS)
-					lara.gun_status = LG_DRAW_GUNS;
-				else if (lara.gun_status == LG_READY && !ammo_change_timer)
+				if (Lara.gun_status == LG_NO_ARMS)
+					Lara.gun_status = LG_DRAW_GUNS;
+				else if (Lara.gun_status == LG_READY && !ammo_change_timer)
 				{
 					if (!tomb5.ammotype_hotkeys)
 						return;
 
 					memset(ammo_change_buf, 0, sizeof(ammo_change_buf));
 
-					if (lara.hk_type_carried & W_AMMO3)
+					if (Lara.hk_type_carried & W_AMMO3)
 					{
-						lara.hk_type_carried &= ~W_AMMO3;
-						lara.hk_type_carried |= W_AMMO2;
+						Lara.hk_type_carried &= ~W_AMMO3;
+						Lara.hk_type_carried |= W_AMMO2;
 						ammo_change_timer = 30;
 						sprintf(ammo_change_buf, "Burst");
 					}
-					else if (lara.hk_type_carried & W_AMMO2)
+					else if (Lara.hk_type_carried & W_AMMO2)
 					{
-						lara.hk_type_carried &= ~W_AMMO2;
-						lara.hk_type_carried |= W_AMMO1;
+						Lara.hk_type_carried &= ~W_AMMO2;
+						Lara.hk_type_carried |= W_AMMO1;
 						ammo_change_timer = 30;
 						sprintf(ammo_change_buf, "Sniper");
 					}
-					else if (lara.hk_type_carried & W_AMMO1)
+					else if (Lara.hk_type_carried & W_AMMO1)
 					{
-						lara.hk_type_carried &= ~W_AMMO1;
-						lara.hk_type_carried |= W_AMMO3;
+						Lara.hk_type_carried &= ~W_AMMO1;
+						Lara.hk_type_carried |= W_AMMO3;
 						ammo_change_timer = 30;
 						sprintf(ammo_change_buf, "Rapid");
 					}
@@ -292,33 +292,33 @@ static void DoWeaponHotkey()
 	{
 		if (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR)
 		{
-			if (!(lara.shotgun_type_carried & W_PRESENT))
+			if (!(Lara.shotgun_type_carried & W_PRESENT))
 				return;
 
-			lara.request_gun_type = WEAPON_SHOTGUN;
+			Lara.request_gun_type = WEAPON_SHOTGUN;
 
-			if (lara.gun_type == WEAPON_SHOTGUN)
+			if (Lara.gun_type == WEAPON_SHOTGUN)
 			{
-				if (lara.gun_status == LG_NO_ARMS)
-					lara.gun_status = LG_DRAW_GUNS;
-				else if (lara.gun_status == LG_READY && !ammo_change_timer)
+				if (Lara.gun_status == LG_NO_ARMS)
+					Lara.gun_status = LG_DRAW_GUNS;
+				else if (Lara.gun_status == LG_READY && !ammo_change_timer)
 				{
 					if (!tomb5.ammotype_hotkeys)
 						return;
 
 					memset(ammo_change_buf, 0, sizeof(ammo_change_buf));
 
-					if (lara.shotgun_type_carried & W_AMMO2)
+					if (Lara.shotgun_type_carried & W_AMMO2)
 					{
-						lara.shotgun_type_carried &= ~W_AMMO2;
-						lara.shotgun_type_carried |= W_AMMO1;
+						Lara.shotgun_type_carried &= ~W_AMMO2;
+						Lara.shotgun_type_carried |= W_AMMO1;
 						ammo_change_timer = 30;
 						sprintf(ammo_change_buf, "Normal");
 					}
-					else if (lara.shotgun_type_carried & W_AMMO1)
+					else if (Lara.shotgun_type_carried & W_AMMO1)
 					{
-						lara.shotgun_type_carried &= ~W_AMMO1;
-						lara.shotgun_type_carried |= W_AMMO2;
+						Lara.shotgun_type_carried &= ~W_AMMO1;
+						Lara.shotgun_type_carried |= W_AMMO2;
 						ammo_change_timer = 30;
 						sprintf(ammo_change_buf, "Wideshot");
 					}
@@ -327,34 +327,34 @@ static void DoWeaponHotkey()
 		}
 		else
 		{
-			if (!(lara.crossbow_type_carried & W_PRESENT))
+			if (!(Lara.crossbow_type_carried & W_PRESENT))
 				return;
 
-			lara.request_gun_type = WEAPON_CROSSBOW;
+			Lara.request_gun_type = WEAPON_CROSSBOW;
 
-			if (lara.gun_status == LG_NO_ARMS && lara.gun_type == WEAPON_CROSSBOW)
-				lara.gun_status = LG_DRAW_GUNS;
+			if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_CROSSBOW)
+				Lara.gun_status = LG_DRAW_GUNS;
 		}
 	}
 	else if (keymap[SDL_SCANCODE_3])
 	{
-		if (!(lara.uzis_type_carried & W_PRESENT))
+		if (!(Lara.uzis_type_carried & W_PRESENT))
 			return;
 
-		lara.request_gun_type = WEAPON_UZI;
+		Lara.request_gun_type = WEAPON_UZI;
 
-		if (lara.gun_status == LG_NO_ARMS && lara.gun_type == WEAPON_UZI)
-			lara.gun_status = LG_DRAW_GUNS;
+		if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_UZI)
+			Lara.gun_status = LG_DRAW_GUNS;
 	}
 	else if (keymap[SDL_SCANCODE_4])
 	{
-		if (!(lara.sixshooter_type_carried & W_PRESENT))
+		if (!(Lara.sixshooter_type_carried & W_PRESENT))
 			return;
 
-		lara.request_gun_type = WEAPON_REVOLVER;
+		Lara.request_gun_type = WEAPON_REVOLVER;
 
-		if (lara.gun_status == LG_NO_ARMS && lara.gun_type == WEAPON_REVOLVER)
-			lara.gun_status = LG_DRAW_GUNS;
+		if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_REVOLVER)
+			Lara.gun_status = LG_DRAW_GUNS;
 	}
 }
 
@@ -467,7 +467,7 @@ long S_UpdateInput()
 	{
 		if (!flare_no_db)
 		{
-			state = lara_item->current_anim_state;
+			state = LaraItem->current_anim_state;
 
 			if (state == AS_ALL4S || state == AS_CRAWL || state == AS_ALL4TURNL ||
 				state == AS_ALL4TURNR || state == AS_CRAWLBACK || state == AS_CRAWL2HANG)
@@ -523,7 +523,7 @@ long S_UpdateInput()
 	if (keymap[SDL_SCANCODE_ESCAPE])
 		linput |= IN_DESELECT | IN_OPTION;
 
-	if (lara.gun_status == LG_READY)
+	if (Lara.gun_status == LG_READY)
 	{
 		savegame.AutoTarget = (uchar)App.AutoTarget;
 
@@ -552,22 +552,22 @@ long S_UpdateInput()
 	{
 		if (!med_hotkey_timer)
 		{
-			if (lara_item->hit_points > 0 && lara_item->hit_points < 1000 || lara.poisoned)
+			if (LaraItem->hit_points > 0 && LaraItem->hit_points < 1000 || Lara.poisoned)
 			{
-				if (lara.num_small_medipack)
+				if (Lara.num_small_medipack)
 				{
-					if (lara.num_small_medipack != -1)
-						lara.num_small_medipack--;
+					if (Lara.num_small_medipack != -1)
+						Lara.num_small_medipack--;
 
-					lara.dpoisoned = 0;
-					lara_item->hit_points += 500;
+					Lara.dpoisoned = 0;
+					LaraItem->hit_points += 500;
 					SoundEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
 					savegame.Game.HealthUsed++;
 
-					if (lara_item->hit_points > 1000)
-						lara_item->hit_points = 1000;
+					if (LaraItem->hit_points > 1000)
+						LaraItem->hit_points = 1000;
 
-					if (InventoryActive && !lara.num_small_medipack)
+					if (InventoryActive && !Lara.num_small_medipack)
 					{
 						construct_object_list();
 						setup_objectlist_startposition(INV_COMPASS_ITEM);
@@ -582,24 +582,24 @@ long S_UpdateInput()
 	{
 		if (!med_hotkey_timer)
 		{
-			if (lara_item->hit_points > 0 && lara_item->hit_points < 1000 || lara.poisoned)
+			if (LaraItem->hit_points > 0 && LaraItem->hit_points < 1000 || Lara.poisoned)
 			{
-				if (lara.num_large_medipack)
+				if (Lara.num_large_medipack)
 				{
-					if (lara.num_large_medipack != -1)
-						lara.num_large_medipack--;
+					if (Lara.num_large_medipack != -1)
+						Lara.num_large_medipack--;
 
-					lara.dpoisoned = 0;
-					lara_item->hit_points = 1000;
+					Lara.dpoisoned = 0;
+					LaraItem->hit_points = 1000;
 					SoundEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
 					savegame.Game.HealthUsed++;
 					med_hotkey_timer = 15;
 
-					if (InventoryActive && !lara.num_large_medipack)
+					if (InventoryActive && !Lara.num_large_medipack)
 					{
 						construct_object_list();
 
-						if (lara.num_small_medipack)
+						if (Lara.num_small_medipack)
 							setup_objectlist_startposition(INV_SMALLMEDI_ITEM);
 						else
 							setup_objectlist_startposition(INV_COMPASS_ITEM);
@@ -682,7 +682,7 @@ long S_UpdateInput()
 
 	inputBusy = linput;
 
-	if (lara.Busy)
+	if (Lara.Busy)
 	{
 		linput &= IN_PAUSE | IN_LOOK | IN_OPTION | IN_RIGHT | IN_LEFT | IN_BACK | IN_FORWARD;
 		if (linput & IN_FORWARD && linput & IN_BACK)
@@ -692,7 +692,7 @@ long S_UpdateInput()
 	if (debounce)
 		dbinput = inputBusy & (dbinput ^ inputBusy);
 
-	input = linput;
+	KeyInput = linput;
 	linput = weird;
 
 	if (keymap[SDL_SCANCODE_F])

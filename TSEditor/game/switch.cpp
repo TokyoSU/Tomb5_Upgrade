@@ -87,8 +87,8 @@ void CrowDoveSwitchCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 	item = &items[item_num];
 
 	if (!(item->flags & IFL_INVISIBLE) && item->mesh_bits & 4 &&
-		(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP &&
-		l->anim_number == ANIM_BREATH && !l->gravity_status || lara.IsMoving && lara.GeneralPtr == (void*)item_num))
+		(KeyInput & IN_ACTION && Lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP &&
+		l->anim_number == ANIM_BREATH && !l->gravity_status || Lara.IsMoving && Lara.GeneralPtr == (void*)item_num))
 	{
 		roty = item->pos.y_rot;
 		item->pos.y_rot = l->pos.y_rot;
@@ -102,21 +102,21 @@ void CrowDoveSwitchCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 				l->frame_number = anims[l->anim_number].frame_base;
 				AddActiveItem(item_num);
 				item->status = ITEM_ACTIVE;
-				lara.IsMoving = 0;
-				lara.head_y_rot = 0;
-				lara.head_x_rot = 0;
-				lara.torso_y_rot = 0;
-				lara.torso_x_rot = 0;
-				lara.gun_status = LG_HANDS_BUSY;
-				lara.GeneralPtr = item;
+				Lara.IsMoving = 0;
+				Lara.head_y_rot = 0;
+				Lara.head_x_rot = 0;
+				Lara.torso_y_rot = 0;
+				Lara.torso_x_rot = 0;
+				Lara.gun_status = LG_HANDS_BUSY;
+				Lara.GeneralPtr = item;
 			}
 			else
-				lara.GeneralPtr = (void*)item_num;
+				Lara.GeneralPtr = (void*)item_num;
 		}
-		else if (lara.IsMoving && lara.GeneralPtr == (void*)item_num)
+		else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_num)
 		{
-			lara.IsMoving = 0;
-			lara.gun_status = LG_NO_ARMS;
+			Lara.IsMoving = 0;
+			Lara.gun_status = LG_NO_ARMS;
 		}
 
 		item->pos.y_rot = roty;
@@ -190,9 +190,9 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS
+	if (KeyInput & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && Lara.gun_status == LG_NO_ARMS
 		&& item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && item->trigger_flags >= 0
-		|| lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+		|| Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 	{
 		bounds = GetBoundsAccurate(item);
 
@@ -290,23 +290,23 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				}
 
 				l->frame_number = anims[l->anim_number].frame_base;
-				lara.IsMoving = 0;
-				lara.gun_status = LG_HANDS_BUSY;
-				lara.head_x_rot = 0;
-				lara.head_y_rot = 0;
-				lara.torso_x_rot = 0;
-				lara.torso_y_rot = 0;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_HANDS_BUSY;
+				Lara.head_x_rot = 0;
+				Lara.head_y_rot = 0;
+				Lara.torso_x_rot = 0;
+				Lara.torso_y_rot = 0;
 				AddActiveItem(item_number);
 				item->status = ITEM_ACTIVE;
 				AnimateItem(item);
 			}
 			else
-				lara.GeneralPtr = (void*)item_number;
+				Lara.GeneralPtr = (void*)item_number;
 		}
-		else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+		else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 		{
-			lara.IsMoving = 0;
-			lara.gun_status = LG_NO_ARMS;
+			Lara.IsMoving = 0;
+			Lara.gun_status = LG_NO_ARMS;
 		}
 	}
 	else if (l->current_anim_state != AS_SWITCHON && l->current_anim_state != AS_SWITCHOFF)
@@ -319,8 +319,8 @@ void SwitchCollision2(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (input & IN_ACTION && item->status==ITEM_INACTIVE && lara.water_status == LW_UNDERWATER &&
-		lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_TREAD)
+	if (KeyInput & IN_ACTION && item->status==ITEM_INACTIVE && Lara.water_status == LW_UNDERWATER &&
+		Lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_TREAD)
 	{
 		if (TestLaraPosition(Switch2Bounds, item, l))
 		{
@@ -334,7 +334,7 @@ void SwitchCollision2(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					do AnimateLara(l); while (l->current_anim_state != AS_SWITCHON);
 
 					l->goal_anim_state = AS_TREAD;
-					lara.gun_status = LG_HANDS_BUSY;
+					Lara.gun_status = LG_HANDS_BUSY;
 					item->goal_anim_state = item->current_anim_state != 1;
 					item->status = ITEM_ACTIVE;
 					AddActiveItem(item_number);
@@ -352,15 +352,15 @@ void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (input & IN_ACTION && lara.water_status == LW_UNDERWATER && l->current_anim_state == AS_TREAD && l->anim_number == ANIM_TREAD &&
-		lara.gun_status == LG_NO_ARMS && item->current_anim_state == 0 || lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+	if (KeyInput & IN_ACTION && Lara.water_status == LW_UNDERWATER && l->current_anim_state == AS_TREAD && l->anim_number == ANIM_TREAD &&
+		Lara.gun_status == LG_NO_ARMS && item->current_anim_state == 0 || Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 	{
 		flag = 0;
 
 		if (TestLaraPosition(UnderwaterSwitchBounds, item, l))
 		{
 			if (!MoveLaraPosition(&UnderwaterSwitchPos, item, l))
-				lara.GeneralPtr = (void*)item_number;
+				Lara.GeneralPtr = (void*)item_number;
 			else
 				flag = 1;
 		}
@@ -373,7 +373,7 @@ void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				if (MoveLaraPosition(&UnderwaterSwitchPos2, item, l))
 					flag = 1;
 				else
-					lara.GeneralPtr = (void*)item_number;
+					Lara.GeneralPtr = (void*)item_number;
 			}
 
 			l->pos.y_rot ^= 32768;
@@ -385,8 +385,8 @@ void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			l->anim_number = ANIM_WATERSWITCH;
 			l->frame_number = anims[ANIM_WATERSWITCH].frame_base;
 			l->fallspeed = 0;
-			lara.IsMoving = 0;
-			lara.gun_status = 1;
+			Lara.IsMoving = 0;
+			Lara.gun_status = 1;
 			item->goal_anim_state = 1;
 			item->status = ITEM_ACTIVE;
 			AddActiveItem(item_number);
@@ -401,8 +401,8 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (!(item->flags & IFL_INVISIBLE) && (input&IN_ACTION && lara.gun_status==LG_NO_ARMS && l->current_anim_state == AS_STOP &&
-		l->anim_number == ANIM_BREATH && !l->gravity_status || lara.IsMoving&& lara.GeneralPtr == (void*)item_number))
+	if (!(item->flags & IFL_INVISIBLE) && (KeyInput&IN_ACTION && Lara.gun_status==LG_NO_ARMS && l->current_anim_state == AS_STOP &&
+		l->anim_number == ANIM_BREATH && !l->gravity_status || Lara.IsMoving&& Lara.GeneralPtr == (void*)item_number))
 	{
 		roty = item->pos.y_rot;
 		item->pos.y_rot = l->pos.y_rot;
@@ -417,22 +417,22 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				AddActiveItem(item_number);
 				item->status = ITEM_ACTIVE;
 				item->pos.y_rot = roty;
-				lara.IsMoving = 0;
-				lara.head_x_rot = 0;
-				lara.head_y_rot = 0;
-				lara.torso_x_rot = 0;
-				lara.torso_y_rot = 0;
-				lara.gun_status = LG_HANDS_BUSY;
-				lara.GeneralPtr = item;
+				Lara.IsMoving = 0;
+				Lara.head_x_rot = 0;
+				Lara.head_y_rot = 0;
+				Lara.torso_x_rot = 0;
+				Lara.torso_y_rot = 0;
+				Lara.gun_status = LG_HANDS_BUSY;
+				Lara.GeneralPtr = item;
 
 			}
 			else
-				lara.GeneralPtr = (void*)item_number;
+				Lara.GeneralPtr = (void*)item_number;
 		}
-		else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+		else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 		{
-			lara.IsMoving = 0;
-			lara.gun_status = 0;
+			Lara.IsMoving = 0;
+			Lara.gun_status = 0;
 		}
 
 		item->pos.y_rot = roty;
@@ -447,7 +447,7 @@ void TurnSwitchControl(short item_number)
 	ITEM_INFO* l;
 
 	item = &items[item_number];
-	l = lara_item;
+	l = LaraItem;
 
 	if (item->item_flags[0] == 2)
 	{
@@ -455,7 +455,7 @@ void TurnSwitchControl(short item_number)
 		{
 			item->pos.y_rot += 16384;
 
-			if (input & IN_ACTION)
+			if (KeyInput & IN_ACTION)
 			{
 				l->anim_number = ANIM_TURNSWITCHCB;
 				l->frame_number = anims[ANIM_TURNSWITCHCB].frame_base;
@@ -477,7 +477,7 @@ void TurnSwitchControl(short item_number)
 		{
 			item->pos.y_rot -= 16384;
 
-			if (input & IN_ACTION)
+			if (KeyInput & IN_ACTION)
 			{
 				l->anim_number = ANIM_TURNSWITCHAB;
 				l->frame_number = anims[ANIM_TURNSWITCHAB].frame_base;
@@ -505,7 +505,7 @@ void TurnSwitchControl(short item_number)
 		item->anim_number = objects[item->object_number].anim_index;
 		item->frame_number = anims[item->anim_number].frame_base;
 		RemoveActiveItem(item_number);
-		lara.gun_status = LG_NO_ARMS;
+		Lara.gun_status = LG_NO_ARMS;
 		UseForcedFixedCamera = 0;
 		item->item_flags[1] = 2;
 	}
@@ -520,8 +520,8 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	flag = 0;
 	item = &items[item_number];
 
-	if (!item->current_anim_state && input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
-		&& !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+	if (!item->current_anim_state && KeyInput & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
+		&& !l->gravity_status && Lara.gun_status == LG_NO_ARMS || Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 	{
 		if (TestLaraPosition(TurnSwitchBoundsA, item, l))
 		{
@@ -537,7 +537,7 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				ForcedFixedCamera.z = item->pos.z_pos - ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 			}
 			else
-				lara.GeneralPtr = (void*)item_number;
+				Lara.GeneralPtr = (void*)item_number;
 		}
 		else
 		{
@@ -555,12 +555,12 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					ForcedFixedCamera.z = item->pos.z_pos + ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 				}
 				else
-					lara.GeneralPtr = (void*)item_number;
+					Lara.GeneralPtr = (void*)item_number;
 			}
-			else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+			else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 			{
-				lara.IsMoving = 0;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_NO_ARMS;
 			}
 
 			l->pos.y_rot ^= 32768;
@@ -584,12 +584,12 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 	else
 	{
-		lara.IsMoving = 0;
-		lara.head_y_rot = 0;
-		lara.head_x_rot = 0;
-		lara.torso_y_rot = 0;
-		lara.torso_x_rot = 0;
-		lara.gun_status = LG_HANDS_BUSY;
+		Lara.IsMoving = 0;
+		Lara.head_y_rot = 0;
+		Lara.head_x_rot = 0;
+		Lara.torso_y_rot = 0;
+		Lara.torso_x_rot = 0;
+		Lara.gun_status = LG_HANDS_BUSY;
 		l->current_anim_state = AS_TURNSWITCH;
 		UseForcedFixedCamera = 1;
 		ForcedFixedCamera.y = item->pos.y_pos - 2048;
@@ -623,8 +623,8 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	flag = 0;
 	item = &items[item_number];
 
-	if (input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH &&
-		lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+	if (KeyInput & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH &&
+		Lara.gun_status == LG_NO_ARMS || Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 	{
 		if (item->current_anim_state == 1)
 		{
@@ -638,12 +638,12 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					flag = 1;
 				}
 				else
-					lara.GeneralPtr = (void*)item_number;
+					Lara.GeneralPtr = (void*)item_number;
 			}
-			else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+			else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 			{
-				lara.IsMoving = 0;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_NO_ARMS;
 			}
 
 			l->pos.y_rot ^= 32768;
@@ -658,12 +658,12 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					flag = 1;
 				}
 				else
-					lara.GeneralPtr = (void*)item_number;
+					Lara.GeneralPtr = (void*)item_number;
 			}
-			else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+			else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 			{
-				lara.IsMoving = 0;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_NO_ARMS;
 			}
 		}
 	}
@@ -676,12 +676,12 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		l->frame_number = anims[ANIM_RAILSWITCH].frame_base;
 		l->goal_anim_state = AS_RAILSWITCH;
 		l->current_anim_state = AS_RAILSWITCH;
-		lara.IsMoving=0;
-		lara.head_y_rot = 0;
-		lara.head_x_rot = 0;
-		lara.torso_y_rot = 0;
-		lara.torso_x_rot = 0;
-		lara.gun_status = 1;
+		Lara.IsMoving=0;
+		Lara.head_y_rot = 0;
+		Lara.head_x_rot = 0;
+		Lara.torso_y_rot = 0;
+		Lara.torso_x_rot = 0;
+		Lara.gun_status = 1;
 		item->status = ITEM_ACTIVE;
 		AddActiveItem(item_number);
 		AnimateItem(item);
@@ -694,7 +694,7 @@ void JumpSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) &&
+	if (KeyInput & IN_ACTION && Lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) &&
 		l->gravity_status && l->fallspeed > 0 && item->current_anim_state == 0)
 	{
 		if (TestLaraPosition(JumpSwitchBounds, item, l))
@@ -705,7 +705,7 @@ void JumpSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			l->frame_number = anims[ANIM_LEAPSWITCH].frame_base;
 			l->fallspeed = 0;
 			l->gravity_status = 0;
-			lara.gun_status = LG_HANDS_BUSY;
+			Lara.gun_status = LG_HANDS_BUSY;
 			item->status = ITEM_ACTIVE;
 			item->goal_anim_state = 1;
 			AddActiveItem(item_number);
@@ -721,9 +721,9 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	flag = 0;
 	item = &items[item_number];
 
-	if (input & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM && l->current_anim_state == AS_STOP &&
-		l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS && !item->item_flags[0] ||
-		lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+	if (KeyInput & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM && l->current_anim_state == AS_STOP &&
+		l->anim_number == ANIM_BREATH && Lara.gun_status == LG_NO_ARMS && !item->item_flags[0] ||
+		Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 	{
 		if (item->current_anim_state == 1)
 		{
@@ -731,7 +731,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 			if (TestLaraPosition(CrowbarBounds2, item, l))
 			{
-				if (lara.IsMoving || GLOBAL_inventoryitemchosen == CROWBAR_ITEM)
+				if (Lara.IsMoving || GLOBAL_inventoryitemchosen == CROWBAR_ITEM)
 				{
 					if (MoveLaraPosition(&CrowbarPos2, item, l))
 					{
@@ -741,17 +741,17 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 						item->goal_anim_state = 0;
 					}
 					else
-						lara.GeneralPtr = (void*)item_number;
+						Lara.GeneralPtr = (void*)item_number;
 
 					GLOBAL_inventoryitemchosen = NO_ITEM;
 				}
 				else
 					flag = -1;
 			}
-			else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+			else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 			{
-				lara.IsMoving = 0;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_NO_ARMS;
 			}
 
 			l->pos.y_rot ^= 32768;
@@ -760,7 +760,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		{
 			if (TestLaraPosition(CrowbarBounds, item, l))
 			{
-				if (lara.IsMoving || GLOBAL_inventoryitemchosen == CROWBAR_ITEM)
+				if (Lara.IsMoving || GLOBAL_inventoryitemchosen == CROWBAR_ITEM)
 				{
 					if (MoveLaraPosition(&CrowbarPos, item, l))
 					{
@@ -770,17 +770,17 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 						item->goal_anim_state = 1;
 					}
 					else
-						lara.GeneralPtr = (void*)item_number;
+						Lara.GeneralPtr = (void*)item_number;
 
 					GLOBAL_inventoryitemchosen = NO_ITEM;
 				}
 				else
 					flag = -1;
 			}
-			else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+			else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 			{
-				lara.IsMoving = 0;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_NO_ARMS;
 			}
 		}
 	}
@@ -793,19 +793,19 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		{
 			l->goal_anim_state = AS_SWITCHON;
 			l->current_anim_state = AS_SWITCHON;
-			lara.IsMoving = 0;
-			lara.head_y_rot = 0;
-			lara.head_x_rot = 0;
-			lara.torso_y_rot = 0;
-			lara.torso_x_rot = 0;
-			lara.gun_status = 1;
+			Lara.IsMoving = 0;
+			Lara.head_y_rot = 0;
+			Lara.head_x_rot = 0;
+			Lara.torso_y_rot = 0;
+			Lara.torso_x_rot = 0;
+			Lara.gun_status = 1;
 			item->status = ITEM_ACTIVE;
 			AddActiveItem(item_number);
 			AnimateItem(item);
 		}
 		else
 		{
-			if (lara.crowbar)
+			if (Lara.crowbar)
 				GLOBAL_enterinventory = CROWBAR_ITEM;
 			else if (OldPickupPos.x != l->pos.x_pos || OldPickupPos.y != l->pos.y_pos || OldPickupPos.z != l->pos.z_pos)
 			{
@@ -853,8 +853,8 @@ void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (input & IN_ACTION && item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && CurrentSequence < 3 && lara.gun_status == LG_NO_ARMS &&
-		l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+	if (KeyInput & IN_ACTION && item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && CurrentSequence < 3 && Lara.gun_status == LG_NO_ARMS &&
+		l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 	{
 		if (TestLaraPosition(FullBlockSwitchBounds, item, l))
 		{
@@ -872,20 +872,20 @@ void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				item->status = ITEM_ACTIVE;
 				AddActiveItem(item_number);
 				AnimateItem(item);
-				lara.IsMoving = 0;
-				lara.head_y_rot = 0;
-				lara.head_x_rot = 0;
-				lara.torso_y_rot = 0;
-				lara.torso_x_rot = 0;
-				lara.gun_status = LG_HANDS_BUSY;
+				Lara.IsMoving = 0;
+				Lara.head_y_rot = 0;
+				Lara.head_x_rot = 0;
+				Lara.torso_y_rot = 0;
+				Lara.torso_x_rot = 0;
+				Lara.gun_status = LG_HANDS_BUSY;
 			}
 			else
-				lara.GeneralPtr = (void*)item_number;
+				Lara.GeneralPtr = (void*)item_number;
 		}
-		else if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+		else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 		{
-			lara.IsMoving = 0;
-			lara.gun_status = LG_NO_ARMS;
+			Lara.IsMoving = 0;
+			Lara.gun_status = LG_NO_ARMS;
 		}
 	}
 	else
@@ -901,15 +901,15 @@ void CogSwitchControl(short item_number)
 
 	if (item->current_anim_state == 1)
 	{
-		if (item->goal_anim_state == 1 && !(input & IN_ACTION))
+		if (item->goal_anim_state == 1 && !(KeyInput & IN_ACTION))
 		{
-			lara_item->goal_anim_state = AS_STOP;
+			LaraItem->goal_anim_state = AS_STOP;
 			item->goal_anim_state = 0;
 		}
 
-		if (lara_item->anim_number == ANIM_COGSWITCHL && lara_item->frame_number == anims[ANIM_COGSWITCHL].frame_base + 10)
+		if (LaraItem->anim_number == ANIM_COGSWITCHL && LaraItem->frame_number == anims[ANIM_COGSWITCHL].frame_base + 10)
 		{
-			item = (ITEM_INFO*)lara.GeneralPtr;
+			item = (ITEM_INFO*)Lara.GeneralPtr;
 			item->item_flags[0] = 40;
 			SoundEffect(SFX_STONE_SCRAPE_FAST, (PHD_3DPOS*)&item->pos, SFX_DEFAULT);
 		}
@@ -919,11 +919,11 @@ void CogSwitchControl(short item_number)
 		item->current_anim_state = 0;
 		item->status = ITEM_INACTIVE;
 		RemoveActiveItem(item_number);
-		lara_item->anim_number = ANIM_STOP;
-		lara_item->frame_number = anims[ANIM_STOP].frame_base;
-		lara_item->goal_anim_state = AS_STOP;
-		lara_item->current_anim_state = AS_STOP;
-		lara.gun_status = LG_NO_ARMS;
+		LaraItem->anim_number = ANIM_STOP;
+		LaraItem->frame_number = anims[ANIM_STOP].frame_base;
+		LaraItem->goal_anim_state = AS_STOP;
+		LaraItem->current_anim_state = AS_STOP;
+		Lara.gun_status = LG_NO_ARMS;
 	}
 }
 
@@ -947,20 +947,20 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	if (item->status != ITEM_INACTIVE)
 		return;
 	
-	if (!(item->flags & IFL_INVISIBLE) && (input & IN_ACTION && lara.gun_status == LG_NO_ARMS && !l->gravity_status &&
-		l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == (void*)item_number))
+	if (!(item->flags & IFL_INVISIBLE) && (KeyInput & IN_ACTION && Lara.gun_status == LG_NO_ARMS && !l->gravity_status &&
+		l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || Lara.IsMoving && Lara.GeneralPtr == (void*)item_number))
 	{
 		if (TestLaraPosition(CogSwitchBounds, item, l))
 		{
 			if (MoveLaraPosition(&CogSwitchPos, item, l))
 			{
-				lara.IsMoving = 0;
-				lara.head_y_rot = 0;
-				lara.head_x_rot = 0;
-				lara.torso_y_rot = 0;
-				lara.torso_x_rot = 0;
-				lara.gun_status = LG_HANDS_BUSY;
-				lara.GeneralPtr = door_item;
+				Lara.IsMoving = 0;
+				Lara.head_y_rot = 0;
+				Lara.head_x_rot = 0;
+				Lara.torso_y_rot = 0;
+				Lara.torso_x_rot = 0;
+				Lara.gun_status = LG_HANDS_BUSY;
+				Lara.GeneralPtr = door_item;
 				l->anim_number = ANIM_COGSWITCHS;
 				l->frame_number = anims[ANIM_COGSWITCHS].frame_base;
 				l->goal_anim_state = AS_COGSWITCH;
@@ -977,15 +977,15 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				}
 			}
 			else
-				lara.GeneralPtr = (void*)item_number;
+				Lara.GeneralPtr = (void*)item_number;
 
 			return;
 		}
 
-		if (lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+		if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 		{
-			lara.IsMoving = 0;
-			lara.gun_status = LG_NO_ARMS;
+			Lara.IsMoving = 0;
+			Lara.gun_status = LG_NO_ARMS;
 		}
 	}
 

@@ -673,10 +673,10 @@ void DoOptions()
 		{
 			sfx_bak = SFXVolume;
 
-			if (input & IN_LEFT || keymap[SDL_SCANCODE_LEFT])
+			if (KeyInput & IN_LEFT || keymap[SDL_SCANCODE_LEFT])
 				MusicVolume--;
 
-			if (input & IN_RIGHT || keymap[SDL_SCANCODE_RIGHT])
+			if (KeyInput & IN_RIGHT || keymap[SDL_SCANCODE_RIGHT])
 				MusicVolume++;
 
 			if (MusicVolume > 100)
@@ -690,10 +690,10 @@ void DoOptions()
 		}
 		else if (sel & 4)
 		{
-			if (input & IN_LEFT || keymap[SDL_SCANCODE_LEFT])
+			if (KeyInput & IN_LEFT || keymap[SDL_SCANCODE_LEFT])
 				SFXVolume--;
 
-			if (input & IN_RIGHT || keymap[SDL_SCANCODE_RIGHT])
+			if (KeyInput & IN_RIGHT || keymap[SDL_SCANCODE_RIGHT])
 				SFXVolume++;
 
 			if (SFXVolume > 100)
@@ -1098,7 +1098,7 @@ long S_LoadSave(long load_or_save, long mono, long inv_active)
 			break;
 		}
 
-		if (input & IN_OPTION)
+		if (KeyInput & IN_OPTION)
 		{
 			ret = -1;
 			break;

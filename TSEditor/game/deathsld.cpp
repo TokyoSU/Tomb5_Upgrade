@@ -33,14 +33,14 @@ void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
 	ITEM_INFO* item;
 
-	if (input & IN_ACTION && !l->gravity_status && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP)
+	if (KeyInput & IN_ACTION && !l->gravity_status && Lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP)
 	{
 		item = &items[item_number];
 
 		if (item->status == ITEM_INACTIVE && TestLaraPosition(DeathSlideBounds, item, l))
 		{
 			AlignLaraPosition(&DeathSlidePosition, item, l);
-			lara.gun_status = LG_HANDS_BUSY;
+			Lara.gun_status = LG_HANDS_BUSY;
 			l->goal_anim_state = AS_DEATHSLIDE;
 
 			do AnimateLara(l); while (l->current_anim_state != AS_NULL);
@@ -89,11 +89,11 @@ void ControlDeathSlide(short item_number)
 		if (item->room_number != room_number)
 			ItemNewRoom(item_number, room_number);
 
-		if (lara_item->current_anim_state == AS_DEATHSLIDE)
+		if (LaraItem->current_anim_state == AS_DEATHSLIDE)
 		{
-			lara_item->pos.x_pos = item->pos.x_pos;
-			lara_item->pos.y_pos = item->pos.y_pos;
-			lara_item->pos.z_pos = item->pos.z_pos;
+			LaraItem->pos.x_pos = item->pos.x_pos;
+			LaraItem->pos.y_pos = item->pos.y_pos;
+			LaraItem->pos.z_pos = item->pos.z_pos;
 		}
 
 		x = item->pos.x_pos + (1024 * phd_sin(item->pos.y_rot) >> W2V_SHIFT);
@@ -103,13 +103,13 @@ void ControlDeathSlide(short item_number)
 
 		if (GetHeight(floor, x, y, z) <= y + 256 || GetCeiling(floor, x, y, z) >= y - 256)
 		{
-			if (lara_item->current_anim_state == AS_DEATHSLIDE)
+			if (LaraItem->current_anim_state == AS_DEATHSLIDE)
 			{
-				lara_item->goal_anim_state = 3;
-				AnimateLara(lara_item);
-				lara_item->gravity_status = 1;
-				lara_item->speed = item->fallspeed;
-				lara_item->fallspeed = item->fallspeed >> 2;
+				LaraItem->goal_anim_state = 3;
+				AnimateLara(LaraItem);
+				LaraItem->gravity_status = 1;
+				LaraItem->speed = item->fallspeed;
+				LaraItem->fallspeed = item->fallspeed >> 2;
 			}
 
 			SoundEffect(SFX_COGS_ROME, &item->pos, SFX_DEFAULT);

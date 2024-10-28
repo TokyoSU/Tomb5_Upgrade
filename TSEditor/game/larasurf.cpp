@@ -42,7 +42,7 @@ long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll)
 	item->gravity_status = 0;
 	item->speed = 0;
 	item->fallspeed = 0;
-	lara.water_status = LW_WADE;
+	Lara.water_status = LW_WADE;
 	return 1;
 }
 
@@ -51,8 +51,8 @@ long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll)
 	long hdif;
 	short angle;
 
-	if (coll->coll_type != CT_FRONT || !(input & IN_ACTION) || abs(coll->left_floor2 - coll->right_floor2) >= 60 || lara.gun_status != LG_NO_ARMS &&
-		(lara.gun_status != LG_READY || lara.gun_type != WEAPON_FLARE) || coll->front_ceiling > 0 || coll->mid_ceiling > 0)
+	if (coll->coll_type != CT_FRONT || !(KeyInput & IN_ACTION) || abs(coll->left_floor2 - coll->right_floor2) >= 60 || Lara.gun_status != LG_NO_ARMS &&
+		(Lara.gun_status != LG_READY || Lara.gun_type != WEAPON_FLARE) || coll->front_ceiling > 0 || coll->mid_ceiling > 0)
 		return 0;
 
 	hdif = coll->front_floor + 700;
@@ -105,19 +105,19 @@ long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll)
 	item->current_anim_state = AS_WATEROUT;
 	item->goal_anim_state = AS_STOP;
 	item->pos.y_rot = angle;
-	lara.gun_status = LG_HANDS_BUSY;
+	Lara.gun_status = LG_HANDS_BUSY;
 	item->pos.z_rot = 0;
 	item->pos.x_rot = 0;
 	item->gravity_status = 0;
 	item->speed = 0;
 	item->fallspeed = 0;
-	lara.water_status = LW_ABOVE_WATER;
+	Lara.water_status = LW_ABOVE_WATER;
 	return 1;
 }
 
 void LaraSurfaceCollision(ITEM_INFO* item, COLL_INFO* coll)
 {
-	coll->facing = lara.move_angle;
+	coll->facing = Lara.move_angle;
 	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos + 700, item->pos.z_pos, item->room_number, 800);
 	ShiftItem(item, coll);
 
@@ -144,7 +144,7 @@ void LaraSurfaceCollision(ITEM_INFO* item, COLL_INFO* coll)
 		item->frame_number = anims[ANIM_SURFDIVE].frame_base;
 		item->pos.x_rot = -8190;
 		item->fallspeed = 80;
-		lara.water_status = LW_UNDERWATER;
+		Lara.water_status = LW_UNDERWATER;
 	}
 }
 
@@ -165,12 +165,12 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll)
 	coll->radius = 100;
 	coll->trigger = 0;
 
-	if (input & IN_LOOK && lara.look)
+	if (KeyInput & IN_LOOK && Lara.look)
 		LookLeftRight();
 	else
 		ResetLook();
 
-	lara.look = 1;
+	Lara.look = 1;
 	lara_control_routines[item->current_anim_state](item, coll);
 	
 	if (item->pos.z_rot >= -364 || item->pos.z_rot <= 364)
@@ -180,12 +180,12 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll)
 	else
 		item->pos.z_rot += 364;
 	
-	if (lara.current_active && lara.water_status != LW_FLYCHEAT)
+	if (Lara.current_active && Lara.water_status != LW_FLYCHEAT)
 		LaraWaterCurrent(coll);
 
 	AnimateLara(item);
-	item->pos.x_pos += item->fallspeed * phd_sin(lara.move_angle) >> (W2V_SHIFT + 2);
-	item->pos.z_pos += item->fallspeed * phd_cos(lara.move_angle) >> (W2V_SHIFT + 2);
+	item->pos.x_pos += item->fallspeed * phd_sin(Lara.move_angle) >> (W2V_SHIFT + 2);
+	item->pos.z_pos += item->fallspeed * phd_cos(Lara.move_angle) >> (W2V_SHIFT + 2);
 	LaraBaddieCollision(item, coll);
 	lara_collision_routines[item->current_anim_state](item, coll);
 	UpdateLaraRoom(item, 100);
@@ -201,17 +201,17 @@ void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	lara.dive_count = 0;
+	Lara.dive_count = 0;
 
-	if (input & IN_LEFT)
+	if (KeyInput & IN_LEFT)
 		item->pos.y_rot -= 728;
-	else if (input & IN_RIGHT)
+	else if (KeyInput & IN_RIGHT)
 		item->pos.y_rot += 728;
 
-	if (!(input & IN_FORWARD))
+	if (!(KeyInput & IN_FORWARD))
 		item->goal_anim_state = AS_SURFTREAD;
 
-	if (input & IN_JUMP)
+	if (KeyInput & IN_JUMP)
 		item->goal_anim_state = AS_SURFTREAD;
 
 	item->fallspeed += 8;
@@ -228,14 +228,14 @@ void lara_as_surfback(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	lara.dive_count = 0;
+	Lara.dive_count = 0;
 
-	if (input & IN_LEFT)
+	if (KeyInput & IN_LEFT)
 		item->pos.y_rot -= 364;
-	else if (input & IN_RIGHT)
+	else if (KeyInput & IN_RIGHT)
 		item->pos.y_rot += 364;
 
-	if (!(input & IN_BACK))
+	if (!(KeyInput & IN_BACK))
 		item->goal_anim_state = AS_SURFTREAD;
 
 	item->fallspeed += 8;
@@ -252,14 +252,14 @@ void lara_as_surfleft(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	lara.dive_count = 0;
+	Lara.dive_count = 0;
 
-	if (input & IN_LEFT)
+	if (KeyInput & IN_LEFT)
 		item->pos.y_rot -= 364;
-	else if (input & IN_RIGHT)
+	else if (KeyInput & IN_RIGHT)
 		item->pos.y_rot += 364;
 
-	if (!(input & IN_LSTEP))
+	if (!(KeyInput & IN_LSTEP))
 		item->goal_anim_state = AS_SURFTREAD;
 
 	item->fallspeed += 8;
@@ -276,14 +276,14 @@ void lara_as_surfright(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	lara.dive_count = 0;
+	Lara.dive_count = 0;
 
-	if (input & IN_LEFT)
+	if (KeyInput & IN_LEFT)
 		item->pos.y_rot -= 364;
-	else if (input & IN_RIGHT)
+	else if (KeyInput & IN_RIGHT)
 		item->pos.y_rot += 364;
 
-	if (!(input & IN_RSTEP))
+	if (!(KeyInput & IN_RSTEP))
 		item->goal_anim_state = AS_SURFTREAD;
 
 	item->fallspeed += 8;
@@ -305,61 +305,61 @@ void lara_as_surftread(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	if (input & IN_LOOK)
+	if (KeyInput & IN_LOOK)
 	{
 		LookUpDown();
 		return;
 	}
 
-	if (input & IN_LEFT)
+	if (KeyInput & IN_LEFT)
 		item->pos.y_rot -= 728;
-	else if (input & IN_RIGHT)
+	else if (KeyInput & IN_RIGHT)
 		item->pos.y_rot += 728;
 	
-	if (input & IN_FORWARD)
+	if (KeyInput & IN_FORWARD)
 		item->goal_anim_state = AS_SURFSWIM;
-	else if (input & IN_BACK)
+	else if (KeyInput & IN_BACK)
 		item->goal_anim_state = AS_SURFBACK;
 
-	if (input & IN_LSTEP)
+	if (KeyInput & IN_LSTEP)
 		item->goal_anim_state = AS_SURFLEFT;
-	else if (input & IN_RSTEP)
+	else if (KeyInput & IN_RSTEP)
 		item->goal_anim_state = AS_SURFRIGHT;
 
-	if (input & IN_JUMP)
+	if (KeyInput & IN_JUMP)
 	{
-		lara.dive_count++;
+		Lara.dive_count++;
 
-		if (lara.dive_count == 10)
+		if (Lara.dive_count == 10)
 			item->goal_anim_state = AS_SWIM;
 	}
 	else
-		lara.dive_count = 0;
+		Lara.dive_count = 0;
 }
 
 void lara_col_surfswim(ITEM_INFO* item, COLL_INFO* coll)
 {
 	coll->bad_neg = -384;
-	lara.move_angle = item->pos.y_rot;
+	Lara.move_angle = item->pos.y_rot;
 	LaraSurfaceCollision(item, coll);
 	LaraTestWaterClimbOut(item, coll);
 }
 
 void lara_col_surfback(ITEM_INFO* item, COLL_INFO* coll)
 {
-	lara.move_angle = item->pos.y_rot - 0x8000;
+	Lara.move_angle = item->pos.y_rot - 0x8000;
 	LaraSurfaceCollision(item, coll);
 }
 
 void lara_col_surfleft(ITEM_INFO* item, COLL_INFO* coll)
 {
-	lara.move_angle = item->pos.y_rot - 0x4000;
+	Lara.move_angle = item->pos.y_rot - 0x4000;
 	LaraSurfaceCollision(item, coll);
 }
 
 void lara_col_surfright(ITEM_INFO* item, COLL_INFO* coll)
 {
-	lara.move_angle = item->pos.y_rot + 0x4000;
+	Lara.move_angle = item->pos.y_rot + 0x4000;
 	LaraSurfaceCollision(item, coll);
 }
 
@@ -372,9 +372,9 @@ void lara_col_surftread(ITEM_INFO* item, COLL_INFO* coll)
 		item->pos.x_rot = -8190;
 		item->frame_number = anims[ANIM_SURFDIVE].frame_base;
 		item->fallspeed = 80;
-		lara.water_status = LW_UNDERWATER;
+		Lara.water_status = LW_UNDERWATER;
 	}
 
-	lara.move_angle = item->pos.y_rot;
+	Lara.move_angle = item->pos.y_rot;
 	LaraSurfaceCollision(item, coll);
 }

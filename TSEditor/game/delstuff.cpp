@@ -35,9 +35,9 @@ void GetLaraJointPos(PHD_VECTOR* pos, long node)
 	pos->x = (long)aMXPtr->m03;
 	pos->y = (long)aMXPtr->m13;
 	pos->z = (long)aMXPtr->m23;
-	pos->x += lara_item->pos.x_pos;
-	pos->y += lara_item->pos.y_pos;
-	pos->z += lara_item->pos.z_pos;
+	pos->x += LaraItem->pos.x_pos;
+	pos->y += LaraItem->pos.y_pos;
+	pos->z += LaraItem->pos.z_pos;
 	phd_PopMatrix();
 }
 
@@ -49,33 +49,33 @@ void CalcLaraMatrices(long flag)
 	long rate, frac;
 	short spaz;
 	
-	bone = &bones[objects[lara_item->object_number].bone_index];
-	frac = GetFrames(lara_item, frmptr, &rate);
+	bone = &bones[objects[LaraItem->object_number].bone_index];
+	frac = GetFrames(LaraItem, frmptr, &rate);
 
-	if (lara.hit_direction < 0)
+	if (Lara.hit_direction < 0)
 	{
 		if (frac)
 		{
-			GLaraShadowframe = GetBoundsAccurate(lara_item);
+			GLaraShadowframe = GetBoundsAccurate(LaraItem);
 			Rich_CalcLaraMatrices_Interpolated(frmptr[0], frmptr[1], frac, rate, bone, flag);
 			return;
 		}
 	}
 
-	if (lara.hit_direction < 0)
+	if (Lara.hit_direction < 0)
 		frame = *frmptr;
 	else
 	{
-		if (!lara.hit_direction)
-			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKF : ANIM_SPAZ_FORWARD;
-		else if (lara.hit_direction == 1)
-			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKR : ANIM_SPAZ_RIGHT;
-		else if (lara.hit_direction == 2)
-			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKB : ANIM_SPAZ_BACK;
+		if (!Lara.hit_direction)
+			spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKF : ANIM_SPAZ_FORWARD;
+		else if (Lara.hit_direction == 1)
+			spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKR : ANIM_SPAZ_RIGHT;
+		else if (Lara.hit_direction == 2)
+			spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKB : ANIM_SPAZ_BACK;
 		else
-			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
+			spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
 
-		frame = &anims[spaz].frame_ptr[lara.hit_frame * (anims[spaz].interpolation >> 8)];
+		frame = &anims[spaz].frame_ptr[Lara.hit_frame * (anims[spaz].interpolation >> 8)];
 	}
 
 	Rich_CalcLaraMatrices_Normal(frame, bone, flag);
@@ -97,11 +97,11 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	phd_PushMatrix();
 
 	if (!flag || flag == 2)
-		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+		phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	else
 		phd_SetTrans(0, 0, 0);
 
-	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
+	phd_RotYXZ(LaraItem->pos.y_rot, LaraItem->pos.x_rot, LaraItem->pos.z_rot);
 
 	if (flag == 2)
 	{
@@ -154,18 +154,18 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 
 	phd_TranslateRel(bone[25], bone[26], bone[27]);
 
-	if (lara.weapon_item != NO_ITEM && lara.gun_type == WEAPON_HK &&
-		(items[lara.weapon_item].current_anim_state == 0 || items[lara.weapon_item].current_anim_state == 1 ||
-			items[lara.weapon_item].current_anim_state == 2 || items[lara.weapon_item].current_anim_state == 3 ||
-			items[lara.weapon_item].current_anim_state == 4))
+	if (Lara.weapon_item != NO_ITEM && Lara.gun_type == WEAPON_HK &&
+		(items[Lara.weapon_item].current_anim_state == 0 || items[Lara.weapon_item].current_anim_state == 1 ||
+			items[Lara.weapon_item].current_anim_state == 2 || items[Lara.weapon_item].current_anim_state == 3 ||
+			items[Lara.weapon_item].current_anim_state == 4))
 	{
-		rot = &lara.right_arm.frame_base[lara.right_arm.frame_number * (anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
+		rot = &Lara.right_arm.frame_base[Lara.right_arm.frame_number * (anims[Lara.right_arm.anim_number].interpolation >> 8) + 9];
 		gar_RotYXZsuperpack(&rot, 7);
 	}
 	else
 		gar_RotYXZsuperpack(&rot, 0);
 
-	phd_RotYXZ(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
+	phd_RotYXZ(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
 	memcpy(mx, aMXPtr, 48);
 	mx += 12;
 
@@ -173,15 +173,15 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	phd_TranslateRel(bone[53], bone[54], bone[55]);
 	rot2 = rot;
 	gar_RotYXZsuperpack(&rot2, 6);
-	phd_RotYXZ(lara.head_y_rot, lara.head_x_rot, lara.head_z_rot);
+	phd_RotYXZ(Lara.head_y_rot, Lara.head_x_rot, Lara.head_z_rot);
 	memcpy(mx, aMXPtr, 48);
 	mx += 12;
 	phd_PopMatrix();
 
 	gun = WEAPON_NONE;
 
-	if (lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS)
-		gun = lara.gun_type;
+	if (Lara.gun_status == LG_READY || Lara.gun_status == LG_FLARE || Lara.gun_status == LG_DRAW_GUNS || Lara.gun_status == LG_UNDRAW_GUNS)
+		gun = Lara.gun_type;
 
 	switch (gun)
 	{
@@ -208,10 +208,10 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		phd_PushMatrix();
 		phd_TranslateRel(bone[41], bone[42], bone[43]);
 
-		if (lara.flare_control_left)
+		if (Lara.flare_control_left)
 		{
-			rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * 
-				(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+			rot = &Lara.left_arm.frame_base[(anims[Lara.left_arm.anim_number].interpolation >> 8) * 
+				(Lara.left_arm.frame_number - anims[Lara.left_arm.anim_number].frame_base) + 9];
 
 			gar_RotYXZsuperpack(&rot, 11);
 		}
@@ -247,9 +247,9 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		aMXPtr->m21 = aMXPtr[-2].m21;
 		aMXPtr->m22 = aMXPtr[-2].m22;
 
-		phd_RotYXZ(lara.right_arm.y_rot, lara.right_arm.x_rot, lara.right_arm.z_rot);
-		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * 
-			(lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ(Lara.right_arm.y_rot, Lara.right_arm.x_rot, Lara.right_arm.z_rot);
+		rot = &Lara.right_arm.frame_base[(anims[Lara.right_arm.anim_number].interpolation >> 8) * 
+			(Lara.right_arm.frame_number - anims[Lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -278,9 +278,9 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		aMXPtr->m21 = aMXPtr[-2].m21;
 		aMXPtr->m22 = aMXPtr[-2].m22;
 
-		phd_RotYXZ(lara.left_arm.y_rot, lara.left_arm.x_rot, lara.left_arm.z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * 
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ(Lara.left_arm.y_rot, Lara.left_arm.x_rot, Lara.left_arm.z_rot);
+		rot = &Lara.left_arm.frame_base[(anims[Lara.left_arm.anim_number].interpolation >> 8) * 
+			(Lara.left_arm.frame_number - anims[Lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -310,9 +310,9 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		aMXPtr->m21 = aMXPtr[-2].m21;
 		aMXPtr->m22 = aMXPtr[-2].m22;
 
-		phd_RotYXZ(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * 
-			(lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
+		rot = &Lara.right_arm.frame_base[(anims[Lara.right_arm.anim_number].interpolation >> 8) * 
+			(Lara.right_arm.frame_number - anims[Lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -341,9 +341,9 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		aMXPtr->m21 = aMXPtr[-2].m21;
 		aMXPtr->m22 = aMXPtr[-2].m22;
 
-		phd_RotYXZ(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * 
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
+		rot = &Lara.left_arm.frame_base[(anims[Lara.left_arm.anim_number].interpolation >> 8) * 
+			(Lara.left_arm.frame_number - anims[Lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -364,8 +364,8 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	case WEAPON_CROSSBOW:
 		phd_PushMatrix();
 		phd_TranslateRel(bone[29], bone[30], bone[31]);
-		rot = &lara.right_arm.frame_base[lara.right_arm.frame_number * 
-			(anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
+		rot = &Lara.right_arm.frame_base[Lara.right_arm.frame_number * 
+			(anims[Lara.right_arm.anim_number].interpolation >> 8) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -425,11 +425,11 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	arms = aMXPtr;
 
 	if (!flag || flag == 2)
-		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+		phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	else
 		phd_SetTrans(0, 0, 0);
 
-	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
+	phd_RotYXZ(LaraItem->pos.y_rot, LaraItem->pos.x_rot, LaraItem->pos.z_rot);
 
 	if (flag == 2)
 	{
@@ -506,19 +506,19 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 
 	phd_TranslateRel_I(bone[25], bone[26], bone[27]);
 
-	if (lara.weapon_item != NO_ITEM && lara.gun_type == WEAPON_HK &&
-		(items[lara.weapon_item].current_anim_state == 0 || items[lara.weapon_item].current_anim_state == 1 ||
-			items[lara.weapon_item].current_anim_state == 2 || items[lara.weapon_item].current_anim_state == 3 ||
-			items[lara.weapon_item].current_anim_state == 4))
+	if (Lara.weapon_item != NO_ITEM && Lara.gun_type == WEAPON_HK &&
+		(items[Lara.weapon_item].current_anim_state == 0 || items[Lara.weapon_item].current_anim_state == 1 ||
+			items[Lara.weapon_item].current_anim_state == 2 || items[Lara.weapon_item].current_anim_state == 3 ||
+			items[Lara.weapon_item].current_anim_state == 4))
 	{
-		rot = &lara.right_arm.frame_base[lara.right_arm.frame_number * (anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
+		rot = &Lara.right_arm.frame_base[Lara.right_arm.frame_number * (anims[Lara.right_arm.anim_number].interpolation >> 8) + 9];
 		rot2 = rot;
 		gar_RotYXZsuperpack_I(&rot, &rot2, 7);
 	}
 	else
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 
-	phd_RotYXZ_I(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
+	phd_RotYXZ_I(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
 	phd_PushMatrix();
 	InterpolateMatrix();
 	memcpy(mx, aMXPtr, 48);
@@ -530,7 +530,7 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	rotcopy = rot;
 	rot2copy = rot2;
 	gar_RotYXZsuperpack_I(&rotcopy, &rot2copy, 6);
-	phd_RotYXZ_I(lara.head_y_rot, lara.head_x_rot, lara.head_z_rot);
+	phd_RotYXZ_I(Lara.head_y_rot, Lara.head_x_rot, Lara.head_z_rot);
 	phd_PushMatrix();
 	InterpolateMatrix();
 	memcpy(mx, aMXPtr, 48);
@@ -540,8 +540,8 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	phd_PopMatrix_I();
 	gun = WEAPON_NONE;
 
-	if (lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS)
-		gun = lara.gun_type;
+	if (Lara.gun_status == LG_READY || Lara.gun_status == LG_FLARE || Lara.gun_status == LG_DRAW_GUNS || Lara.gun_status == LG_UNDRAW_GUNS)
+		gun = Lara.gun_type;
 
 	switch (gun)
 	{
@@ -577,10 +577,10 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[41], bone[42], bone[43]);
 
-		if (lara.flare_control_left)
+		if (Lara.flare_control_left)
 		{
-			rot2 = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * 
-				(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+			rot2 = &Lara.left_arm.frame_base[(anims[Lara.left_arm.anim_number].interpolation >> 8) * 
+				(Lara.left_arm.frame_number - anims[Lara.left_arm.anim_number].frame_base) + 9];
 			rot = rot2;
 			gar_RotYXZsuperpack_I(&rot, &rot2, 11);
 		}
@@ -615,8 +615,8 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[29], bone[30], bone[31]);
 		aInterpolateArmMatrix(arms);
-		phd_RotYXZ(lara.right_arm.y_rot, lara.right_arm.x_rot, lara.right_arm.z_rot);
-		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * (lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ(Lara.right_arm.y_rot, Lara.right_arm.x_rot, Lara.right_arm.z_rot);
+		rot = &Lara.right_arm.frame_base[(anims[Lara.right_arm.anim_number].interpolation >> 8) * (Lara.right_arm.frame_number - anims[Lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -635,9 +635,9 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[41], bone[42], bone[43]);
 		aInterpolateArmMatrix(arms);
-		phd_RotYXZ(lara.left_arm.y_rot, lara.left_arm.x_rot, lara.left_arm.z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * 
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ(Lara.left_arm.y_rot, Lara.left_arm.x_rot, Lara.left_arm.z_rot);
+		rot = &Lara.left_arm.frame_base[(anims[Lara.left_arm.anim_number].interpolation >> 8) * 
+			(Lara.left_arm.frame_number - anims[Lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -657,9 +657,9 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[29], bone[30], bone[31]);
 		aInterpolateArmMatrix(arms);
-		phd_RotYXZ_I(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * 
-			(lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ_I(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
+		rot = &Lara.right_arm.frame_base[(anims[Lara.right_arm.anim_number].interpolation >> 8) * 
+			(Lara.right_arm.frame_number - anims[Lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -678,9 +678,9 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[41], bone[42], bone[43]);
 		aInterpolateArmMatrix(arms);
-		phd_RotYXZ_I(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * 
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		phd_RotYXZ_I(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
+		rot = &Lara.left_arm.frame_base[(anims[Lara.left_arm.anim_number].interpolation >> 8) * 
+			(Lara.left_arm.frame_number - anims[Lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
 		memcpy(mx, aMXPtr, 48);
 		mx += 12;
@@ -701,8 +701,8 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	case WEAPON_CROSSBOW:
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[29], bone[30], bone[31]);
-		rot2 = &lara.right_arm.frame_base[lara.right_arm.frame_number * 
-			(anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
+		rot2 = &Lara.right_arm.frame_base[Lara.right_arm.frame_number * 
+			(anims[Lara.right_arm.anim_number].interpolation >> 8) + 9];
 		rot = rot2;
 		gar_RotYXZsuperpack_I(&rot, &rot2, 8);
 		phd_PushMatrix();

@@ -33,22 +33,22 @@ void Draw_Mirror_Lara()
 			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
 	}
 
-	lara_item->pos.z_pos = zplane - lara_item->pos.z_pos;
-	lara_item->pos.x_rot = -lara_item->pos.x_rot;
-	lara_item->pos.y_rot = -lara_item->pos.y_rot;
-	lara_item->pos.z_rot += 0x8000;
+	LaraItem->pos.z_pos = zplane - LaraItem->pos.z_pos;
+	LaraItem->pos.x_rot = -LaraItem->pos.x_rot;
+	LaraItem->pos.y_rot = -LaraItem->pos.y_rot;
+	LaraItem->pos.z_rot += 0x8000;
 	CalcLaraMatrices(2);
 	SetCullCW();
-	DrawLara(lara_item, 1);
+	DrawLara(LaraItem, 1);
 	DrawGunshells();
 	SetCullCCW();
-	lara_item->pos.z_pos = zplane - lara_item->pos.z_pos;
-	lara_item->pos.x_rot = -lara_item->pos.x_rot;
-	lara_item->pos.y_rot = -lara_item->pos.y_rot;
-	lara_item->pos.z_rot += 0x8000;
+	LaraItem->pos.z_pos = zplane - LaraItem->pos.z_pos;
+	LaraItem->pos.x_rot = -LaraItem->pos.x_rot;
+	LaraItem->pos.y_rot = -LaraItem->pos.y_rot;
+	LaraItem->pos.z_rot += 0x8000;
 	phd_PushMatrix();
 
-	if (lara.right_arm.flash_gun)
+	if (Lara.right_arm.flash_gun)
 	{
 		aMXPtr->m00 = lara_matrices[LMX_HAND_R * indices_count + M00];
 		aMXPtr->m01 = lara_matrices[LMX_HAND_R * indices_count + M01];
@@ -62,10 +62,10 @@ void Draw_Mirror_Lara()
 		aMXPtr->m21 = lara_matrices[LMX_HAND_R * indices_count + M21];
 		aMXPtr->m22 = lara_matrices[LMX_HAND_R * indices_count + M22];
 		aMXPtr->m23 = lara_matrices[LMX_HAND_R * indices_count + M23];
-		SetGunFlash(lara.gun_type);
+		SetGunFlash(Lara.gun_type);
 	}
 
-	if (lara.left_arm.flash_gun)
+	if (Lara.left_arm.flash_gun)
 	{
 		aMXPtr->m00 = lara_matrices[LMX_HAND_L * indices_count + M00];
 		aMXPtr->m01 = lara_matrices[LMX_HAND_L * indices_count + M01];
@@ -79,7 +79,7 @@ void Draw_Mirror_Lara()
 		aMXPtr->m21 = lara_matrices[LMX_HAND_L * indices_count + M21];
 		aMXPtr->m22 = lara_matrices[LMX_HAND_L * indices_count + M22];
 		aMXPtr->m23 = lara_matrices[LMX_HAND_L * indices_count + M23];
-		SetGunFlash(lara.gun_type);
+		SetGunFlash(Lara.gun_type);
 	}
 
 	phd_PopMatrix();

@@ -805,23 +805,23 @@ void DrawRooms(short current_room)
 	if (gfCurrentLevel != LVL5_TITLE)
 		SkyDrawPhase();
 
-	if (objects[LARA].loaded && !(lara_item->flags & IFL_INVISIBLE))
+	if (objects[LARA].loaded && !(LaraItem->flags & IFL_INVISIBLE))
 	{
 		nPolyType = 4;
 
-		if (lara_item->mesh_bits && !SCNoDrawLara)
+		if (LaraItem->mesh_bits && !SCNoDrawLara)
 		{
-			if (lara.skelebob)
+			if (Lara.skelebob)
 				SetupSkelebobMeshswaps();
 
-			DrawLara(lara_item, 0);
+			DrawLara(LaraItem, 0);
 
-			if (lara.skelebob)
+			if (Lara.skelebob)
 				RestoreLaraMeshswaps();
 
 			phd_PushMatrix();
 
-			if (lara.right_arm.flash_gun)
+			if (Lara.right_arm.flash_gun)
 			{
 				aMXPtr->m00 = lara_matrices[LMX_HAND_R * indices_count + M00];
 				aMXPtr->m01 = lara_matrices[LMX_HAND_R * indices_count + M01];
@@ -835,10 +835,10 @@ void DrawRooms(short current_room)
 				aMXPtr->m21 = lara_matrices[LMX_HAND_R * indices_count + M21];
 				aMXPtr->m22 = lara_matrices[LMX_HAND_R * indices_count + M22];
 				aMXPtr->m23 = lara_matrices[LMX_HAND_R * indices_count + M23];
-				SetGunFlash(lara.gun_type);
+				SetGunFlash(Lara.gun_type);
 			}
 
-			if (lara.left_arm.flash_gun)
+			if (Lara.left_arm.flash_gun)
 			{
 				aMXPtr->m00 = lara_matrices[LMX_HAND_L * indices_count + M00];
 				aMXPtr->m01 = lara_matrices[LMX_HAND_L * indices_count + M01];
@@ -852,13 +852,13 @@ void DrawRooms(short current_room)
 				aMXPtr->m21 = lara_matrices[LMX_HAND_L * indices_count + M21];
 				aMXPtr->m22 = lara_matrices[LMX_HAND_L * indices_count + M22];
 				aMXPtr->m23 = lara_matrices[LMX_HAND_L * indices_count + M23];
-				SetGunFlash(lara.gun_type);
+				SetGunFlash(Lara.gun_type);
 			}
 
 			phd_PopMatrix();
 		}
 
-		if (gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+		if (gfLevelFlags & GF_MIRROR && LaraItem->room_number == gfMirrorRoom)
 			Draw_Mirror_Lara();
 	}
 
@@ -917,14 +917,14 @@ void DrawRooms(short current_room)
 	DrawRats();
 	DrawBats();
 	DrawSpiders();
-	lx = lara_item->pos.x_pos;
-	ly = lara_item->pos.y_pos;
-	lz = lara_item->pos.z_pos;
-	lr = lara_item->room_number;
-	lara_item->pos.x_pos = camera.pos.x;
-	lara_item->pos.y_pos = camera.pos.y;
-	lara_item->pos.z_pos = camera.pos.z;
-	lara_item->room_number = camera.pos.room_number;
+	lx = LaraItem->pos.x_pos;
+	ly = LaraItem->pos.y_pos;
+	lz = LaraItem->pos.z_pos;
+	lr = LaraItem->room_number;
+	LaraItem->pos.x_pos = camera.pos.x;
+	LaraItem->pos.y_pos = camera.pos.y;
+	LaraItem->pos.z_pos = camera.pos.z;
+	LaraItem->room_number = camera.pos.room_number;
 	DoWeather();
 	DoUwEffect();
 	S_DrawFires();
@@ -938,10 +938,10 @@ void DrawRooms(short current_room)
 	DrawLightning();
 	DrawTwogunLasers();
 	S_DrawFootPrints();
-	lara_item->pos.x_pos = lx;
-	lara_item->pos.y_pos = ly;
-	lara_item->pos.z_pos = lz;
-	lara_item->room_number = lr;
+	LaraItem->pos.x_pos = lx;
+	LaraItem->pos.y_pos = ly;
+	LaraItem->pos.z_pos = lz;
+	LaraItem->room_number = lr;
 
 	if (LaserSightActive)
 		DrawLaserSightSprite();
@@ -964,26 +964,26 @@ void CalculateObjectLightingLara()
 		pos.y = 0;
 		pos.z = 0;
 
-		if (lara_item->anim_number == ANIM_DUCKBREATHE || lara_item->anim_number == ANIM_ALL4S || lara_item->anim_number == ANIM_BREATH)
+		if (LaraItem->anim_number == ANIM_DUCKBREATHE || LaraItem->anim_number == ANIM_ALL4S || LaraItem->anim_number == ANIM_BREATH)
 		{
-			pos.x = lara_item->pos.x_pos;
+			pos.x = LaraItem->pos.x_pos;
 
-			if (lara_item->anim_number == ANIM_BREATH)
-				pos.y = lara_item->pos.y_pos - 512;
+			if (LaraItem->anim_number == ANIM_BREATH)
+				pos.y = LaraItem->pos.y_pos - 512;
 			else
-				pos.y = lara_item->pos.y_pos - 192;
+				pos.y = LaraItem->pos.y_pos - 192;
 
-			pos.z = lara_item->pos.z_pos;
+			pos.z = LaraItem->pos.z_pos;
 		}
 		else
 			GetLaraJointPos(&pos, LMX_TORSO);
 
-		current_item = lara_item;
-		lara_item->il.item_pos.x = pos.x;
-		lara_item->il.item_pos.y = pos.y;
-		lara_item->il.item_pos.z = pos.z;
-		CalcAmbientLight(lara_item);
-		CreateLightList(lara_item);
+		current_item = LaraItem;
+		LaraItem->il.item_pos.x = pos.x;
+		LaraItem->il.item_pos.y = pos.y;
+		LaraItem->il.item_pos.z = pos.z;
+		CalcAmbientLight(LaraItem);
+		CreateLightList(LaraItem);
 	}
 }
 
@@ -1015,45 +1015,45 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate)
 
 void SetupSkelebobMeshswaps()
 {
-	lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_HEAD];
-	lara.mesh_ptrs[LM_TORSO] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_TORSO];
-	skelly_backgunbak = lara.back_gun;
-	skelly_rhandbak = lara.mesh_ptrs[LM_RHAND];
-	skelly_lhandbak = lara.mesh_ptrs[LM_LHAND];
+	Lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_HEAD];
+	Lara.mesh_ptrs[LM_TORSO] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_TORSO];
+	skelly_backgunbak = Lara.back_gun;
+	skelly_rhandbak = Lara.mesh_ptrs[LM_RHAND];
+	skelly_lhandbak = Lara.mesh_ptrs[LM_LHAND];
 
-	if (lara.back_gun)
+	if (Lara.back_gun)
 	{
-		if (lara.back_gun == CROSSBOW_ANIM)
-			lara.back_gun = UZI_ANIM;
-		else if (lara.back_gun == HK_ANIM)
-			lara.back_gun = PISTOLS_ANIM;
+		if (Lara.back_gun == CROSSBOW_ANIM)
+			Lara.back_gun = UZI_ANIM;
+		else if (Lara.back_gun == HK_ANIM)
+			Lara.back_gun = PISTOLS_ANIM;
 	}
 
-	if (lara.gun_type == WEAPON_CROSSBOW)
+	if (Lara.gun_type == WEAPON_CROSSBOW)
 	{
-		if (lara.mesh_ptrs[LM_RHAND] == meshes[objects[CROSSBOW_ANIM].mesh_index + 2 * LM_RHAND])
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[UZI_ANIM].mesh_index + 2 * LM_RHAND];
+		if (Lara.mesh_ptrs[LM_RHAND] == meshes[objects[CROSSBOW_ANIM].mesh_index + 2 * LM_RHAND])
+			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[UZI_ANIM].mesh_index + 2 * LM_RHAND];
 		else
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
+			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
 	}
-	else if (lara.gun_type == WEAPON_HK)
+	else if (Lara.gun_type == WEAPON_HK)
 	{
-		if (lara.mesh_ptrs[LM_RHAND] == meshes[objects[HK_ANIM].mesh_index + 20])
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[PISTOLS_ANIM].mesh_index + 2 * LM_RHAND];
+		if (Lara.mesh_ptrs[LM_RHAND] == meshes[objects[HK_ANIM].mesh_index + 20])
+			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[PISTOLS_ANIM].mesh_index + 2 * LM_RHAND];
 		else
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
+			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
 	}
 	
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_LHAND];
+	Lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_LHAND];
 }
 
 void RestoreLaraMeshswaps()
 {
-	lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA].mesh_index + 2 * LM_HEAD];
-	lara.mesh_ptrs[LM_TORSO] = meshes[objects[LARA].mesh_index + 2 * LM_TORSO];
-	lara.back_gun = skelly_backgunbak;
-	lara.mesh_ptrs[LM_RHAND] = skelly_rhandbak;
-	lara.mesh_ptrs[LM_LHAND] = skelly_lhandbak;
+	Lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA].mesh_index + 2 * LM_HEAD];
+	Lara.mesh_ptrs[LM_TORSO] = meshes[objects[LARA].mesh_index + 2 * LM_TORSO];
+	Lara.back_gun = skelly_backgunbak;
+	Lara.mesh_ptrs[LM_RHAND] = skelly_rhandbak;
+	Lara.mesh_ptrs[LM_LHAND] = skelly_lhandbak;
 }
 
 void RenderIt(short current_room)

@@ -245,8 +245,8 @@ void ControlGunship(short item_number)
 				if (items[Target].object_number == LARA)
 				{
 					TriggerDynamic(pos2.x, pos2.y, pos2.z, 16, (GetRandomControl() & 0x3F) + 96, (GetRandomControl() & 0x1F) + 64, 0);
-					DoBloodSplat(v.x, v.y, v.z, short((GetRandomControl() & 1) + 2), short(GetRandomControl() << 1), lara_item->room_number);
-					lara_item->hit_points -= 20;
+					DoBloodSplat(v.x, v.y, v.z, short((GetRandomControl() & 1) + 2), short(GetRandomControl() << 1), LaraItem->room_number);
+					LaraItem->hit_points -= 20;
 				}
 				else if (items[Target].object_number >= SMASH_OBJECT1 && items[Target].object_number <= SMASH_OBJECT8)
 				{
@@ -336,7 +336,7 @@ void ControlIris(short item_number)
 	{
 		SoundEffect(SFX_RICH_IRIS_ELEC, &item->pos, SFX_DEFAULT);
 
-		if (!lara.burn)
+		if (!Lara.burn)
 		{
 			pos.z = 0;
 			pos.y = 0;
@@ -348,17 +348,17 @@ void ControlIris(short item_number)
 			else
 			{
 				if (!item->item_flags[3])
-					SoundEffect(SFX_LARA_INJURY_NONRND, &lara_item->pos, SFX_DEFAULT);
+					SoundEffect(SFX_LARA_INJURY_NONRND, &LaraItem->pos, SFX_DEFAULT);
 
-				if (lara_item->hit_points <= 72 || item->item_flags[3] >= 45)
+				if (LaraItem->hit_points <= 72 || item->item_flags[3] >= 45)
 				{
 					LaraBurn();
-					lara_item->hit_points = 0;
-					lara.BurnCount = 24;
+					LaraItem->hit_points = 0;
+					Lara.BurnCount = 24;
 				}
 				else
 				{
-					lara_item->hit_points -= 12;
+					LaraItem->hit_points -= 12;
 					item->item_flags[3]++;
 				}
 			}
@@ -539,17 +539,17 @@ void ControlArea51Laser(short item_number)
 	if (room_number != item->room_number)
 		ItemNewRoom(item_number, room_number);
 
-	if (TestBoundsCollide(item, lara_item, 64))
+	if (TestBoundsCollide(item, LaraItem, 64))
 	{
 		if (!item->draw_room)
 		{
-			SoundEffect(SFX_LARA_INJURY_NONRND, &lara_item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_INJURY_NONRND, &LaraItem->pos, SFX_DEFAULT);
 			item->draw_room = 1;
 		}
 
-		lara_item->hit_points -= 100;
-		DoBloodSplat(lara_item->pos.x_pos, item->pos.y_pos - GetRandomControl() - 32, lara_item->pos.z_pos,
-			(GetRandomControl() & 3) + 4, short(GetRandomControl() << 1), lara_item->room_number);
+		LaraItem->hit_points -= 100;
+		DoBloodSplat(LaraItem->pos.x_pos, item->pos.y_pos - GetRandomControl() - 32, LaraItem->pos.z_pos,
+			(GetRandomControl() & 3) + 4, short(GetRandomControl() << 1), LaraItem->room_number);
 		AnimateItem(item);
 	}
 	else
@@ -572,19 +572,19 @@ void ControlGasCloud(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	if (lara.water_status != LW_FLYCHEAT)
+	if (Lara.water_status != LW_FLYCHEAT)
 	{
-		if (!lara.Gassed)
+		if (!Lara.Gassed)
 		{
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;
 			GetLaraJointPos(&pos, LMX_HEAD);
-			room_number = lara_item->room_number;
+			room_number = LaraItem->room_number;
 			GetFloor(pos.x, pos.y, pos.z, &room_number);
 
 			if (room[room_number].flags & ROOM_NO_LENSFLARE)
-				lara.Gassed = 1;
+				Lara.Gassed = 1;
 		}
 	}
 

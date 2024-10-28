@@ -14,7 +14,7 @@ extern long defaultJLayout[32];
 
 extern SDL_Scancode layout[LAY_Count][LAYK_Count];
 extern bool conflict[LAYK_Count];
-extern long input;
+extern long KeyInput;
 extern long dbinput;
 extern long inputBusy;
 extern long joystick_read;

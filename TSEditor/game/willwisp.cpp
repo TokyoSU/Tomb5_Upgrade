@@ -56,16 +56,16 @@ void WillOWispControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(willowisp);
 		else if (willowisp->hurt_by_lara)
-			willowisp->enemy = lara_item;
+			willowisp->enemy = LaraItem;
 
 		CreatureAIInfo(item, &info);
 
-		if (willowisp->enemy == lara_item)
+		if (willowisp->enemy == LaraItem)
 			lara_info.distance = info.distance;
 		else
 		{
-			lara_dx = lara_item->pos.x_pos - item->pos.x_pos;
-			lara_dz = lara_item->pos.z_pos - item->pos.z_pos;
+			lara_dx = LaraItem->pos.x_pos - item->pos.x_pos;
+			lara_dz = LaraItem->pos.z_pos - item->pos.z_pos;
 			phd_atan(lara_dz, lara_dx);
 			lara_info.distance = SQUARE(lara_dx) + SQUARE(lara_dz);
 		}
@@ -75,7 +75,7 @@ void WillOWispControl(short item_number)
 		angle = CreatureTurn(item, willowisp->maximum_turn);
 		willowisp->maximum_turn = 1274;
 
-		if (lara_info.distance <= 1863225 && abs(long(item->pos.y_pos - lara_item->pos.y_pos <= 1024)) && !willowisp->reached_goal)
+		if (lara_info.distance <= 1863225 && abs(long(item->pos.y_pos - LaraItem->pos.y_pos <= 1024)) && !willowisp->reached_goal)
 			item->goal_anim_state = 2;
 		else
 			item->goal_anim_state = 1;
@@ -108,7 +108,7 @@ void WillOWispControl(short item_number)
 
 		CreatureAnimation(item_number, angle, tilt);
 
-		if (willowisp->enemy == lara_item)
+		if (willowisp->enemy == LaraItem)
 		{
 			x = item->item_flags[0];
 			item->item_flags[0]++;
@@ -166,16 +166,16 @@ void MazeMonsterControl(short item_number)
 			if (item->ai_bits)
 				GetAITarget(monster);
 			else if (monster->hurt_by_lara)
-				monster->enemy = lara_item;
+				monster->enemy = LaraItem;
 
 			CreatureAIInfo(item, &info);
 
-			if (monster->enemy == lara_item)
+			if (monster->enemy == LaraItem)
 				distance = info.distance;
 			else
 			{
-				dx = lara_item->pos.x_pos - item->pos.x_pos;
-				dz = lara_item->pos.z_pos - item->pos.z_pos;
+				dx = LaraItem->pos.x_pos - item->pos.x_pos;
+				dz = LaraItem->pos.z_pos - item->pos.z_pos;
 				phd_atan(dz, dx);
 				distance = SQUARE(dx) + SQUARE(dz);
 			}
@@ -228,8 +228,8 @@ void MazeMonsterControl(short item_number)
 						item->anim_number == anim + 2 && item->frame_number > frame + 6 && item->frame_number < frame + 16))
 					{
 						CreatureEffectT(item, &mazemonster_hitleft, 20, item->pos.y_rot, DoBloodSplat);
-						lara_item->hit_points -= 150;
-						lara_item->hit_status = 1;
+						LaraItem->hit_points -= 150;
+						LaraItem->hit_status = 1;
 						monster->flags |= 1;
 					}
 					else if (item->touch_bits & 0xF00000 &&
@@ -237,8 +237,8 @@ void MazeMonsterControl(short item_number)
 						item->anim_number == anim + 2 && item->frame_number > frame + 33 && item->frame_number < frame + 43))
 					{
 						CreatureEffectT(item, &mazemonster_hitright, 20, item->pos.y_rot, DoBloodSplat);
-						lara_item->hit_points -= 150;
-						lara_item->hit_status = 1;
+						LaraItem->hit_points -= 150;
+						LaraItem->hit_status = 1;
 						monster->flags |= 2;
 					}
 				}

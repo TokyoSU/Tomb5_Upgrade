@@ -39,7 +39,7 @@ void _special1_end()
 
 	if (!bDoCredits)
 	{
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 		trigger_title_spotcam(2);
 	}
 
@@ -133,7 +133,7 @@ void _special2_end()
 	if (!bDoCredits)
 	{
 		trigger_title_spotcam(3);
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	}
 
 	Chris_Menu = 0;
@@ -261,7 +261,7 @@ void _special3_end()
 	if (!bDoCredits)
 	{
 		trigger_title_spotcam(4);
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	}
 
 	Chris_Menu = 0;
@@ -310,7 +310,7 @@ void _special4_end()
 	if (!bDoCredits)
 	{
 		trigger_title_spotcam(1);
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	}
 
 	Chris_Menu = 0;

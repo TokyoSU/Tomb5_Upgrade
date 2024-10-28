@@ -159,9 +159,9 @@ void ControlMissile(short fx_number)
 
 		if (ItemNearLara(&fx->pos, 200))
 		{
-			lara_item->hit_status = 1;
-			fx->pos.y_rot = lara_item->pos.y_rot;
-			fx->speed = lara_item->speed;
+			LaraItem->hit_status = 1;
+			fx->pos.y_rot = LaraItem->pos.y_rot;
+			fx->speed = LaraItem->speed;
 			fx->counter = 0;
 			fx->frame_number = 0;
 		}

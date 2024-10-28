@@ -36,8 +36,8 @@ void TriggerFlareSparks(long x, long y, long z, long xv, long yv, long zv)
 	SPARKS* sptr;
 	long dx, dz, rand;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = LaraItem->pos.x_pos - x;
+	dz = LaraItem->pos.z_pos - z;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -77,8 +77,8 @@ void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit)
 	SPARKS* sptr;
 	long dx, dz, rand;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = LaraItem->pos.x_pos - x;
+	dz = LaraItem->pos.z_pos - z;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -240,8 +240,8 @@ void ControlSmokeEmitter(short item_number)
 
 		if (item->item_flags[2])
 		{
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = LaraItem->pos.x_pos - item->pos.x_pos;
+			dz = LaraItem->pos.z_pos - item->pos.z_pos;
 
 			if (dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384)
 				return;
@@ -461,7 +461,7 @@ void ControlEnemyMissile(short fx_number)
 	}
 	else
 	{
-		phd_GetVectorAngles(lara_item->pos.x_pos - fx->pos.x_pos, lara_item->pos.y_pos - fx->pos.y_pos - 256, lara_item->pos.z_pos - fx->pos.z_pos, angles);
+		phd_GetVectorAngles(LaraItem->pos.x_pos - fx->pos.x_pos, LaraItem->pos.y_pos - fx->pos.y_pos - 256, LaraItem->pos.z_pos - fx->pos.z_pos, angles);
 
 		if (!fx->flag1)
 		{
@@ -556,17 +556,17 @@ void ControlEnemyMissile(short fx_number)
 
 	if (ItemNearLara(&fx->pos, 200))
 	{
-		lara_item->hit_status = 1;
+		LaraItem->hit_status = 1;
 
 		if (!fx->flag1)
 		{
 			TriggerExplosionSparks(ox, oy, oz, 3, -2, 0, fx->room_number);
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 48, 0x18806000, 0);
 
-			if (lara_item->hit_points < 500)
+			if (LaraItem->hit_points < 500)
 				LaraBurn();
 			else
-				lara_item->hit_points -= 300;
+				LaraItem->hit_points -= 300;
 		}
 		else if (fx->flag1 == 1)
 		{
@@ -575,15 +575,15 @@ void ControlEnemyMissile(short fx_number)
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0x1000030, 64, 0x18008040, 0x10000);
 			fx->pos.y_pos -= 128;
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 48, 0x18008040, 0x10000);
-			lara_item->hit_points -= 200;
+			LaraItem->hit_points -= 200;
 		}
 		else if (fx->flag1 == 2)
 		{
 			ExplodeFX(fx, 0, 32);
-			lara_item->hit_points -= 50;
-			DoBloodSplat(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, (GetRandomControl() & 3) + 2, lara_item->pos.y_rot, lara_item->room_number);
+			LaraItem->hit_points -= 50;
+			DoBloodSplat(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, (GetRandomControl() & 3) + 2, LaraItem->pos.y_rot, LaraItem->room_number);
 			SoundEffect(SFX_IMP_STONE_HIT, &fx->pos, SFX_DEFAULT);
-			SoundEffect(SFX_LARA_INJURY_RND, &lara_item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_INJURY_RND, &LaraItem->pos, SFX_DEFAULT);
 		}
 
 		KillEffect(fx_number);
@@ -797,8 +797,8 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number)
 	long dx, dz;
 	uchar size;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = LaraItem->pos.x_pos - x;
+	dz = LaraItem->pos.z_pos - z;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -1247,8 +1247,8 @@ void TriggerExplosionSmoke(long x, long y, long z, long uw)
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = LaraItem->pos.x_pos - x;
+	dz = LaraItem->pos.z_pos - z;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -1469,8 +1469,8 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 	long dx, dz, size;
 	uchar swp;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = LaraItem->pos.x_pos - x;
+	dz = LaraItem->pos.z_pos - z;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -1499,13 +1499,13 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		sptr->sG = (GetRandomControl() & 0x1F) + 48;
 		sptr->sB = 48;
 
-		if (lara.BurnBlue == 1)
+		if (Lara.BurnBlue == 1)
 		{
 			swp = sptr->sR;
 			sptr->sR = sptr->sB;
 			sptr->sB = swp;
 		}
-		else if (lara.BurnBlue == 2)
+		else if (Lara.BurnBlue == 2)
 		{
 			sptr->sB = sptr->sG >> 1;
 			sptr->sG = 255;
@@ -1519,13 +1519,13 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		sptr->dG = (GetRandomControl() & 0x3F) + 128;
 		sptr->dB = 32;
 
-		if (lara.BurnBlue == 1)
+		if (Lara.BurnBlue == 1)
 		{
 			swp = sptr->dR;
 			sptr->dR = sptr->dB;
 			sptr->dB = swp;
 		}
-		else if (lara.BurnBlue == 2)
+		else if (Lara.BurnBlue == 2)
 		{
 			sptr->dB = sptr->dG >> 1;
 			sptr->dG = 255;
@@ -1657,8 +1657,8 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly)
 	SPARKS* sptr;
 	long dx, dy, dz;
 
-	dx = lara_item->pos.x_pos - item->pos.x_pos;
-	dz = lara_item->pos.z_pos - item->pos.z_pos;
+	dx = LaraItem->pos.x_pos - item->pos.x_pos;
+	dz = LaraItem->pos.z_pos - item->pos.z_pos;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -1818,13 +1818,13 @@ void UpdateSparks()
 	short* bounds;
 	long fade, uw, rad, rnd, x, y, z, r, g, b, falloff;
 
-	bounds = GetBoundsAccurate(lara_item);
-	DeadlyBounds[0] = lara_item->pos.x_pos + bounds[0];
-	DeadlyBounds[1] = lara_item->pos.x_pos + bounds[1];
-	DeadlyBounds[2] = lara_item->pos.y_pos + bounds[2];
-	DeadlyBounds[3] = lara_item->pos.y_pos + bounds[3];
-	DeadlyBounds[4] = lara_item->pos.z_pos + bounds[4];
-	DeadlyBounds[5] = lara_item->pos.z_pos + bounds[5];
+	bounds = GetBoundsAccurate(LaraItem);
+	DeadlyBounds[0] = LaraItem->pos.x_pos + bounds[0];
+	DeadlyBounds[1] = LaraItem->pos.x_pos + bounds[1];
+	DeadlyBounds[2] = LaraItem->pos.y_pos + bounds[2];
+	DeadlyBounds[3] = LaraItem->pos.y_pos + bounds[3];
+	DeadlyBounds[4] = LaraItem->pos.z_pos + bounds[4];
+	DeadlyBounds[5] = LaraItem->pos.z_pos + bounds[5];
 
 	for (int i = 0; i < 1024; i++)
 	{
@@ -1928,7 +1928,7 @@ void UpdateSparks()
 
 		sptr->Size = uchar(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
 
-		if (sptr->Flags & SF_FIRE && !lara.burn || sptr->Flags & SF_DAMAGE)
+		if (sptr->Flags & SF_FIRE && !Lara.burn || sptr->Flags & SF_DAMAGE)
 		{
 			rad = sptr->Size << sptr->Scalar >> 1;
 
@@ -1939,7 +1939,7 @@ void UpdateSparks()
 				if (sptr->Flags & SF_FIRE)
 					LaraBurn();
 				else
-					lara_item->hit_points -= 2;
+					LaraItem->hit_points -= 2;
 			}
 		}
 	}

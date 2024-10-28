@@ -125,9 +125,9 @@ void UpdateRats()
 		fx->pos.y_pos += fx->fallspeed;
 		fx->pos.z_pos += (phd_cos(fx->pos.y_rot) * fx->speed) >> W2V_SHIFT;
 		fx->fallspeed += 6;
-		dz = lara_item->pos.z_pos - fx->pos.z_pos;
-		dy = lara_item->pos.y_pos - fx->pos.y_pos;
-		dx = lara_item->pos.x_pos - fx->pos.x_pos;
+		dz = LaraItem->pos.z_pos - fx->pos.z_pos;
+		dy = LaraItem->pos.y_pos - fx->pos.y_pos;
+		dx = LaraItem->pos.x_pos - fx->pos.x_pos;
 
 		if (fx->flags >= 170)
 			angle = short(fx->pos.y_rot - phd_atan(dz, dx));
@@ -136,8 +136,8 @@ void UpdateRats()
 
 		if (abs(dz) < 85 && abs(dy) < 85 && abs(dx) < 85)
 		{
-			lara_item->hit_points--;
-			lara_item->hit_status = 1;
+			LaraItem->hit_points--;
+			LaraItem->hit_status = 1;
 		}
 
 		if (fx->flags & 1)

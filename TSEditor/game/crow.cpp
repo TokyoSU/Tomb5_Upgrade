@@ -108,8 +108,8 @@ void CrowControl(short item_number)
 
 			if (!crow->flags && item->touch_bits)
 			{
-				lara_item->hit_points -= 20;
-				lara_item->hit_status = 1;
+				LaraItem->hit_points -= 20;
+				LaraItem->hit_status = 1;
 				CreatureEffect(item, &crow_bite, DoBloodSplat);
 				crow->flags = 1;
 			}

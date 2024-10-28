@@ -65,14 +65,14 @@ void LaraBurn()
 {
 	short fire;
 
-	if (!lara.burn && !lara.BurnSmoke)
+	if (!Lara.burn && !Lara.BurnSmoke)
 	{
-		fire = CreateEffect(lara_item->room_number);
+		fire = CreateEffect(LaraItem->room_number);
 
 		if (fire != NO_ITEM)
 		{
 			effects[fire].object_number = FLAME;
-			lara.burn = 1;
+			Lara.burn = 1;
 		}
 	}
 }
@@ -81,7 +81,7 @@ void LavaBurn(ITEM_INFO* item)
 {
 	short room_number;
 
-	if (item->hit_points >= 0 && lara.water_status != LW_FLYCHEAT)
+	if (item->hit_points >= 0 && Lara.water_status != LW_FLYCHEAT)
 	{
 		room_number = item->room_number;
 
@@ -152,7 +152,7 @@ void ControlExplosion(short item_number)
 
 					if (lp < 2048)
 					{
-						lara_item->hit_points -= (short) (lp / 16);
+						LaraItem->hit_points -= (short) (lp / 16);
 
 						if (lp < 768)
 							LaraBurn();
@@ -398,10 +398,10 @@ void DartsControl(short item_number)
 
 	if (item->touch_bits)
 	{
-		lara_item->hit_points -= 25;
-		lara_item->hit_status = 1;
-		lara.poisoned += 160;
-		DoBloodSplat(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, (GetRandomControl() & 3) + 4, lara_item->pos.y_rot, lara_item->room_number);
+		LaraItem->hit_points -= 25;
+		LaraItem->hit_status = 1;
+		Lara.poisoned += 160;
+		DoBloodSplat(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, (GetRandomControl() & 3) + 4, LaraItem->pos.y_rot, LaraItem->room_number);
 		KillItem(item_number);
 	}
 	else
@@ -508,10 +508,10 @@ void FlameEmitterControl(short item_number)
 			TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 16 - (GetRandomControl() & 1), 192 + (GetRandomControl() & 0x3F), 96 + (GetRandomControl() & 0x1F), 0);
 			SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, 0);
 
-			if (!lara.burn && item->trigger_flags != 33 && ItemNearLara(&item->pos, 600))
+			if (!Lara.burn && item->trigger_flags != 33 && ItemNearLara(&item->pos, 600))
 			{
-				x = lara_item->pos.x_pos - item->pos.x_pos;
-				z = lara_item->pos.z_pos - item->pos.z_pos;
+				x = LaraItem->pos.x_pos - item->pos.x_pos;
+				z = LaraItem->pos.z_pos - item->pos.z_pos;
 				distance = SQUARE(x) + SQUARE(z);
 
 				if (distance < 262144)
@@ -671,12 +671,12 @@ void FlameEmitter3Control(short item_number)
 			pos.y_pos = item->pos.y_pos;
 			pos.z_pos = item->pos.z_pos;
 
-			if (ItemNearLara(&pos, 600) && !lara.burn)
+			if (ItemNearLara(&pos, 600) && !Lara.burn)
 			{
-				lara_item->hit_points -= 5;
-				lara_item->hit_status = 1;
-				x = lara_item->pos.x_pos - pos.x_pos;
-				z = lara_item->pos.z_pos - pos.z_pos;
+				LaraItem->hit_points -= 5;
+				LaraItem->hit_status = 1;
+				x = LaraItem->pos.x_pos - pos.x_pos;
+				z = LaraItem->pos.z_pos - pos.z_pos;
 				distance = SQUARE(x) + SQUARE(z);
 
 				if (distance < 202500)
@@ -693,12 +693,12 @@ void FlameControl(short fx_number)
 
 	fx = &effects[fx_number];
 
-	if (lara.water_status == LW_FLYCHEAT)
+	if (Lara.water_status == LW_FLYCHEAT)
 	{
 		KillEffect(fx_number);
-		lara.burn = 0;
-		lara.BurnBlue = 0;
-		lara.BurnSmoke = 0;
+		Lara.burn = 0;
+		Lara.BurnBlue = 0;
+		Lara.BurnSmoke = 0;
 		return;
 	}
 
@@ -711,46 +711,46 @@ void FlameControl(short fx_number)
 			fx->pos.z_pos = 0;
 			GetLaraJointPos((PHD_VECTOR*) &fx->pos, i);
 
-			if (lara.BurnCount)
+			if (Lara.BurnCount)
 			{
-				lara.BurnCount--;
+				Lara.BurnCount--;
 
-				if (!lara.BurnCount)
-					lara.BurnSmoke = 1;
+				if (!Lara.BurnCount)
+					Lara.BurnSmoke = 1;
 			}
 
-			TriggerFireFlame(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1, 255 - lara.BurnSmoke);
+			TriggerFireFlame(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1, 255 - Lara.BurnSmoke);
 		}
 	}
 
 	r = (GetRandomControl() & 0x3F) + 192;
 	g = (GetRandomControl() & 0x1F) + 96;
 
-	if (!lara.BurnSmoke)
+	if (!Lara.BurnSmoke)
 	{
-		if (!lara.BurnBlue)
-			TriggerDynamic(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, 13, r, g, 0);
-		else if (lara.BurnBlue == 1)
-			TriggerDynamic(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, 13, 0, g, r);
-		else if (lara.BurnBlue == 2)
-			TriggerDynamic(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, 13, 0, r, g);
+		if (!Lara.BurnBlue)
+			TriggerDynamic(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, 13, r, g, 0);
+		else if (Lara.BurnBlue == 1)
+			TriggerDynamic(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, 13, 0, g, r);
+		else if (Lara.BurnBlue == 2)
+			TriggerDynamic(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, 13, 0, r, g);
 	}
 
-	if (lara_item->room_number != fx->room_number)
-		EffectNewRoom(fx_number, lara_item->room_number);
+	if (LaraItem->room_number != fx->room_number)
+		EffectNewRoom(fx_number, LaraItem->room_number);
 
 	y = GetWaterHeight(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->room_number);
 
-	if (y != NO_HEIGHT && fx->pos.y_pos > y && !lara.BurnBlue)
+	if (y != NO_HEIGHT && fx->pos.y_pos > y && !Lara.BurnBlue)
 	{
 		KillEffect(fx_number);
-		lara.burn = 0;
+		Lara.burn = 0;
 	}
 	else
 	{
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &fx->pos, 0);
-		lara_item->hit_points -= 7;
-		lara_item->hit_status = 1;
+		LaraItem->hit_points -= 7;
+		LaraItem->hit_status = 1;
 	}
 }
 
@@ -765,11 +765,11 @@ void RollingBallCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* col
 
 	if (TriggerActive(item) && (item->item_flags[0] || item->fallspeed))
 	{
-		lara_item->anim_number = ANIM_RBALL_DEATH;
-		lara_item->frame_number = anims[ANIM_RBALL_DEATH].frame_base;
-		lara_item->goal_anim_state = AS_DEATH;
-		lara_item->current_anim_state = AS_DEATH;
-		lara_item->gravity_status = 0;
+		LaraItem->anim_number = ANIM_RBALL_DEATH;
+		LaraItem->frame_number = anims[ANIM_RBALL_DEATH].frame_base;
+		LaraItem->goal_anim_state = AS_DEATH;
+		LaraItem->current_anim_state = AS_DEATH;
+		LaraItem->gravity_status = 0;
 	}
 	else
 		ObjectCollision(item_number, laraitem, coll);
@@ -1027,8 +1027,8 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
-		&& lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == (void*)item_number)
+	if (KeyInput & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
+		&& Lara.gun_status == LG_NO_ARMS || Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
 	{
 		if (TestLaraPosition(FloorTrapDoorBounds, item, l))
 		{
@@ -1037,12 +1037,12 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				l->anim_number = ANIM_LIFTTRAP;
 				l->frame_number = anims[ANIM_LIFTTRAP].frame_base;
 				l->current_anim_state = AS_LIFTTRAP;
-				lara.IsMoving = 0;
-				lara.head_y_rot = 0;
-				lara.head_x_rot = 0;
-				lara.torso_y_rot = 0;
-				lara.torso_x_rot = 0;
-				lara.gun_status = LG_HANDS_BUSY;
+				Lara.IsMoving = 0;
+				Lara.head_y_rot = 0;
+				Lara.head_x_rot = 0;
+				Lara.torso_y_rot = 0;
+				Lara.torso_x_rot = 0;
+				Lara.gun_status = LG_HANDS_BUSY;
 				AddActiveItem(item_number);
 				item->goal_anim_state = 1;
 				item->status = ITEM_ACTIVE;
@@ -1058,7 +1058,7 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				ForcedFixedCamera.room_number = item->room_number;
 			}
 			else
-				lara.GeneralPtr = (void*)item_number;
+				Lara.GeneralPtr = (void*)item_number;
 		}
 	}
 	else if (item->current_anim_state == 1)
@@ -1080,19 +1080,19 @@ void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	pass2 = (short)TestLaraPosition(CeilingTrapDoorBounds, item, l);
 	l->pos.y_rot += 32768;
 
-	if (input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_UPJUMP &&
-		l->gravity_status && lara.gun_status == LG_NO_ARMS && (pass1 || pass2))
+	if (KeyInput & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_UPJUMP &&
+		l->gravity_status && Lara.gun_status == LG_NO_ARMS && (pass1 || pass2))
 	{
 		AlignLaraPosition(&CeilingTrapDoorPos, item, l);
 
 		if (pass2)
-			lara_item->pos.y_rot += 32768;
+			LaraItem->pos.y_rot += 32768;
 
-		lara.head_y_rot = 0;
-		lara.head_x_rot = 0;
-		lara.torso_y_rot = 0;
-		lara.torso_x_rot = 0;
-		lara.gun_status = LG_HANDS_BUSY;
+		Lara.head_y_rot = 0;
+		Lara.head_x_rot = 0;
+		Lara.torso_y_rot = 0;
+		Lara.torso_x_rot = 0;
+		Lara.gun_status = LG_HANDS_BUSY;
 		l->gravity_status = 0;
 		l->fallspeed = 0;
 		l->anim_number = ANIM_PULLTRAP;
@@ -1317,25 +1317,25 @@ void ControlScaledSpike(short item_number)
 		item->status = ITEM_ACTIVE;
 		hit = (short)TestBoundsCollideTeethSpikes(item);
 
-		if (lara_item->hit_points > 0 && hit)
+		if (LaraItem->hit_points > 0 && hit)
 		{
 			bounds = GetBestFrame(item);
-			larabounds = GetBestFrame(lara_item);
+			larabounds = GetBestFrame(LaraItem);
 			num = 0;
 
-			if ((item->item_flags[0] > 1024 || lara_item->gravity_status) && (item->trigger_flags & 7) > 2 && (item->trigger_flags & 7) < 6)
+			if ((item->item_flags[0] > 1024 || LaraItem->gravity_status) && (item->trigger_flags & 7) > 2 && (item->trigger_flags & 7) < 6)
 			{
-				if (lara_item->fallspeed > 6 || item->item_flags[0] > 1024)
+				if (LaraItem->fallspeed > 6 || item->item_flags[0] > 1024)
 				{
-					lara_item->hit_points = -1;
+					LaraItem->hit_points = -1;
 					num = 20;
 				}
 			}
-			else if (lara_item->speed < 30)
+			else if (LaraItem->speed < 30)
 				num = 0;
 			else
 			{
-				lara_item->hit_points -= 8;
+				LaraItem->hit_points -= 8;
 				num = (GetRandomControl() & 3) + 2;
 			}
 
@@ -1366,25 +1366,25 @@ void ControlScaledSpike(short item_number)
 
 			while (num > 0)
 			{
-				dx = (GetRandomControl() & 0x7F) + lara_item->pos.x_pos - 64;
-				dz = (GetRandomControl() & 0x7F) + lara_item->pos.z_pos - 64;
+				dx = (GetRandomControl() & 0x7F) + LaraItem->pos.x_pos - 64;
+				dz = (GetRandomControl() & 0x7F) + LaraItem->pos.z_pos - 64;
 				TriggerBlood(dx, yb - GetRandomControl() % dy, dz, GetRandomControl() << 1, 1);
 				num--;
 			}
 
-			if (lara_item->hit_points <= 0)
+			if (LaraItem->hit_points <= 0)
 			{
-				room_number = lara_item->room_number;
-				dy = GetHeight(GetFloor(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_number),
-					lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+				room_number = LaraItem->room_number;
+				dy = GetHeight(GetFloor(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, &room_number),
+					LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 
-				if (item->pos.y_pos >= lara_item->pos.y_pos && dy - lara_item->pos.y_pos < 50)
+				if (item->pos.y_pos >= LaraItem->pos.y_pos && dy - LaraItem->pos.y_pos < 50)
 				{
-					lara_item->anim_number = ANIM_SPIKED;
-					lara_item->frame_number = anims[ANIM_SPIKED].frame_base;
-					lara_item->current_anim_state = AS_DEATH;
-					lara_item->goal_anim_state = AS_DEATH;
-					lara_item->gravity_status = 0;
+					LaraItem->anim_number = ANIM_SPIKED;
+					LaraItem->frame_number = anims[ANIM_SPIKED].frame_base;
+					LaraItem->current_anim_state = AS_DEATH;
+					LaraItem->goal_anim_state = AS_DEATH;
+					LaraItem->gravity_status = 0;
 				}
 			}
 		}
@@ -1400,7 +1400,7 @@ void ControlScaledSpike(short item_number)
 			{
 				item->item_flags[0] = 0;
 
-				if (!(item->trigger_flags & 16) && lara_item->hit_points > 0)
+				if (!(item->trigger_flags & 16) && LaraItem->hit_points > 0)
 					item->item_flags[2] = 64;
 			}
 			else
@@ -1521,10 +1521,10 @@ void ControlTwoBlockPlatform(short item_number)
 	else
 	{
 		OnObject = 0;
-		height = lara_item->pos.y_pos + 1;
-		TwoBlockPlatformFloor(item, lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &height);
+		height = LaraItem->pos.y_pos + 1;
+		TwoBlockPlatformFloor(item, LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, &height);
 
-		if (!OnObject || lara_item->anim_number == 89)
+		if (!OnObject || LaraItem->anim_number == 89)
 			item->item_flags[1] = -1;
 		else
 			item->item_flags[1] = 1;
@@ -1615,8 +1615,8 @@ void FallingCeiling(short item_number)
 	}
 	else if (item->current_anim_state == 1 && item->touch_bits)
 	{
-		lara_item->hit_points -= 300;
-		lara_item->hit_status = 1;
+		LaraItem->hit_points -= 300;
+		LaraItem->hit_status = 1;
 	}
 
 	AnimateItem(item);
@@ -1664,14 +1664,14 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item)
 		rad = 480;
 
 	y = item->pos.y_pos + SPDETyoffs[item->trigger_flags & 7];
-	bounds = GetBestFrame(lara_item);
+	bounds = GetBestFrame(LaraItem);
 
-	if (lara_item->pos.y_pos + bounds[2] > y || lara_item->pos.y_pos + bounds[3] < y - 900)
+	if (LaraItem->pos.y_pos + bounds[2] > y || LaraItem->pos.y_pos + bounds[3] < y - 900)
 		return 0;
 
-	xMin = lara_item->pos.x_pos + bounds[0];
-	xMax = lara_item->pos.x_pos + bounds[1];
-	zMin = lara_item->pos.z_pos + bounds[4];
-	zMax = lara_item->pos.z_pos + bounds[5];
+	xMin = LaraItem->pos.x_pos + bounds[0];
+	xMax = LaraItem->pos.x_pos + bounds[1];
+	zMin = LaraItem->pos.z_pos + bounds[4];
+	zMax = LaraItem->pos.z_pos + bounds[5];
 	return xMin <= x + rad && xMax >= x - rad && zMin <= z + rad && zMax >= z - rad;
 }

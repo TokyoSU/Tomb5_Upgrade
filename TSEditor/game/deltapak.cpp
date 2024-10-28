@@ -242,7 +242,7 @@ void andrea1_control()
 		break;
 
 	case 705:
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 		break;
 	}
 
@@ -258,8 +258,8 @@ void andrea1_control()
 
 void andrea1_end()
 {
-	lara_item->mesh_bits = -1;
-	lara.pickupitems &= ~1;
+	LaraItem->mesh_bits = -1;
+	Lara.pickupitems &= ~1;
 }
 
 void andrea2_init()
@@ -284,9 +284,9 @@ void andrea2_control()
 	else if (frame == 678)
 		undraw_pistol_mesh_right(WEAPON_PISTOLS);
 	else if (frame == 2500)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	else if (frame == 2797)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 	else if (frame == 2522)
 	{
 		item = find_a_fucking_item(ANIMATING10);
@@ -358,7 +358,7 @@ void andrea2_control()
 
 void andrea2_end()
 {
-	lara.pickupitems &= ~2;
+	Lara.pickupitems &= ~2;
 }
 
 void andrea3_init()
@@ -369,9 +369,9 @@ void andrea3_init()
 void andrea3_control()
 {
 	if (GLOBAL_cutseq_frame == 332)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	else if (GLOBAL_cutseq_frame == 421)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	deal_with_pistols(andrea3_pistols_info);
 	handle_lara_chatting(lara_chat_ranges_andrea3);
@@ -418,10 +418,10 @@ void andrea3b_control()
 	f = GLOBAL_cutseq_frame;
 
 	if (f == 301 || f == 639 || f == 781)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 
 	if (f == 512 || f == 692 || f == 1084)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	if (f == 1191)
 	{
@@ -519,11 +519,11 @@ void cranecut_control()
 	switch (f)
 	{
 	case 74:
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 		break;
 
 	case 124:
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 		break;
 
 	case 801:
@@ -588,7 +588,7 @@ void richcut1_init()
 	ITEM_INFO* item;
 	short item_num;
 
-	item_num = room[lara_item->room_number].item_number;
+	item_num = room[LaraItem->room_number].item_number;
 
 	while (item_num != NO_ITEM)
 	{
@@ -617,10 +617,10 @@ void richcut1_control()
 	f = GLOBAL_cutseq_frame;
 
 	if (f == 101 || f == 493 || f == 673)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 
 	if (f == 208 || f == 580 || f == 810)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	if (f == 840)
 	{
@@ -641,7 +641,7 @@ void richcut1_end()
 void richcut2_init()
 {
 	cutrot = 1;
-	lara_item->mesh_bits = 0;
+	LaraItem->mesh_bits = 0;
 }
 
 void richcut2_control()
@@ -657,7 +657,7 @@ void richcut2_control()
 
 void richcut2_end()
 {
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 }
 
 void richcut3_init()
@@ -673,9 +673,9 @@ void richcut3_control()
 	{
 		cutseq_meshbits[1] |= 0x80000000;
 		cutseq_removelara_hk();
-		lara.back_gun = 0;
-		lara.hk_type_carried = W_NONE;
-		lara.last_gun_type = WEAPON_NONE;
+		Lara.back_gun = 0;
+		Lara.hk_type_carried = W_NONE;
+		Lara.last_gun_type = WEAPON_NONE;
 	}
 }
 
@@ -700,7 +700,7 @@ void richcut4_init()
 	meshes[objects[TWOGUN].mesh_index + 17] = meshes[objects[MAFIA2_MIP].mesh_index + 16];
 	cutseq_meshbits[2] &= 0xFFFFFFFB;
 	cutseq_meshswapbits[1] |= 0x100;
-	lara_item->mesh_bits = 0;
+	LaraItem->mesh_bits = 0;
 }
 
 void richcut4_control()
@@ -738,7 +738,7 @@ void richcut4_end()
 {
 	find_a_fucking_item(SAILOR_MIP)->mesh_bits = -1;
 	DelsHandyTeleportLara(35328, 0, 35328, 49152);
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 }
 
 void andy1_init()
@@ -814,7 +814,7 @@ void andy3_end()
 {
 	FlipMap(2);
 	do_catapult_meshswap();
-	lara.puzzleitems[1] = 0;
+	Lara.puzzleitems[1] = 0;
 	DelsHandyTeleportLara(55902, 8448, 53349, 32768);
 }
 
@@ -905,7 +905,7 @@ void andy4b_control()
 void andy4b_end()
 {
 	DelsHandyTeleportLara(43543, 5376, 47285, 32768);
-	lara.puzzleitems[2] = 0;
+	Lara.puzzleitems[2] = 0;
 }
 
 void andy5_init()
@@ -980,9 +980,9 @@ void andy6_control()
 	PHD_VECTOR pos;
 
 	if (GLOBAL_cutseq_frame == 900)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	else if (GLOBAL_cutseq_frame == 1401)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	pos.x = 0;
 	pos.y = 48;
@@ -1045,11 +1045,11 @@ void andy8_control()
 		break;
 
 	case 1244:
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 		break;
 
 	case 1476:
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 		break;
 
 	case 145:
@@ -1061,14 +1061,14 @@ void andy8_control()
 void andy8_end()
 {
 	SetCutPlayed(36);
-	lara.puzzleitems[0] = 0;
+	Lara.puzzleitems[0] = 0;
 	do_chalk_meshswap();
 }
 
 void andy9_init()
 {
 	cutseq_kill_item(ANIMATING15);
-	lara_item->mesh_bits = 0;
+	LaraItem->mesh_bits = 0;
 }
 
 void andy9_control()
@@ -1078,10 +1078,10 @@ void andy9_control()
 	f = GLOBAL_cutseq_frame;
 
 	if (f == 151 || f == 1033 || f == 3868)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	if (f == 192 || f == 1099 || f == 3974)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 
 	handle_lara_chatting(lara_chat_ranges_andy9);
 	handle_actor_chatting(ACTOR1_SPEECH_HEAD1, 2, 4, SAILOR_MIP, priest_chat_ranges_andy9);
@@ -1092,7 +1092,7 @@ void andy9_control()
 void andy9_end()
 {
 	cutseq_restore_item(ANIMATING15);
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 }
 
 void andy10_init()
@@ -1113,7 +1113,7 @@ void andy10_init()
 	RemoveActiveItem(item - items);
 	DisableBaddieAI(item - items);
 	item->flags |= IFL_INVISIBLE;
-	lara.water_status = LW_UNDERWATER;
+	Lara.water_status = LW_UNDERWATER;
 	FlipMap(7);
 	disable_horizon = 1;
 }
@@ -1137,10 +1137,10 @@ void andy10_control()
 	}
 	
 	if (f == 338 || f == 775)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	
 	if (f == 747)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 	
 	if (f == 902 || f == 1574)
 		cutseq_meshbits[4] &= ~0x80000000;
@@ -1162,18 +1162,18 @@ void andy10_control()
 
 void andy10_end()
 {
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	SetCutPlayed(43);
 	Cutanimate(ANIMATING12);
 	Cutanimate(ANIMATING13);
 	FlipMap(7);
 	DelsHandyTeleportLara(39424, 15360, 48640, 0);
-	lara.water_status = LW_UNDERWATER;
-	lara_item->pos.x_rot = -5278;
-	lara_item->anim_number = ANIM_TREAD;
-	lara_item->frame_number = anims[ANIM_TREAD].frame_base;
-	lara_item->current_anim_state = AS_TREAD;
-	lara_item->goal_anim_state = AS_TREAD;
+	Lara.water_status = LW_UNDERWATER;
+	LaraItem->pos.x_rot = -5278;
+	LaraItem->anim_number = ANIM_TREAD;
+	LaraItem->frame_number = anims[ANIM_TREAD].frame_base;
+	LaraItem->current_anim_state = AS_TREAD;
+	LaraItem->goal_anim_state = AS_TREAD;
 	NailInvItem(PUZZLE_ITEM2);
 	disable_horizon = 0;
 }
@@ -1181,7 +1181,7 @@ void andy10_end()
 void andy11_init()
 {
 	cutseq_kill_item(ANIMATING15);
-	lara_item->mesh_bits = 0;
+	LaraItem->mesh_bits = 0;
 	cutseq_meshbits[4] &= ~0xF8000;
 	cutseq_meshbits[5] &= ~0x80000000;
 }
@@ -1193,10 +1193,10 @@ void andy11_control()
 	f = GLOBAL_cutseq_frame;
 
 	if (f == 2112 || f == 2660 || f == 3082 || f == 3626 || f == 4002 || f == 4064 || f == 4118 || f == 4366 || f == 4789 || f == 5390)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	if (f == 2164 || f == 2863 || f == 3534 || f == 3915 || f == 4064 || f == 4158 || f == 4569 || f == 5076)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 
 	if (f == 3082)
 		cutseq_meshbits[5] |= 0x80000000;
@@ -1243,10 +1243,10 @@ void cossack_control()
 	f = GLOBAL_cutseq_frame;
 
 	if (f == 98 || f == 344 || f == 743 || f == 1263)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 
 	if (f == 281 || f == 468 || f == 901 || f == 1339)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	if (f == 156)
 	{
@@ -1324,7 +1324,7 @@ void monk2_control()
 	f = GLOBAL_cutseq_frame;
 
 	if (f == 70)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 
 	if (f >= 630 && f < 720)
 	{
@@ -1353,7 +1353,7 @@ void monk2_control()
 
 void monk2_end()
 {
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 }
 
 void swampy_init()
@@ -1371,7 +1371,7 @@ void swampy_init()
 		item->flags |= IFL_INVISIBLE;
 	}
 
-	lara.water_status = LW_UNDERWATER;
+	Lara.water_status = LW_UNDERWATER;
 }
 
 void swampy_control()
@@ -1385,15 +1385,15 @@ void swampy_end()
 	SetCutNotPlayed(43);
 	AddActiveItem(find_a_fucking_item(GREEN_TEETH) - items);
 	DelsHandyTeleportLara(42477, 12456, 55982, 28953);
-	lara.water_status = LW_UNDERWATER;
-	lara_item->pos.x_rot = -5278;
-	lara_item->anim_number = ANIM_TREAD;
-	lara_item->frame_number = anims[ANIM_TREAD].frame_base;
-	lara_item->current_anim_state = AS_TREAD;
-	lara_item->goal_anim_state = AS_TREAD;
+	Lara.water_status = LW_UNDERWATER;
+	LaraItem->pos.x_rot = -5278;
+	LaraItem->anim_number = ANIM_TREAD;
+	LaraItem->frame_number = anims[ANIM_TREAD].frame_base;
+	LaraItem->current_anim_state = AS_TREAD;
+	LaraItem->goal_anim_state = AS_TREAD;
 
-	if (lara.air > 200)
-		lara.air = 200;
+	if (Lara.air > 200)
+		Lara.air = 200;
 }
 
 void hamgate_init()
@@ -1445,9 +1445,9 @@ void stealth3_start()
 		if (item->object_number == CHEF || item->object_number == SAS || item->object_number == BLUE_GUARD ||
 			item->object_number == SWAT_PLUS || item->object_number == SWAT || item->object_number == TWOGUN)
 		{
-			if (abs(item->pos.x_pos - lara_item->pos.x_pos) < 1024 &&
-				abs(item->pos.z_pos - lara_item->pos.z_pos) < 1024 &&
-				abs(item->pos.y_pos - lara_item->pos.y_pos) < 256)
+			if (abs(item->pos.x_pos - LaraItem->pos.x_pos) < 1024 &&
+				abs(item->pos.z_pos - LaraItem->pos.z_pos) < 1024 &&
+				abs(item->pos.y_pos - LaraItem->pos.y_pos) < 256)
 			{
 				GLOBAL_cutme->actor_data[1].objslot = item->object_number;
 				item->status = ITEM_INVISIBLE;
@@ -1476,9 +1476,9 @@ void stealth3_end()
 		if (item->object_number == CHEF || item->object_number == SAS || item->object_number == BLUE_GUARD ||
 			item->object_number == SWAT_PLUS || item->object_number == SWAT || item->object_number == TWOGUN)
 		{
-			if (abs(item->pos.x_pos - lara_item->pos.x_pos) < 1024 &&
-				abs(item->pos.z_pos - lara_item->pos.z_pos) < 1024 &&
-				abs(item->pos.y_pos - lara_item->pos.y_pos) < 256)
+			if (abs(item->pos.x_pos - LaraItem->pos.x_pos) < 1024 &&
+				abs(item->pos.z_pos - LaraItem->pos.z_pos) < 1024 &&
+				abs(item->pos.y_pos - LaraItem->pos.y_pos) < 256)
 			{
 				item->hit_points = 0;
 				item->current_anim_state = 6;
@@ -1520,13 +1520,13 @@ void joby2_control()
 	switch (GLOBAL_cutseq_frame)
 	{
 	case 176:
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 		cutseq_meshbits[3] |= 0x80000000;
 		cutseq_meshbits[4] |= 0x80000000;
 		break;
 
 	case 1622:
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 		cutseq_meshbits[1] &= ~0x80000000;
 		cutseq_meshbits[2] &= ~0x80000000;
 		cutseq_meshbits[3] &= ~0x80000000;
@@ -1537,7 +1537,7 @@ void joby2_control()
 		break;
 
 	case 1822:
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 		disable_horizon = 0;
 		cutseq_meshbits[1] |= 0x80000000;
 		cutseq_meshbits[2] |= 0x80000000;
@@ -1563,7 +1563,7 @@ void joby2_control()
 
 void joby2_end()
 {
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	DelsHandyTeleportLara(22905, -4608, 45415, 48806);
 	cutseq_kill_item(ANIMATING6);
 }
@@ -1576,9 +1576,9 @@ void joby3_init()
 void joby3_control()
 {
 	if (GLOBAL_cutseq_frame == 583)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	else if (GLOBAL_cutseq_frame == 765)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 	else if (GLOBAL_cutseq_frame == 1299)
 		FlipMap(3);
 
@@ -1607,10 +1607,10 @@ void joby4_control()
 		cutseq_meshbits[5] &= ~0x80000000;
 
 	if (f == 769 || f == 1966)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 
 	if (f == 1593)
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 
 	handle_lara_chatting(lara_chat_ranges_joby4);
 	handle_actor_chatting(ACTOR1_SPEECH_HEAD1, 2, 3, CRANE_GUY_MIP, admiral_chat_ranges_joby4);
@@ -1619,7 +1619,7 @@ void joby4_control()
 
 void joby4_end()
 {
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	cutseq_restore_item(DOOR_TYPE1);
 	cutseq_restore_item(DOOR_TYPE5);
 	DelsHandyTeleportLara(57950, 8960, 53760, 16384);
@@ -1640,7 +1640,7 @@ void joby5_control()
 	f = GLOBAL_cutseq_frame;
 
 	if (f == 144)
-		lara_item->mesh_bits = 0;
+		LaraItem->mesh_bits = 0;
 	else if (f == 436)
 		cutseq_meshbits[2] |= 0x80000000;
 	else if (f == 1796)
@@ -1660,7 +1660,7 @@ void joby5_end()
 	cutseq_restore_item(ANIMATING3);
 	cutseq_restore_item(ANIMATING4);
 	DelsHandyTeleportLara(61952, -1792, 55808, 32768);
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 }
 
 void joby6_init()
@@ -1679,20 +1679,20 @@ void joby6_control()
 {
 	if (GLOBAL_cutseq_frame == 542)
 	{
-		lara_item->mesh_bits = 0x81FF01FF;
-		lara.mesh_ptrs[LM_HIPS] = meshes[objects[MESHSWAP3].mesh_index];
+		LaraItem->mesh_bits = 0x81FF01FF;
+		Lara.mesh_ptrs[LM_HIPS] = meshes[objects[MESHSWAP3].mesh_index];
 	}
 }
 
 void joby6_end()
 {
-	lara_item->mesh_bits = -1;
-	lara.mesh_ptrs[LM_HIPS] = meshes[objects[LARA].mesh_index];
+	LaraItem->mesh_bits = -1;
+	Lara.mesh_ptrs[LM_HIPS] = meshes[objects[LARA].mesh_index];
 }
 
 void joby7_init()
 {
-	lara_item->mesh_bits = 0;
+	LaraItem->mesh_bits = 0;
 	cutseq_kill_item(ANIMATING2);
 	cutseq_meshbits[6] &= ~0x80000000;
 }
@@ -1731,7 +1731,7 @@ void joby7_control()
 		s.z = 0;
 		GetActorJointAbsPosition(1, 0, &s);
 
-		room_no = lara_item->room_number;
+		room_no = LaraItem->room_number;
 		IsRoomOutsideNo = -1;
 		IsRoomOutside(s.x, s.y, s.z);
 
@@ -1762,17 +1762,17 @@ void joby7_control()
 
 void joby7_end()
 {
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	cutseq_restore_item(ANIMATING2);
 	AddDisplayPickup(PICKUP_ITEM1);
 	DelsHandyTeleportLara(30049, 17583, 69794, 51830);
-	lara.water_status = LW_UNDERWATER;
-	lara_item->pos.x_rot = 1090;
-	lara_item->anim_number = ANIM_TREAD;
-	lara_item->frame_number = anims[ANIM_TREAD].frame_base;
-	lara_item->current_anim_state = AS_TREAD;
-	lara_item->goal_anim_state = AS_TREAD;
-	lara.Anxiety = 80;
+	Lara.water_status = LW_UNDERWATER;
+	LaraItem->pos.x_rot = 1090;
+	LaraItem->anim_number = ANIM_TREAD;
+	LaraItem->frame_number = anims[ANIM_TREAD].frame_base;
+	LaraItem->current_anim_state = AS_TREAD;
+	LaraItem->goal_anim_state = AS_TREAD;
+	Lara.Anxiety = 80;
 }
 
 void joby8_init()
@@ -1782,11 +1782,11 @@ void joby8_init()
 
 	cutseq_kill_item(DOOR_TYPE4);
 	cutseq_kill_item(ANIMATING16);
-	lara_item->mesh_bits = 0x81FF01FF;
+	LaraItem->mesh_bits = 0x81FF01FF;
 
-	room_number = lara_item->room_number;
-	floor = GetFloor(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_number);
-	GetHeight(floor, lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	room_number = LaraItem->room_number;
+	floor = GetFloor(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, &room_number);
+	GetHeight(floor, LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	TestTriggers(trigger_index, 1, 0);
 
 	cutseq_meshswapbits[7] = 128;
@@ -1826,7 +1826,7 @@ void joby8_control()
 		break;
 
 	case 440:
-		lara_item->mesh_bits = -1;
+		LaraItem->mesh_bits = -1;
 		break;
 
 	case 2103:
@@ -1834,9 +1834,9 @@ void joby8_control()
 		break;
 
 	case 2724:
-		room_num = lara_item->room_number;
-		floor = GetFloor(lara_item->pos.x_pos + 1024, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_num);
-		GetHeight(floor, lara_item->pos.x_pos + 1024, lara_item->pos.y_pos, lara_item->pos.z_pos);
+		room_num = LaraItem->room_number;
+		floor = GetFloor(LaraItem->pos.x_pos + 1024, LaraItem->pos.y_pos, LaraItem->pos.z_pos, &room_num);
+		GetHeight(floor, LaraItem->pos.x_pos + 1024, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 		TestTriggers(trigger_index, 1, 0);
 		break;
 	}
@@ -1962,7 +1962,7 @@ void joby10_end()
 void special1_init()
 {
 	cutrot = 0;
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	Chris_Menu = 0;
 }
 
@@ -1979,7 +1979,7 @@ void special1_end()
 void special2_init()
 {
 	cutrot = 0;
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	Chris_Menu = 0;
 	ResetCutItem(ANIMATING1_MIP);
 	ResetCutItem(ANIMATING2_MIP);
@@ -2012,7 +2012,7 @@ void special2_end()
 void special3_init()
 {
 	cutrot = 0;
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	Chris_Menu = 0;
 	nSpecialCut = 3;
 }
@@ -2029,7 +2029,7 @@ void special3_end()
 
 void special4_init()
 {
-	lara_item->mesh_bits = -1;
+	LaraItem->mesh_bits = -1;
 	Chris_Menu = 0;
 	cutrot = 1;
 	nSpecialCut = 4;
@@ -2054,8 +2054,8 @@ void handle_cutseq_triggering(long name)
 
 	if (!cutseq_trig)
 	{
-		if (lara.gun_type == WEAPON_FLARE || lara.gun_status != LG_NO_ARMS && lara.gun_status != LG_HANDS_BUSY)
-			lara.gun_status = LG_UNDRAW_GUNS;
+		if (Lara.gun_type == WEAPON_FLARE || Lara.gun_status != LG_NO_ARMS && Lara.gun_status != LG_HANDS_BUSY)
+			Lara.gun_status = LG_UNDRAW_GUNS;
 
 		memset(cutseq_meshswapbits, 0, sizeof(cutseq_meshswapbits));
 		memset(cutseq_meshbits, -1, sizeof(cutseq_meshbits));
@@ -2076,7 +2076,7 @@ void handle_cutseq_triggering(long name)
 	}
 	else if (cutseq_trig == 1)
 	{
-		n = lara_item->current_anim_state;
+		n = LaraItem->current_anim_state;
 
 		if (!ScreenFadedOut)
 			return;
@@ -2090,48 +2090,48 @@ void handle_cutseq_triggering(long name)
 			goin = 1;
 		}
 
-		if (lara.gun_status == LG_HANDS_BUSY || (lara.gun_status == LG_NO_ARMS && !lara.flare_control_left) ||
+		if (Lara.gun_status == LG_HANDS_BUSY || (Lara.gun_status == LG_NO_ARMS && !Lara.flare_control_left) ||
 			n == AS_ALL4S || n == AS_CRAWL || n == AS_ALL4TURNL || n == AS_ALL4TURNR || n == AS_CRAWLBACK)
 			goin = 1;
 
 		if (goin)
 		{
-			lara.flare_control_left = 0;
-			lara.flare_age = 0;
+			Lara.flare_control_left = 0;
+			Lara.flare_age = 0;
 
 			if (!(gfLevelFlags & GF_YOUNGLARA))
 			{
-				lara.gun_type = WEAPON_NONE;
-				lara.request_gun_type = WEAPON_NONE;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.gun_type = WEAPON_NONE;
+				Lara.request_gun_type = WEAPON_NONE;
+				Lara.gun_status = LG_NO_ARMS;
 				old_lara_LHolster = LHolster;
-				LHolster = lara.pistols_type_carried == W_NONE ? LARA_HOLSTERS : LARA_HOLSTERS_PISTOLS;
-				old_lara_holster = lara.holster;
-				lara.holster = LHolster;
-				lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + (2 * LM_LHAND)];
-				lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + (2 * LM_RHAND)];
-				lara.left_arm.frame_number = 0;
-				lara.right_arm.frame_number = 0;
-				lara.target = 0;
-				lara.right_arm.lock = 0;
-				lara.left_arm.lock = 0;
-				lara_item->goal_anim_state = AS_STOP;
-				lara_item->current_anim_state = AS_STOP;
-				lara_item->frame_number = anims[ANIM_STOP].frame_base;
-				lara_item->anim_number = ANIM_STOP;
-				lara_item->speed = 0;
-				lara_item->fallspeed = 0;
-				lara_item->gravity_status = 0;
-				lara.back_gun = 0;
+				LHolster = Lara.pistols_type_carried == W_NONE ? LARA_HOLSTERS : LARA_HOLSTERS_PISTOLS;
+				old_lara_holster = Lara.holster;
+				Lara.holster = LHolster;
+				Lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + (2 * LM_LHAND)];
+				Lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + (2 * LM_RHAND)];
+				Lara.left_arm.frame_number = 0;
+				Lara.right_arm.frame_number = 0;
+				Lara.target = 0;
+				Lara.right_arm.lock = 0;
+				Lara.left_arm.lock = 0;
+				LaraItem->goal_anim_state = AS_STOP;
+				LaraItem->current_anim_state = AS_STOP;
+				LaraItem->frame_number = anims[ANIM_STOP].frame_base;
+				LaraItem->anim_number = ANIM_STOP;
+				LaraItem->speed = 0;
+				LaraItem->fallspeed = 0;
+				LaraItem->gravity_status = 0;
+				Lara.back_gun = 0;
 
-				if (lara.weapon_item != NO_ITEM)
+				if (Lara.weapon_item != NO_ITEM)
 				{
-					KillItem(lara.weapon_item);
-					lara.weapon_item = NO_ITEM;
+					KillItem(Lara.weapon_item);
+					Lara.weapon_item = NO_ITEM;
 				}
 			}
 
-			lara.water_status = LW_ABOVE_WATER;
+			Lara.water_status = LW_ABOVE_WATER;
 
 			if (gfCurrentLevel != LVL5_TITLE)
 				S_CDStop();
@@ -2177,7 +2177,7 @@ void handle_cutseq_triggering(long name)
 			cutseq_control_routines[cutseq_num].end_func();
 
 		LHolster = old_lara_LHolster;
-		lara.holster = old_lara_holster;
+		Lara.holster = old_lara_holster;
 
 		if (cutseq_num <= 4)
 			DelsHandyTeleportLara(GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz, cutrot * 0x4000);
@@ -2251,7 +2251,7 @@ void handle_cutseq_triggering(long name)
 void cutseq_givelara_pistols()
 {
 	LHolster = LARA_HOLSTERS;
-	lara.holster = LARA_HOLSTERS;
+	Lara.holster = LARA_HOLSTERS;
 	draw_pistol_meshes(WEAPON_PISTOLS);
 }
 
@@ -2271,8 +2271,8 @@ void do_catapult_meshswap()
 {
 	short* temp;
 	
-	temp = lara.mesh_ptrs[LM_LHAND];
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[CROW_MIP].mesh_index + (2 * LM_LHAND)];
+	temp = Lara.mesh_ptrs[LM_LHAND];
+	Lara.mesh_ptrs[LM_LHAND] = meshes[objects[CROW_MIP].mesh_index + (2 * LM_LHAND)];
 	meshes[objects[CROW_MIP].mesh_index + (2 * LM_LHAND)] = temp;
 }
 
@@ -2280,8 +2280,8 @@ void do_clanger_meshswap()
 {
 	short* temp;
 	
-	temp = lara.mesh_ptrs[LM_RHAND];
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[MESHSWAP2].mesh_index + (2 * LM_RHAND)];
+	temp = Lara.mesh_ptrs[LM_RHAND];
+	Lara.mesh_ptrs[LM_RHAND] = meshes[objects[MESHSWAP2].mesh_index + (2 * LM_RHAND)];
 	meshes[objects[MESHSWAP2].mesh_index + (2 * LM_RHAND)] = temp;
 }
 
@@ -2289,8 +2289,8 @@ void do_hammer_meshswap()
 {
 	short* temp;
 	
-	temp = lara.mesh_ptrs[LM_RHAND];
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[MESHSWAP3].mesh_index + (2 * LM_RHAND)];
+	temp = Lara.mesh_ptrs[LM_RHAND];
+	Lara.mesh_ptrs[LM_RHAND] = meshes[objects[MESHSWAP3].mesh_index + (2 * LM_RHAND)];
 	meshes[objects[MESHSWAP3].mesh_index + (2 * LM_RHAND)] = temp;
 }
 
@@ -2304,8 +2304,8 @@ void do_chalk_meshswap()//optimized out
 {
 	short* temp;
 	
-	temp = lara.mesh_ptrs[LM_RHAND];
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[MAFIA_MIP].mesh_index + 2 * LM_RHAND];
+	temp = Lara.mesh_ptrs[LM_RHAND];
+	Lara.mesh_ptrs[LM_RHAND] = meshes[objects[MAFIA_MIP].mesh_index + 2 * LM_RHAND];
 	meshes[objects[MAFIA_MIP].mesh_index + 2 * LM_RHAND] = temp;
 }
 
@@ -2313,12 +2313,12 @@ void cutseq_shoot_pistols(long left_or_right)
 {
 	if (left_or_right == 14)
 	{
-		lara.left_arm.flash_gun = 4;
+		Lara.left_arm.flash_gun = 4;
 		SmokeCountL = 16;
 	}
 	else
 	{
-		lara.right_arm.flash_gun = 4;
+		Lara.right_arm.flash_gun = 4;
 		SmokeCountR = 16;
 	}
 }
@@ -2351,10 +2351,10 @@ void Cutanimate(long objnum)
 void cutseq_removelara_hk()
 {
 	undraw_shotgun_meshes(WEAPON_HK);
-	lara.gun_type = WEAPON_NONE;
-	lara.request_gun_type = WEAPON_NONE;
-	lara.gun_status = LG_NO_ARMS;
-	lara.last_gun_type = WEAPON_HK;
+	Lara.gun_type = WEAPON_NONE;
+	Lara.request_gun_type = WEAPON_NONE;
+	Lara.gun_status = LG_NO_ARMS;
+	Lara.last_gun_type = WEAPON_HK;
 }
 
 void cutseq_givelara_hk()
@@ -2405,8 +2405,8 @@ void TriggerDelSmoke(long x, long y, long z, long sizeme)
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = LaraItem->pos.x_pos - x;
+	dz = LaraItem->pos.z_pos - z;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -2656,7 +2656,7 @@ void deal_with_pistols(ushort* shootdata)
 
 	if (SmokeCountL || SmokeCountR)
 	{
-		lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA_SCREAM].mesh_index + LM_HEAD * 2];
+		Lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA_SCREAM].mesh_index + LM_HEAD * 2];
 
 		if (SmokeCountL)
 		{
@@ -2677,17 +2677,17 @@ void deal_with_pistols(ushort* shootdata)
 		}
 	}
 	else
-		lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA].mesh_index + LM_HEAD * 2];
+		Lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA].mesh_index + LM_HEAD * 2];
 
-	if (lara.left_arm.flash_gun)
+	if (Lara.left_arm.flash_gun)
 	{
-		lara.left_arm.flash_gun--;
+		Lara.left_arm.flash_gun--;
 		trigger_weapon_dynamics(LMX_HAND_L);
 	}
 
-	if (lara.right_arm.flash_gun)
+	if (Lara.right_arm.flash_gun)
 	{
-		lara.right_arm.flash_gun--;
+		Lara.right_arm.flash_gun--;
 		trigger_weapon_dynamics(LMX_HAND_R);
 	}
 }
@@ -2706,7 +2706,7 @@ void handle_lara_chatting(short* _ranges)
 
 		if (r1 == -1)
 		{
-			lara.mesh_ptrs[14] = meshes[objects[LARA_SKIN].mesh_index + 2 * 14];
+			Lara.mesh_ptrs[14] = meshes[objects[LARA_SKIN].mesh_index + 2 * 14];
 			return;
 		}
 
@@ -2717,7 +2717,7 @@ void handle_lara_chatting(short* _ranges)
 	}
 
 	if (!lara_chat_cnt)
-		lara.mesh_ptrs[LM_HEAD] = meshes[objects[(GetRandomControl() & 3) + LARA_SPEECH_HEAD1].mesh_index + LM_HEAD * 2];
+		Lara.mesh_ptrs[LM_HEAD] = meshes[objects[(GetRandomControl() & 3) + LARA_SPEECH_HEAD1].mesh_index + LM_HEAD * 2];
 }
 
 void handle_actor_chatting(long speechslot, long node, long slot, long objslot, short* _ranges)
@@ -2825,29 +2825,29 @@ void deal_with_actor_shooting(ushort* shootdata, long actornum, long nodenum, PH
 
 void DelsHandyTeleportLara(long x, long y, long z, long yrot)
 {
-	lara_item->pos.x_pos = x;
-	lara_item->pos.y_pos = y;
-	lara_item->pos.z_pos = z;
-	lara.head_x_rot = 0;
-	lara.head_y_rot = 0;
-	lara.torso_x_rot = 0;
-	lara.torso_y_rot = 0;
-	lara_item->pos.x_rot = 0;
-	lara_item->pos.y_rot = (short)yrot;
-	lara_item->pos.z_rot = 0;
-	IsRoomOutside(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	LaraItem->pos.x_pos = x;
+	LaraItem->pos.y_pos = y;
+	LaraItem->pos.z_pos = z;
+	Lara.head_x_rot = 0;
+	Lara.head_y_rot = 0;
+	Lara.torso_x_rot = 0;
+	Lara.torso_y_rot = 0;
+	LaraItem->pos.x_rot = 0;
+	LaraItem->pos.y_rot = (short)yrot;
+	LaraItem->pos.z_rot = 0;
+	IsRoomOutside(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 
-	if (IsRoomOutsideNo != lara_item->room_number)
-		ItemNewRoom(lara.item_number, IsRoomOutsideNo);
+	if (IsRoomOutsideNo != LaraItem->room_number)
+		ItemNewRoom(Lara.item_number, IsRoomOutsideNo);
 
-	lara_item->anim_number = ANIM_STOP;
-	lara_item->frame_number = anims[ANIM_STOP].frame_base;
-	lara_item->current_anim_state = AS_STOP;
-	lara_item->goal_anim_state = AS_STOP;
-	lara_item->speed = 0;
-	lara_item->fallspeed = 0;
-	lara_item->gravity_status = 0;
-	lara.gun_status = LG_NO_ARMS;
+	LaraItem->anim_number = ANIM_STOP;
+	LaraItem->frame_number = anims[ANIM_STOP].frame_base;
+	LaraItem->current_anim_state = AS_STOP;
+	LaraItem->goal_anim_state = AS_STOP;
+	LaraItem->speed = 0;
+	LaraItem->fallspeed = 0;
+	LaraItem->gravity_status = 0;
+	Lara.gun_status = LG_NO_ARMS;
 	camera.fixed_camera = 1;
 }
 
@@ -3250,15 +3250,15 @@ void frigup_lara()
 	if (cutseq_num == 18 && GLOBAL_cutseq_frame <= 130)
 		PrintString(phd_centerx, phd_winymax - 3 * font_height, 5, SCRIPT_TEXT(TXT_cack), FF_CENTER);
 
-	lara_item->pos.x_pos = GLOBAL_cutme->orgx;
-	lara_item->pos.y_pos = GLOBAL_cutme->orgy;
-	lara_item->pos.z_pos = GLOBAL_cutme->orgz;
+	LaraItem->pos.x_pos = GLOBAL_cutme->orgx;
+	LaraItem->pos.y_pos = GLOBAL_cutme->orgy;
+	LaraItem->pos.z_pos = GLOBAL_cutme->orgz;
 
 	if (GLOBAL_cutme->actor_data[0].objslot == NO_ITEM)
 		return;
 
 	frame = &temp_rotation_buffer[0];
-	object = &objects[lara_item->object_number];
+	object = &objects[LaraItem->object_number];
 	bone = &bones[object->bone_index];
 	updateAnimFrame(actor_pnodes[0], 16, frame);
 
@@ -3290,22 +3290,22 @@ void CalculateObjectLightingLaraCutSeq()
 	pos.y = 0;
 	pos.z = 0;
 	GetLaraJointPos(&pos, LMX_TORSO);
-	room_num = lara_item->room_number;
+	room_num = LaraItem->room_number;
 	IsRoomOutsideNo = -1;
 	IsRoomOutside(pos.x, pos.y, pos.z);
 
 	if (IsRoomOutsideNo != -1)
 		room_num = IsRoomOutsideNo;
 
-	room_num2 = lara_item->room_number;
-	current_item = lara_item;
-	lara_item->il.item_pos.x = pos.x;
-	lara_item->il.item_pos.y = pos.y;
-	lara_item->il.item_pos.z = pos.z;
-	lara_item->room_number = room_num;
-	CalcAmbientLight(lara_item);
-	CreateLightList(lara_item);
-	lara_item->room_number = room_num2;
+	room_num2 = LaraItem->room_number;
+	current_item = LaraItem;
+	LaraItem->il.item_pos.x = pos.x;
+	LaraItem->il.item_pos.y = pos.y;
+	LaraItem->il.item_pos.z = pos.z;
+	LaraItem->room_number = room_num;
+	CalcAmbientLight(LaraItem);
+	CreateLightList(LaraItem);
+	LaraItem->room_number = room_num2;
 }
 
 void GrabActorMatrix(long actornum, ulong nodenum, long* matrixstash)
@@ -3384,9 +3384,9 @@ long Load_and_Init_Cutseq(long num)
 
 	if (cutseq_num <= 4)
 	{
-		GLOBAL_cutme->orgx = (lara_item->pos.x_pos & ~0x3FF) + 512;
-		GLOBAL_cutme->orgy = lara_item->pos.y_pos;
-		GLOBAL_cutme->orgz = (lara_item->pos.z_pos & ~0x3FF) + 512;
+		GLOBAL_cutme->orgx = (LaraItem->pos.x_pos & ~0x3FF) + 512;
+		GLOBAL_cutme->orgy = LaraItem->pos.y_pos;
+		GLOBAL_cutme->orgz = (LaraItem->pos.z_pos & ~0x3FF) + 512;
 	}
 
 	init_cutseq_actors(packed, 0);
@@ -3517,7 +3517,7 @@ void init_cutseq_actors(char* data, long resident)
 			InitPackNodes(nlheader, actor_pnodes[i], packed, pda_nodes + 1);
 
 		memset(&duff_item[i], 0, sizeof(ITEM_INFO));
-		duff_item[i].il.ambient = lara_item->il.ambient;
+		duff_item[i].il.ambient = LaraItem->il.ambient;
 		duff_item[i].il.fcnt = -1;
 		duff_item[i].il.room_number = -1;
 		duff_item[i].il.RoomChange = 0;
@@ -3551,10 +3551,10 @@ void init_cutseq_actors(char* data, long resident)
 	GLOBAL_playing_cutseq = 1;
 	GLOBAL_cutseq_frame = 0;
 	DelsHandyTeleportLara(GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz, 0);
-	camera.pos.x = lara_item->pos.x_pos;
-	camera.pos.y = lara_item->pos.y_pos;
-	camera.pos.z = lara_item->pos.z_pos;
-	camera.pos.room_number = lara_item->room_number;
+	camera.pos.x = LaraItem->pos.x_pos;
+	camera.pos.y = LaraItem->pos.y_pos;
+	camera.pos.z = LaraItem->pos.z_pos;
+	camera.pos.room_number = LaraItem->room_number;
 	InitialiseHair();
 }
 
@@ -3567,9 +3567,9 @@ void init_resident_cutseq(long num)
 
 	if (cutseq_num <= 4)
 	{
-		GLOBAL_cutme->orgx = (lara_item->pos.x_pos & -1024) + 512;
-		GLOBAL_cutme->orgy = lara_item->pos.y_pos;
-		GLOBAL_cutme->orgz = (lara_item->pos.z_pos & -1024) + 512;
+		GLOBAL_cutme->orgx = (LaraItem->pos.x_pos & -1024) + 512;
+		GLOBAL_cutme->orgy = LaraItem->pos.y_pos;
+		GLOBAL_cutme->orgz = (LaraItem->pos.z_pos & -1024) + 512;
 	}
 
 	init_cutseq_actors(packed, 1);
@@ -3641,9 +3641,9 @@ void do_cutseq_skipper_stuff()
 		if (GLOBAL_cutseq_frame < 320)
 		{
 			cutseq_removelara_hk();
-			lara.back_gun = 0;
-			lara.hk_type_carried = W_NONE;
-			lara.last_gun_type = WEAPON_NONE;
+			Lara.back_gun = 0;
+			Lara.hk_type_carried = W_NONE;
+			Lara.last_gun_type = WEAPON_NONE;
 		}
 
 		break;
@@ -3674,8 +3674,8 @@ void do_cutseq_skipper_stuff()
 
 		if (GLOBAL_cutseq_frame < 2724)
 		{
-			room_num = lara_item->room_number;
-			GetHeight(GetFloor(lara_item->pos.x_pos + 1024, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_num), lara_item->pos.x_pos + 1024, lara_item->pos.y_pos, lara_item->pos.z_pos);
+			room_num = LaraItem->room_number;
+			GetHeight(GetFloor(LaraItem->pos.x_pos + 1024, LaraItem->pos.y_pos, LaraItem->pos.z_pos, &room_num), LaraItem->pos.x_pos + 1024, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 			TestTriggers(trigger_index, 1, 0);
 		}
 
@@ -3698,6 +3698,6 @@ void do_cutseq_skipper_stuff()
 		break;
 	}
 
-	lara_item->mesh_bits = -1;	//for good fucking measure
+	LaraItem->mesh_bits = -1;	//for good fucking measure
 	cutseq_trig = 3;	//end it
 }

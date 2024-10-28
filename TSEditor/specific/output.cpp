@@ -702,9 +702,9 @@ void RenderLoadPic()
 	camera.pos.x = load_cam.x;
 	camera.pos.y = load_cam.y;
 	camera.pos.z = load_cam.z;
-	lara_item->pos.x_pos = camera.pos.x;
-	lara_item->pos.y_pos = camera.pos.y;
-	lara_item->pos.z_pos = camera.pos.z;
+	LaraItem->pos.x_pos = camera.pos.x;
+	LaraItem->pos.y_pos = camera.pos.y;
+	LaraItem->pos.z_pos = camera.pos.z;
 	camera.target.x = load_target.x;
 	camera.target.y = load_target.y;
 	camera.target.z = load_target.z;
@@ -712,9 +712,9 @@ void RenderLoadPic()
 
 	KillActiveBaddies(false);
 	SetFade(255, 0);
-	poisoned = lara.poisoned;
+	poisoned = Lara.poisoned;
 	FadeScreenHeight = 0;
-	lara.poisoned = 0;
+	Lara.poisoned = 0;
 	BinocularRange = 0;
 
 	if (App.dx.InScene)
@@ -749,7 +749,7 @@ void RenderLoadPic()
 	S_OutputPolyList();
 	S_DumpScreen();
 
-	lara.poisoned = poisoned;
+	Lara.poisoned = poisoned;
 }
 
 long S_GetObjectBounds(short* bounds)

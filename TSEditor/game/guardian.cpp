@@ -247,7 +247,7 @@ void GuardianControl(short item_number)
 			d.x = 0;
 			d.y = 0;
 			d.z = 0;
-			GetJointAbsPosition(lara_item, (PHD_VECTOR*)&d, LM_HEAD);
+			GetJointAbsPosition(LaraItem, (PHD_VECTOR*)&d, LM_HEAD);
 
 			if (LOS(&s, &d))
 			{
@@ -273,18 +273,18 @@ void GuardianControl(short item_number)
 			d.x = 0;
 			d.y = 0;
 			d.z = 0;
-			GetJointAbsPosition(lara_item, (PHD_VECTOR*) &d, LM_HEAD);
+			GetJointAbsPosition(LaraItem, (PHD_VECTOR*) &d, LM_HEAD);
 			dx = s.x - d.x;
 			dy = s.y - d.y;
 			dz = s.z - d.z;
 			adiff = phd_sqrt(SQUARE(dx) + SQUARE(dy) + SQUARE(dz));
 
-			if (LOS(&s, &d) && adiff <= 0x2000 && lara_item->hit_points > 0 && !lara.burn && (gt.x || gt.y || gt.z))
+			if (LOS(&s, &d) && adiff <= 0x2000 && LaraItem->hit_points > 0 && !Lara.burn && (gt.x || gt.y || gt.z))
 			{
 				d.x = 0;
 				d.y = 0;
 				d.z = 0;
-				GetJointAbsPosition(lara_item, (PHD_VECTOR*) &d, LM_HIPS);
+				GetJointAbsPosition(LaraItem, (PHD_VECTOR*) &d, LM_HIPS);
 				gt.TrackSpeed = 3;
 				gt.TrackLara = 1;
 			}
@@ -362,7 +362,7 @@ void GuardianControl(short item_number)
 		{
 			if (gt.TrackLara)
 			{
-				if (!(GetRandomControl() & 0x1F) && abs(gt.Xdiff) < 1024 && abs(gt.Ydiff) < 1024 && !lara_item->fallspeed || !(GetRandomControl() & 0x1FF))
+				if (!(GetRandomControl() & 0x1F) && abs(gt.Xdiff) < 1024 && abs(gt.Ydiff) < 1024 && !LaraItem->fallspeed || !(GetRandomControl() & 0x1FF))
 				{
 					item->item_flags[0]++;
 					item->item_flags[3] = 0;
@@ -393,7 +393,7 @@ void GuardianControl(short item_number)
 				if (!lptr)
 					lptr = gt.elptr[1];
 
-				if ((item->item_flags[3] <= 90 || !lptr || lptr->Life) && lara_item->hit_points > 0 && !lara.burn)
+				if ((item->item_flags[3] <= 90 || !lptr || lptr->Life) && LaraItem->hit_points > 0 && !Lara.burn)
 				{
 					if (item->item_flags[3] > 90 && lptr && lptr->Life < 16)
 					{
@@ -451,26 +451,26 @@ void GuardianControl(short item_number)
 								}
 							}
 
-							if (!lara.burn)
+							if (!Lara.burn)
 							{
 								farflag = 0;
-								bounds = GetBoundsAccurate(lara_item);
+								bounds = GetBoundsAccurate(LaraItem);
 
 								phd_PushUnitMatrix();
-								phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
+								phd_RotYXZ(LaraItem->pos.y_rot, LaraItem->pos.x_rot, LaraItem->pos.z_rot);
 								phd_SetTrans(0, 0, 0);
 								mRotBoundingBoxNoPersp(bounds, tbounds);
 								phd_PopMatrix();
 
-								DB[0] = lara_item->pos.x_pos + tbounds[0];
-								DB[1] = lara_item->pos.x_pos + tbounds[1];
-								DB[2] = lara_item->pos.y_pos + tbounds[2];
-								DB[3] = lara_item->pos.y_pos + tbounds[3];
-								DB[4] = lara_item->pos.z_pos + tbounds[4];
-								DB[5] = lara_item->pos.z_pos + tbounds[5];
-								dx1 = lara_item->pos.x_pos + ((bounds[0] + bounds[1]) >> 1) - d.x;
-								dy1 = lara_item->pos.y_pos + ((bounds[2] + bounds[3]) >> 1) - d.y;
-								dz1 = lara_item->pos.z_pos + ((bounds[4] + bounds[5]) >> 1) - d.z;
+								DB[0] = LaraItem->pos.x_pos + tbounds[0];
+								DB[1] = LaraItem->pos.x_pos + tbounds[1];
+								DB[2] = LaraItem->pos.y_pos + tbounds[2];
+								DB[3] = LaraItem->pos.y_pos + tbounds[3];
+								DB[4] = LaraItem->pos.z_pos + tbounds[4];
+								DB[5] = LaraItem->pos.z_pos + tbounds[5];
+								dx1 = LaraItem->pos.x_pos + ((bounds[0] + bounds[1]) >> 1) - d.x;
+								dy1 = LaraItem->pos.y_pos + ((bounds[2] + bounds[3]) >> 1) - d.y;
+								dz1 = LaraItem->pos.z_pos + ((bounds[4] + bounds[5]) >> 1) - d.z;
 								adiff = phd_sqrt(SQUARE(dx1) + SQUARE(dy1) + SQUARE(dz1));
 
 								if (adiff < 0x2000)
@@ -524,9 +524,9 @@ void GuardianControl(short item_number)
 									if (lp1 == 999)
 									{
 										LaraBurn();
-										lara.BurnCount = 48;
-										lara.BurnBlue = 2;
-										lara_item->hit_points = 0;
+										Lara.BurnCount = 48;
+										Lara.BurnBlue = 2;
+										LaraItem->hit_points = 0;
 									}
 								}
 							}

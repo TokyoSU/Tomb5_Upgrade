@@ -83,10 +83,10 @@ short GunHit(long x, long y, long z, short speed, short yrot, short room_number)
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
-	GetJointAbsPosition(lara_item, &pos, (25 * GetRandomControl()) / 0x7FFF);
+	GetJointAbsPosition(LaraItem, &pos, (25 * GetRandomControl()) / 0x7FFF);
 
-	DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 3, lara_item->pos.y_rot, lara_item->room_number);
-	SoundEffect(SFX_LARA_INJURY_RND, &lara_item->pos, SFX_DEFAULT);
+	DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 3, LaraItem->pos.y_rot, LaraItem->room_number);
+	SoundEffect(SFX_LARA_INJURY_RND, &LaraItem->pos, SFX_DEFAULT);
 	return GunShot(x, y, z, speed, yrot, room_number);
 }
 
@@ -94,10 +94,10 @@ short GunMiss(long x, long y, long z, short speed, short yrot, short room_number
 {
 	GAME_VECTOR pos;
 
-	pos.x = lara_item->pos.x_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
-	pos.y = lara_item->floor;
-	pos.z = lara_item->pos.z_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
-	pos.room_number = lara_item->room_number;
+	pos.x = LaraItem->pos.x_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
+	pos.y = LaraItem->floor;
+	pos.z = LaraItem->pos.z_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
+	pos.room_number = LaraItem->room_number;
 	Richochet(&pos);
 	return GunShot(x, y, z, speed, yrot, room_number);
 }
@@ -139,13 +139,13 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 
 	if (damage)
 	{
-		if (enemy == lara_item)
+		if (enemy == LaraItem)
 		{
 			if (hit)
 			{
 				CreatureEffect(item, gun, GunHit);
-				lara_item->hit_points -= (short)damage;
-				lara_item->hit_status = 1;
+				LaraItem->hit_points -= (short)damage;
+				LaraItem->hit_status = 1;
 			}
 			else if (targetable)
 				CreatureEffect(item, gun, GunMiss);

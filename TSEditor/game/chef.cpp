@@ -46,19 +46,19 @@ void ChefControl(short item_number)
 	if (item->ai_bits)
 		GetAITarget(chef);
 	else if (chef->hurt_by_lara)
-		chef->enemy = lara_item;
+		chef->enemy = LaraItem;
 
 	CreatureAIInfo(item, &info);
 
-	if (chef->enemy == lara_item)
+	if (chef->enemy == LaraItem)
 	{
 		larainfo.angle = info.angle;
 		larainfo.distance = info.distance;
 	}
 	else
 	{
-		dx = lara_item->pos.x_pos - item->pos.x_pos;
-		dz = lara_item->pos.z_pos - item->pos.z_pos;
+		dx = LaraItem->pos.x_pos - item->pos.x_pos;
+		dz = LaraItem->pos.z_pos - item->pos.z_pos;
 		larainfo.angle = short(phd_atan(dz, dx) - item->pos.y_rot);
 		larainfo.ahead = larainfo.angle > -0x4000 && larainfo.angle < 0x4000;
 		larainfo.distance = SQUARE(dz) + SQUARE(dx);
@@ -81,8 +81,8 @@ void ChefControl(short item_number)
 	{
 	case 1:
 
-		if (abs(lara_item->pos.y_pos - item->pos.y_pos) < 1024 && info.distance < 0x240000 &&
-			(item->touch_bits || lara_item->speed > 15 || item->hit_status || TargetVisible(item, &larainfo)))
+		if (abs(LaraItem->pos.y_pos - item->pos.y_pos) < 1024 && info.distance < 0x240000 &&
+			(item->touch_bits || LaraItem->speed > 15 || item->hit_status || TargetVisible(item, &larainfo)))
 		{
 			item->goal_anim_state = 2;
 			chef->alerted = 1;
@@ -116,8 +116,8 @@ void ChefControl(short item_number)
 
 		if (!chef->flags && item->touch_bits & 0x2000 && item->frame_number > anims[item->anim_number].frame_base + 10)
 		{
-			lara_item->hit_points -= 80;
-			lara_item->hit_status = 1;
+			LaraItem->hit_points -= 80;
+			LaraItem->hit_status = 1;
 			CreatureEffectT(item, &knife, 20, item->pos.y_rot, DoBloodSplat);
 			SoundEffect(SFX_LARA_THUD, &item->pos, SFX_DEFAULT);
 			chef->flags = 1;

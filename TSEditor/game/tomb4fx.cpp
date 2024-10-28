@@ -520,7 +520,7 @@ void ControlTeleporter(short item_number)
 			}
 			else
 			{
-				lara.puzzleitems[1] = 1;
+				Lara.puzzleitems[1] = 1;
 				RemoveActiveItem(item_number);
 				item->flags &= ~IFL_CODEBITS;
 			}
@@ -541,10 +541,10 @@ void ControlTeleporter(short item_number)
 				SoundEffect(SFX_LIFT_HIT_FLOOR2, 0, SFX_DEFAULT);
 			}
 
-			lara_item->anim_number = ANIM_ELEVATOR_RECOVER;
-			lara_item->frame_number = anims[lara_item->anim_number].frame_base;
-			lara_item->goal_anim_state = AS_CONTROLLED;
-			lara_item->current_anim_state = AS_CONTROLLED;
+			LaraItem->anim_number = ANIM_ELEVATOR_RECOVER;
+			LaraItem->frame_number = anims[LaraItem->anim_number].frame_base;
+			LaraItem->goal_anim_state = AS_CONTROLLED;
+			LaraItem->current_anim_state = AS_CONTROLLED;
 			item->item_flags[0]++;
 
 			if (item->item_flags[0] >= 150)
@@ -553,14 +553,14 @@ void ControlTeleporter(short item_number)
 		else
 		{
 			camera.fixed_camera = 1;
-			lara_item->pos.x_pos = item->pos.x_pos;
-			lara_item->pos.z_pos = item->pos.z_pos;
-			lara_item->pos.y_rot = item->pos.y_rot - 32768;
+			LaraItem->pos.x_pos = item->pos.x_pos;
+			LaraItem->pos.z_pos = item->pos.z_pos;
+			LaraItem->pos.y_rot = item->pos.y_rot - 32768;
 			room_number = item->room_number;
-			lara_item->pos.y_pos = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			LaraItem->pos.y_pos = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
-			if (lara_item->room_number != room_number)
-				ItemNewRoom(lara.item_number, room_number);
+			if (LaraItem->room_number != room_number)
+				ItemNewRoom(Lara.item_number, room_number);
 
 			if (item->flags & IFL_INVISIBLE)
 				KillItem(item_number);
@@ -1032,8 +1032,8 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 	SPARKS* sptr;
 	long dx, dz, xvel, zvel;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = LaraItem->pos.x_pos - x;
+	dz = LaraItem->pos.z_pos - z;
 
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -1147,19 +1147,19 @@ void UpdateShockwaves()
 		sw->InnerRad += sw->Speed >> 1;
 		sw->Speed -= sw->Speed >> 4;
 
-		if (lara_item->hit_points >= 0 && sw->Flags & 3)
+		if (LaraItem->hit_points >= 0 && sw->Flags & 3)
 		{
-			bounds = GetBestFrame(lara_item);
-			dx = lara_item->pos.x_pos - sw->x;
-			dz = lara_item->pos.z_pos - sw->z;
+			bounds = GetBestFrame(LaraItem);
+			dx = LaraItem->pos.x_pos - sw->x;
+			dz = LaraItem->pos.z_pos - sw->z;
 			dist = phd_sqrt(SQUARE(dx) + SQUARE(dz));
 
-			if (sw->y > lara_item->pos.y_pos + bounds[2] && sw->y < bounds[3] + lara_item->pos.y_pos + 256 &&
+			if (sw->y > LaraItem->pos.y_pos + bounds[2] && sw->y < bounds[3] + LaraItem->pos.y_pos + 256 &&
 				dist > sw->InnerRad && dist < sw->OuterRad)
 			{
 				dir = (short)phd_atan(dz, dx);
-				TriggerShockwaveHitEffect(lara_item->pos.x_pos, sw->y, lara_item->pos.z_pos, *(long*)&sw->r, dir, sw->Speed);
-				lara_item->hit_points -= sw->Speed >> (((sw->Flags & 2) != 0) + 2);
+				TriggerShockwaveHitEffect(LaraItem->pos.x_pos, sw->y, LaraItem->pos.z_pos, *(long*)&sw->r, dir, sw->Speed);
+				LaraItem->hit_points -= sw->Speed >> (((sw->Flags & 2) != 0) + 2);
 			}
 			else
 				sw->Temp = 0;
@@ -1219,9 +1219,9 @@ void TriggerLaraDrips()
 
 	for (int i = 14; i > 0; i--)
 	{
-		if (lara.wet[i])
+		if (Lara.wet[i])
 		{
-			if (!LaraNodeUnderwater[i] && (GetRandomControl() & 0x1FF) < lara.wet[i])
+			if (!LaraNodeUnderwater[i] && (GetRandomControl() & 0x1FF) < Lara.wet[i])
 			{
 				pos.x = (GetRandomControl() & 0x1F) - 16;
 				pos.y = (GetRandomControl() & 0xF) + 16;
@@ -1239,10 +1239,10 @@ void TriggerLaraDrips()
 				drip->Yvel = (GetRandomControl() & 0x1F) + 32;
 				drip->Gravity = (GetRandomControl() & 0x1F) + 32;
 				drip->Life = (GetRandomControl() & 0x1F) + 16;
-				drip->RoomNumber = lara_item->room_number;
+				drip->RoomNumber = LaraItem->room_number;
 			}
 
-			lara.wet[i] -= 4;
+			Lara.wet[i] -= 4;
 		}
 	}
 }
@@ -1711,7 +1711,7 @@ void TriggerGunShell(short leftright, short objnum, long weapon)
 	shell->pos.x_pos = pos.x;
 	shell->pos.y_pos = pos.y;
 	shell->pos.z_pos = pos.z;
-	shell->room_number = lara_item->room_number;
+	shell->room_number = LaraItem->room_number;
 	shell->pos.x_rot = 0;
 	shell->pos.y_rot = 0;
 	shell->pos.z_rot = (short)GetRandomControl();
@@ -1724,19 +1724,19 @@ void TriggerGunShell(short leftright, short objnum, long weapon)
 	{
 		if (weapon == WEAPON_SHOTGUN)
 		{
-			shell->DirXrot = lara.torso_y_rot + lara_item->pos.y_rot - (GetRandomControl() & 0xFFF) + lara.left_arm.y_rot + 0x2800;
-			shell->pos.y_rot += lara.left_arm.y_rot + lara.torso_y_rot + lara_item->pos.y_rot;
+			shell->DirXrot = Lara.torso_y_rot + LaraItem->pos.y_rot - (GetRandomControl() & 0xFFF) + Lara.left_arm.y_rot + 0x2800;
+			shell->pos.y_rot += Lara.left_arm.y_rot + Lara.torso_y_rot + LaraItem->pos.y_rot;
 
 			if (shell->speed < 24)
 				shell->speed += 24;
 		}
 		else
-			shell->DirXrot = lara_item->pos.y_rot - (GetRandomControl() & 0xFFF) + lara.left_arm.y_rot + 0x4800;
+			shell->DirXrot = LaraItem->pos.y_rot - (GetRandomControl() & 0xFFF) + Lara.left_arm.y_rot + 0x4800;
 	}
 	else
-		shell->DirXrot = lara_item->pos.y_rot + (GetRandomControl() & 0xFFF) + lara.left_arm.y_rot - 0x4800;
+		shell->DirXrot = LaraItem->pos.y_rot + (GetRandomControl() & 0xFFF) + Lara.left_arm.y_rot - 0x4800;
 
-	if (lara_item->mesh_bits)
+	if (LaraItem->mesh_bits)
 	{
 		if (weapon == WEAPON_SHOTGUN)
 			shade = 24;
@@ -1898,7 +1898,7 @@ void TriggerShatterSmoke(long x, long y, long z)
 		else
 			sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
 	}
-	else if (room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+	else if (room[LaraItem->room_number].flags & ROOM_NOT_INSIDE)
 		sptr->Flags = SF_OUTSIDE;
 	else
 		sptr->Flags = SF_NONE;
@@ -1949,7 +1949,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 
 	if (GetRandomControl() & 1)
 	{
-		if (room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+		if (room[LaraItem->room_number].flags & ROOM_NOT_INSIDE)
 			sptr->Flags = SF_OUTSIDE | SF_ROTATE;
 		else
 			sptr->Flags = SF_ROTATE;
@@ -1961,7 +1961,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 		else
 			sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
 	}
-	else if (room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+	else if (room[LaraItem->room_number].flags & ROOM_NOT_INSIDE)
 		sptr->Flags = SF_OUTSIDE;
 	else
 		sptr->Flags = SF_NONE;
@@ -1983,7 +1983,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 		sptr->dSize = size;
 	}
 
-	sptr->mirror = gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom;
+	sptr->mirror = gfLevelFlags & GF_MIRROR && LaraItem->room_number == gfMirrorRoom;
 }
 
 long GetFreeSmokeSpark()

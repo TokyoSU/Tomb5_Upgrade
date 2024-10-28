@@ -138,21 +138,21 @@ void ImpControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(imp);
 		else if (imp->hurt_by_lara)
-			imp->enemy = lara_item;
+			imp->enemy = LaraItem;
 
 		CreatureAIInfo(item, &info);
 
-		if (imp->enemy == lara_item)
+		if (imp->enemy == LaraItem)
 			other_angle = info.angle;
 		else
-			other_angle = short(phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos) - item->pos.y_rot);
+			other_angle = short(phd_atan(LaraItem->pos.z_pos - item->pos.z_pos, LaraItem->pos.x_pos - item->pos.x_pos) - item->pos.y_rot);
 
-		elevation = short(item->pos.y_pos - lara_item->pos.y_pos + 384);
+		elevation = short(item->pos.y_pos - LaraItem->pos.y_pos + 384);
 
-		if (lara_item->current_anim_state == AS_DUCK || lara_item->current_anim_state == AS_DUCKROLL ||
-			(lara_item->current_anim_state > AS_MONKEY180 && lara_item->current_anim_state < AS_HANG2DUCK) ||
-			lara_item->current_anim_state == AS_DUCKROTL || lara_item->current_anim_state == AS_DUCKROTR)
-			elevation = short(item->pos.y_pos - lara_item->pos.y_pos);
+		if (LaraItem->current_anim_state == AS_DUCK || LaraItem->current_anim_state == AS_DUCKROLL ||
+			(LaraItem->current_anim_state > AS_MONKEY180 && LaraItem->current_anim_state < AS_HANG2DUCK) ||
+			LaraItem->current_anim_state == AS_DUCKROTL || LaraItem->current_anim_state == AS_DUCKROTR)
+			elevation = short(item->pos.y_pos - LaraItem->pos.y_pos);
 
 		info.x_angle = (short)(phd_atan(phd_sqrt(info.distance), elevation));
 		GetCreatureMood(item, &info, 1);
@@ -222,8 +222,8 @@ void ImpControl(short item_number)
 
 			if (!imp->flags && item->touch_bits & 0x280)
 			{
-				lara_item->hit_points -= 3;
-				lara_item->hit_status = 1;
+				LaraItem->hit_points -= 3;
+				LaraItem->hit_status = 1;
 				CreatureEffectT(item, &imp_hit, 10, item->pos.y_rot, DoBloodSplat);
 			}
 

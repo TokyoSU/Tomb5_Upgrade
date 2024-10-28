@@ -181,8 +181,8 @@ void lara_col_duckroll(ITEM_INFO* item, COLL_INFO* coll);
 extern void (*lara_control_routines[])(ITEM_INFO* item, COLL_INFO* coll);
 extern void (*lara_collision_routines[])(ITEM_INFO* item, COLL_INFO* coll);
 
-extern LARA_INFO lara;
-extern ITEM_INFO* lara_item;
+extern LARA_INFO Lara;
+extern ITEM_INFO* LaraItem;
 extern short DashTimer;
 extern short LaraDrawType;
 extern short WeatherType;

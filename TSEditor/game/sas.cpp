@@ -64,12 +64,12 @@ void SasControl(short item_number)
 	floor = GetFloor(x, y, z, &room_number);
 	farheight = GetHeight(floor, x, y, z);
 
-	if (item->box_number == lara_item->box_number || y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
+	if (item->box_number == LaraItem->box_number || y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
 		jump_ahead = 0;
 	else
 		jump_ahead = 1;
 
-	if (item->box_number == lara_item->box_number || y >= nearheight - 384 || y >= midheight - 384 || y >= farheight + 256 || y <= farheight - 256)
+	if (item->box_number == LaraItem->box_number || y >= nearheight - 384 || y >= midheight - 384 || y >= farheight + 256 || y <= farheight - 256)
 		long_jump_ahead = 0;
 	else
 		long_jump_ahead = 1;
@@ -87,19 +87,19 @@ void SasControl(short item_number)
 	if (item->ai_bits)
 		GetAITarget(sas);
 	else
-		sas->enemy = lara_item;
+		sas->enemy = LaraItem;
 
 	CreatureAIInfo(item, &sasAI);
 
-	if (sas->enemy == lara_item)
+	if (sas->enemy == LaraItem)
 	{
 		lara_info.angle = sasAI.angle;
 		lara_info.distance = sasAI.distance;
 	}
 	else
 	{
-		dx = lara_item->pos.x_pos - item->pos.x_pos;
-		dz = lara_item->pos.z_pos - item->pos.z_pos;
+		dx = LaraItem->pos.x_pos - item->pos.x_pos;
+		dz = LaraItem->pos.z_pos - item->pos.z_pos;
 		lara_info.angle = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 		lara_info.distance = SQUARE(dz) + SQUARE(dx);
 	}
@@ -126,13 +126,13 @@ void SasControl(short item_number)
 	}
 	else
 	{
-		GetCreatureMood(item, &sasAI, sas->enemy != lara_item);
+		GetCreatureMood(item, &sasAI, sas->enemy != LaraItem);
 
 		if (item->object_number == SCIENTIST)
 		{
 			if (item->hit_points < objects[SCIENTIST].hit_points)
 				sas->mood = ESCAPE_MOOD;
-			else if (sas->enemy == lara_item)
+			else if (sas->enemy == LaraItem)
 				sas->mood = BORED_MOOD;
 		}
 
@@ -164,32 +164,32 @@ void SasControl(short item_number)
 			}
 		}
 
-		CreatureMood(item, &sasAI, sas->enemy != lara_item);
+		CreatureMood(item, &sasAI, sas->enemy != LaraItem);
 		angle = CreatureTurn(item, sas->maximum_turn);
 		enemy_bak = sas->enemy;
-		sas->enemy = lara_item;
+		sas->enemy = LaraItem;
 
-		if ((lara_info.distance < 0x400000 && lara_item->speed > 20) || item->hit_status || TargetVisible(item, &lara_info))
+		if ((lara_info.distance < 0x400000 && LaraItem->speed > 20) || item->hit_status || TargetVisible(item, &lara_info))
 		{
 			if (!(item->ai_bits & FOLLOW) && item->object_number != SCIENTIST)
 			{
-				if (abs(item->pos.y_pos - lara_item->pos.y_pos) < 1280)
+				if (abs(item->pos.y_pos - LaraItem->pos.y_pos) < 1280)
 				{
-					sas->enemy = lara_item;
+					sas->enemy = LaraItem;
 					AlertAllGuards(item_number);
 				}
 			}
 		}
 
 		sas->enemy = enemy_bak;
-		bounds = GetBestFrame(lara_item);
+		bounds = GetBestFrame(LaraItem);
 		start.x = item->pos.x_pos;
 		start.y = item->pos.y_pos - 384;
 		start.z = item->pos.z_pos;
 		start.room_number = item->room_number;
-		target.x = lara_item->pos.x_pos;
-		target.y = lara_item->pos.y_pos + ((bounds[3] + 3 * bounds[2]) >> 2);;
-		target.z = lara_item->pos.z_pos;
+		target.x = LaraItem->pos.x_pos;
+		target.y = LaraItem->pos.y_pos + ((bounds[3] + 3 * bounds[2]) >> 2);;
+		target.z = LaraItem->pos.z_pos;
 		los = !LOS(&start, &target) && item->trigger_flags != 10;
 		sas->maximum_turn = 0;
 
@@ -206,7 +206,7 @@ void SasControl(short item_number)
 				torso_x = sasAI.x_angle;
 			}
 
-			if (item->object_number == SCIENTIST && item == lara.target)
+			if (item->object_number == SCIENTIST && item == Lara.target)
 				item->goal_anim_state = 39;
 			else if (item->required_anim_state)
 				item->goal_anim_state = item->required_anim_state;
@@ -225,7 +225,7 @@ void SasControl(short item_number)
 						item->ai_bits &= ~GUARD;
 				}
 			}
-			else if (sas->enemy == lara_item && (lara_info.angle > 20480 || lara_info.angle < -20480) && item->object_number != SCIENTIST)
+			else if (sas->enemy == LaraItem && (lara_info.angle > 20480 || lara_info.angle < -20480) && item->object_number != SCIENTIST)
 				item->goal_anim_state = 2;
 			else if (item->ai_bits & PATROL1)
 				item->goal_anim_state = 5;
@@ -482,7 +482,7 @@ void SasControl(short item_number)
 		case 17:
 			head = 0;
 
-			if (!item->hit_status && lara_item->speed < 40 && !lara.has_fired)
+			if (!item->hit_status && LaraItem->speed < 40 && !Lara.has_fired)
 				sas->alerted = 0;
 
 			if (sas->alerted)
@@ -561,7 +561,7 @@ void SasControl(short item_number)
 
 		case 38:
 
-			if ((item->object_number != SCIENTIST || item != lara.target) &&
+			if ((item->object_number != SCIENTIST || item != Lara.target) &&
 				((GetRandomControl() & 0x7F || item->trigger_flags >= 10) || item->trigger_flags == 9))
 			{
 				if (item->ai_bits & GUARD)
@@ -584,7 +584,7 @@ void SasControl(short item_number)
 
 		case 39:
 
-			if (item != lara.target && !(GetRandomControl() & 0x3F))
+			if (item != Lara.target && !(GetRandomControl() & 0x3F))
 			{
 				if (item->trigger_flags == 7 || item->trigger_flags == 9)
 					item->required_anim_state = 38;

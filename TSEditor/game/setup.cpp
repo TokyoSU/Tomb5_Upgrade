@@ -71,37 +71,37 @@ void InitialiseLara(long restore)
 	LARA_INFO backup;
 	short item_num, gun;
 
-	if (lara.item_number == NO_ITEM)
+	if (Lara.item_number == NO_ITEM)
 		return;
 
-	item_num = lara.item_number;
-	lara_item->data = &lara;
-	lara_item->collidable = 0;
+	item_num = Lara.item_number;
+	LaraItem->data = &Lara;
+	LaraItem->collidable = 0;
 
 	if (!restore)
-		memset(&lara, 0, sizeof(LARA_INFO));
+		memset(&Lara, 0, sizeof(LARA_INFO));
 	else
 	{
-		memcpy(&backup, &lara, sizeof(LARA_INFO));
-		memset(&lara, 0, sizeof(LARA_INFO));
-		memcpy(&lara.pistols_type_carried, &backup.pistols_type_carried, 59);	//restores inventory items
+		memcpy(&backup, &Lara, sizeof(LARA_INFO));
+		memset(&Lara, 0, sizeof(LARA_INFO));
+		memcpy(&Lara.pistols_type_carried, &backup.pistols_type_carried, 59);	//restores inventory items
 	}
 
-	lara.look = 1;
-	lara.item_number = item_num;
-	lara.hit_direction = -1;
-	lara.air = 1800;
-	lara.weapon_item = NO_ITEM;
+	Lara.look = 1;
+	Lara.item_number = item_num;
+	Lara.hit_direction = -1;
+	Lara.air = 1800;
+	Lara.weapon_item = NO_ITEM;
 	PoisonFlag = 0;
-	lara.dpoisoned = 0;
-	lara.poisoned = 0;
-	lara.water_surface_dist = 100;
+	Lara.dpoisoned = 0;
+	Lara.poisoned = 0;
+	Lara.water_surface_dist = 100;
 	LHolster = LARA_HOLSTERS_PISTOLS;
-	lara.holster = LARA_HOLSTERS_PISTOLS;
-	lara.location = -1;
-	lara.highest_location = -1;
-	lara.RopePtr = NO_ITEM;
-	lara_item->hit_points = 1000;
+	Lara.holster = LARA_HOLSTERS_PISTOLS;
+	Lara.location = -1;
+	Lara.highest_location = -1;
+	Lara.RopePtr = NO_ITEM;
+	LaraItem->hit_points = 1000;
 
 	for (int i = 0; i < gfNumPickups; i++)
 		DEL_picked_up_object((short)convert_invobj_to_obj(gfPickups[i]));
@@ -113,32 +113,32 @@ void InitialiseLara(long restore)
 	else
 		gun = WEAPON_NONE;
 
-	if (gfLevelFlags & GF_OFFICE && objects[HK_ITEM].loaded && lara.hk_type_carried & W_PRESENT)
+	if (gfLevelFlags & GF_OFFICE && objects[HK_ITEM].loaded && Lara.hk_type_carried & W_PRESENT)
 		gun = WEAPON_HK;
 
-	lara.gun_status = LG_NO_ARMS;
-	lara.last_gun_type = gun;
-	lara.gun_type = gun;
-	lara.request_gun_type = gun;
+	Lara.gun_status = LG_NO_ARMS;
+	Lara.last_gun_type = gun;
+	Lara.gun_type = gun;
+	Lara.request_gun_type = gun;
 	LaraInitialiseMeshes();
-	lara.skelebob = 0;
+	Lara.skelebob = 0;
 
 	if (objects[PISTOLS_ITEM].loaded)
-		lara.pistols_type_carried = W_PRESENT | W_AMMO1;
+		Lara.pistols_type_carried = W_PRESENT | W_AMMO1;
 
-	lara.binoculars = 1;
+	Lara.binoculars = 1;
 
 	if (!restore)
 	{
 		if (objects[FLARE_INV_ITEM].loaded)
-			lara.num_flares = 3;
+			Lara.num_flares = 3;
 
-		lara.num_small_medipack = 3;
-		lara.num_large_medipack = 1;
+		Lara.num_small_medipack = 3;
+		Lara.num_large_medipack = 1;
 	}
 
-	lara.num_pistols_ammo = -1;
-	InitialiseLaraAnims(lara_item);
+	Lara.num_pistols_ammo = -1;
+	InitialiseLaraAnims(LaraItem);
 	DashTimer = 120;
 
 	for (int i = 0; i < gfNumTakeaways; i++)
@@ -149,40 +149,40 @@ void InitialiseLara(long restore)
 
 	if (gfCurrentLevel == LVL5_DEEPSEA_DIVE)
 	{
-		lara.puzzleitems[0] = 10;
-		lara.pickupitems &= ~8;
+		Lara.puzzleitems[0] = 10;
+		Lara.pickupitems &= ~8;
 	}
 	else if (gfCurrentLevel == LVL5_SUBMARINE)
 	{
-		memset(&lara.puzzleitems, 0, 12);
-		lara.puzzleitemscombo = 0;
-		lara.pickupitems = 0;
-		lara.pickupitemscombo = 0;
-		lara.keyitems = 0;
-		lara.keyitemscombo = 0;
+		memset(&Lara.puzzleitems, 0, 12);
+		Lara.puzzleitemscombo = 0;
+		Lara.pickupitems = 0;
+		Lara.pickupitemscombo = 0;
+		Lara.keyitems = 0;
+		Lara.keyitemscombo = 0;
 	}
 	else if (gfCurrentLevel == LVL5_SINKING_SUBMARINE)
 	{
-		lara.puzzleitems[0] = 0;
-		lara.pickupitems = 0;
+		Lara.puzzleitems[0] = 0;
+		Lara.pickupitems = 0;
 	}
 	else if (gfCurrentLevel == LVL5_ESCAPE_WITH_THE_IRIS)
 	{
-		lara.pickupitems &= ~1;
-		lara.puzzleitems[2] = 0;
-		lara.puzzleitems[3] = 0;
-		lara.pickupitems &= ~8;
+		Lara.pickupitems &= ~1;
+		Lara.puzzleitems[2] = 0;
+		Lara.puzzleitems[3] = 0;
+		Lara.pickupitems &= ~8;
 	}
 	else if (gfCurrentLevel == LVL5_RED_ALERT)
 	{
-		lara.pickupitems &= ~2;
-		lara.pickupitems &= ~8;
+		Lara.pickupitems &= ~2;
+		Lara.pickupitems &= ~8;
 	}
 
 	if (gfCurrentLevel >= LVL5_THIRTEENTH_FLOOR && gfCurrentLevel <= LVL5_RED_ALERT)
 	{
-		lara.bottle = 0;
-		lara.wetcloth = CLOTH_MISSING;
+		Lara.bottle = 0;
+		Lara.wetcloth = CLOTH_MISSING;
 	}
 }
 

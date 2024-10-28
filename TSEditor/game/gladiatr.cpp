@@ -67,11 +67,11 @@ void GladiatorControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(gladiator);
 		else if (gladiator->hurt_by_lara)
-			gladiator->enemy = lara_item;
+			gladiator->enemy = LaraItem;
 
 		CreatureAIInfo(item, &info);
 
-		if (gladiator->enemy == lara_item)
+		if (gladiator->enemy == LaraItem)
 		{
 			distance = info.distance;
 			da = info.angle;
@@ -79,8 +79,8 @@ void GladiatorControl(short item_number)
 		}
 		else
 		{
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = LaraItem->pos.x_pos - item->pos.x_pos;
+			dz = LaraItem->pos.z_pos - item->pos.z_pos;
 			da = short(phd_atan(dz, dx) - item->pos.y_rot);
 			front = abs(da) < 0x4000;
 			distance = SQUARE(dx) + SQUARE(dz);
@@ -109,10 +109,10 @@ void GladiatorControl(short item_number)
 			else if (item->ai_bits & PATROL1)
 				item->goal_anim_state = 2;
 			else if (gladiator->mood == ESCAPE_MOOD)
-				item->goal_anim_state = lara.target != item && info.ahead && !item->hit_status ? 1 : 2;
+				item->goal_anim_state = Lara.target != item && info.ahead && !item->hit_status ? 1 : 2;
 			else if (gladiator->mood != BORED_MOOD && (!(item->ai_bits & FOLLOW) || !gladiator->reached_goal && distance <= 0x400000))
 			{
-				if (lara.target == item && front && distance < 0x240000 && GetRandomControl() & 1 && (lara.gun_type == WEAPON_SHOTGUN || !(GetRandomControl() & 0xF)) && item->mesh_bits == -1)
+				if (Lara.target == item && front && distance < 0x240000 && GetRandomControl() & 1 && (Lara.gun_type == WEAPON_SHOTGUN || !(GetRandomControl() & 0xF)) && item->mesh_bits == -1)
 					item->goal_anim_state = 4;
 				else if (info.bite && info.distance < 0xA3C29)
 					item->goal_anim_state = GetRandomControl() & 1 ? 8 : 9;
@@ -168,7 +168,7 @@ void GladiatorControl(short item_number)
 			}
 			else if (gladiator->mood == ESCAPE_MOOD)
 			{
-				if (lara.target != item && info.ahead)
+				if (Lara.target != item && info.ahead)
 					item->goal_anim_state = 1;
 			}
 			else if (item->ai_bits & FOLLOW)
@@ -190,14 +190,14 @@ void GladiatorControl(short item_number)
 				if (!front)
 					item->goal_anim_state = 1;
 			}
-			else if (lara.target != item || !(GetRandomControl() & 0x7F))
+			else if (Lara.target != item || !(GetRandomControl() & 0x7F))
 				item->goal_anim_state = 1;
 
 			break;
 
 		case 5:
 
-			if (lara.target != item)
+			if (Lara.target != item)
 				item->goal_anim_state = 1;
 
 			break;
@@ -230,7 +230,7 @@ void GladiatorControl(short item_number)
 					{
 						if (!((r->mesh[i].z ^ pos.z) & ~1023) && !((r->mesh[i].x ^ pos.x) & ~1023) && r->mesh[i].static_number >= 50 && r->mesh[i].static_number <= 59)
 						{
-							ShatterObject(0, &r->mesh[i], -64, lara_item->room_number, 0);
+							ShatterObject(0, &r->mesh[i], -64, LaraItem->room_number, 0);
 							SoundEffect(ShatterSounds[gfCurrentLevel][r->mesh[i].static_number - 50], (PHD_3DPOS*)&r->mesh[i].x, SFX_DEFAULT);
 							r->mesh[i].Flags &= ~1;
 							floor->stopper = 0;
@@ -242,8 +242,8 @@ void GladiatorControl(short item_number)
 
 				if (!gladiator->flags && item->touch_bits & 0x6000)
 				{
-					lara_item->hit_points -= 120;
-					lara_item->hit_status = 1;
+					LaraItem->hit_points -= 120;
+					LaraItem->hit_status = 1;
 					CreatureEffectT(item, &gladiator_hit, 10, item->pos.y_rot, DoBloodSplat);
 					SoundEffect(SFX_LARA_THUD, &item->pos, SFX_DEFAULT);
 					gladiator->flags = 1;

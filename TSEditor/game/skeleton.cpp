@@ -46,7 +46,7 @@ void SkeletonControl(short item_number)
 	if (item->ai_bits)
 		GetAITarget(skeleton);
 	else if (skeleton->hurt_by_lara)
-		skeleton->enemy = lara_item;
+		skeleton->enemy = LaraItem;
 
 	CreatureAIInfo(item, &info);
 	angle = CreatureTurn(item, skeleton->maximum_turn);
@@ -87,8 +87,8 @@ void SkeletonControl(short item_number)
 
 		if (!skeleton->flags && item->touch_bits & 0x9470 && item->frame_number > anims[item->anim_number].frame_base + 18)
 		{
-			lara_item->hit_points -= 400;
-			lara_item->hit_status = 1;
+			LaraItem->hit_points -= 400;
+			LaraItem->hit_status = 1;
 			CreatureEffectT(item, &skeleton_hit, 10, item->pos.y_rot, DoBloodSplat);
 			skeleton->flags = 1;
 		}

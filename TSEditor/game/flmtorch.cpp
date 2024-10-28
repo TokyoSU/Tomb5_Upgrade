@@ -29,8 +29,8 @@ void FireCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_num];
 
-	if (lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && (item->status & ITEM_ACTIVE) != lara.LitTorch &&
-		item->timer != -1 && input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status)
+	if (Lara.gun_type == WEAPON_TORCH && Lara.gun_status == LG_READY && !Lara.left_arm.lock && (item->status & ITEM_ACTIVE) != Lara.LitTorch &&
+		item->timer != -1 && KeyInput & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status)
 	{
 		rot = item->pos.y_rot;
 
@@ -76,9 +76,9 @@ void FireCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 
 			l->current_anim_state = AS_CONTROLLED;
 			l->frame_number = anims[l->anim_number].frame_base;
-			lara.flare_control_left = 0;
-			lara.left_arm.lock = 3;
-			lara.GeneralPtr = (void*)item_num;
+			Lara.flare_control_left = 0;
+			Lara.left_arm.lock = 3;
+			Lara.GeneralPtr = (void*)item_num;
 		}
 
 		item->pos.y_rot = rot;
@@ -86,7 +86,7 @@ void FireCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 	else if (item->object_number == BURNING_ROOTS)
 		ObjectCollision(item_num, l, coll);
 
-	if (lara.GeneralPtr == (void*)item_num && item->status != ITEM_ACTIVE && l->current_anim_state == AS_CONTROLLED &&
+	if (Lara.GeneralPtr == (void*)item_num && item->status != ITEM_ACTIVE && l->current_anim_state == AS_CONTROLLED &&
 		l->anim_number >= ANIM_LIGHT_TORCH1 && l->anim_number <= ANIM_LIGHT_TORCH5 && l->frame_number - anims[l->anim_number].frame_base == 40)
 	{
 		TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
@@ -102,55 +102,55 @@ void DoFlameTorch()
 	PHD_VECTOR pos;
 	short state;
 
-	switch (lara.left_arm.lock)
+	switch (Lara.left_arm.lock)
 	{
 	case 0:	//holding it
 
-		state = lara_item->current_anim_state;
+		state = LaraItem->current_anim_state;
 
-		if (lara.request_gun_type != lara.gun_type)
+		if (Lara.request_gun_type != Lara.gun_type)
 		{
-			lara.left_arm.lock = 2;	//drop it
-			lara.left_arm.frame_number = 31;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index + 2;
+			Lara.left_arm.lock = 2;	//drop it
+			Lara.left_arm.frame_number = 31;
+			Lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index + 2;
 		}
-		else if (input & IN_DRAW && !lara_item->gravity_status && !lara_item->fallspeed && state != AS_COMPRESS && state != AS_UPJUMP &&
-			state != AS_FORWARDJUMP && state != AS_BACKJUMP && state != AS_RIGHTJUMP && state != AS_LEFTJUMP || lara.water_status == LW_UNDERWATER)
+		else if (KeyInput & IN_DRAW && !LaraItem->gravity_status && !LaraItem->fallspeed && state != AS_COMPRESS && state != AS_UPJUMP &&
+			state != AS_FORWARDJUMP && state != AS_BACKJUMP && state != AS_RIGHTJUMP && state != AS_LEFTJUMP || Lara.water_status == LW_UNDERWATER)
 		{
-			lara.left_arm.lock = 1;	//throw it
-			lara.left_arm.frame_number = 1;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index + 1;
+			Lara.left_arm.lock = 1;	//throw it
+			Lara.left_arm.frame_number = 1;
+			Lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index + 1;
 
-			if (lara.water_status == LW_UNDERWATER)
-				lara.LitTorch = 0;
+			if (Lara.water_status == LW_UNDERWATER)
+				Lara.LitTorch = 0;
 		}
 
 		break;
 
 	case 1:	//throwing it
 
-		if (lara.left_arm.frame_number < 12 && lara_item->gravity_status)
+		if (Lara.left_arm.frame_number < 12 && LaraItem->gravity_status)
 		{
-			lara.left_arm.lock = 0;	//keep holding it
-			lara.left_arm.frame_number = 0;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
+			Lara.left_arm.lock = 0;	//keep holding it
+			Lara.left_arm.frame_number = 0;
+			Lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
 		}
 		else
 		{
-			lara.left_arm.frame_number++;
+			Lara.left_arm.frame_number++;
 
-			if (lara.left_arm.frame_number == 13)
+			if (Lara.left_arm.frame_number == 13)
 			{
-				lara.LitTorch = 0;
-				lara.flare_control_left = 0;
-				lara.left_arm.lock = 0;
-				lara.gun_type = lara.last_gun_type;
-				lara.request_gun_type = WEAPON_NONE;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.LitTorch = 0;
+				Lara.flare_control_left = 0;
+				Lara.left_arm.lock = 0;
+				Lara.gun_type = Lara.last_gun_type;
+				Lara.request_gun_type = WEAPON_NONE;
+				Lara.gun_status = LG_NO_ARMS;
 			}
-			else if (lara.left_arm.frame_number == 12)
+			else if (Lara.left_arm.frame_number == 12)
 			{
-				lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + (LM_LHAND * 2)];
+				Lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + (LM_LHAND * 2)];
 				CreateFlare(BURNING_TORCH_ITEM, 1);
 			}
 		}
@@ -159,20 +159,20 @@ void DoFlameTorch()
 
 	case 2:	//dropping it (when pulling out a weapon)
 
-		lara.left_arm.frame_number++;
+		Lara.left_arm.frame_number++;
 
-		if (lara.left_arm.frame_number == 41)
+		if (Lara.left_arm.frame_number == 41)
 		{
-			lara.LitTorch = 0;
-			lara.flare_control_left = 0;
-			lara.left_arm.lock = 0;
-			lara.last_gun_type = WEAPON_NONE;
-			lara.gun_type = WEAPON_NONE;
-			lara.gun_status = LG_NO_ARMS;
+			Lara.LitTorch = 0;
+			Lara.flare_control_left = 0;
+			Lara.left_arm.lock = 0;
+			Lara.last_gun_type = WEAPON_NONE;
+			Lara.gun_type = WEAPON_NONE;
+			Lara.gun_status = LG_NO_ARMS;
 		}
-		else if (lara.left_arm.frame_number == 36)
+		else if (Lara.left_arm.frame_number == 36)
 		{
-			lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + (LM_LHAND * 2)];
+			Lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + (LM_LHAND * 2)];
 			CreateFlare(BURNING_TORCH_ITEM, 0);
 		}
 
@@ -180,24 +180,24 @@ void DoFlameTorch()
 
 	case 3:	//lighting it
 
-		if (lara_item->current_anim_state != AS_CONTROLLED)
+		if (LaraItem->current_anim_state != AS_CONTROLLED)
 		{
-			lara.LitTorch = lara_item->item_flags[3];
-			lara.flare_control_left = 1;
-			lara.left_arm.lock = 0;
-			lara.left_arm.frame_number = 0;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
+			Lara.LitTorch = LaraItem->item_flags[3];
+			Lara.flare_control_left = 1;
+			Lara.left_arm.lock = 0;
+			Lara.left_arm.frame_number = 0;
+			Lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
 		}
 
 		break;
 	}
 
-	if (lara.flare_control_left)
-		lara.gun_status = LG_READY;
+	if (Lara.flare_control_left)
+		Lara.gun_status = LG_READY;
 
-	lara.left_arm.frame_base = anims[lara.left_arm.anim_number].frame_ptr;
+	Lara.left_arm.frame_base = anims[Lara.left_arm.anim_number].frame_ptr;
 
-	if (lara.LitTorch)
+	if (Lara.LitTorch)
 	{
 		pos.x = -32;
 		pos.y = 64;
@@ -206,10 +206,10 @@ void DoFlameTorch()
 		TriggerDynamic(pos.x, pos.y, pos.z, 12 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 
 		if (!(wibble & 7))
-		   TriggerTorchFlame(lara_item - items, 0);
+		   TriggerTorchFlame(LaraItem - items, 0);
 
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, (PHD_3DPOS*)&pos, 0);
-		torchroom = lara_item->room_number;
+		torchroom = LaraItem->room_number;
 	}
 }
 
@@ -259,18 +259,18 @@ void TriggerTorchFlame(short item_number, long node)
 
 void GetFlameTorch()
 {
-	if (lara.gun_type == WEAPON_FLARE)
+	if (Lara.gun_type == WEAPON_FLARE)
 		CreateFlare(FLARE_ITEM, 0);
 
-	lara.request_gun_type = WEAPON_TORCH;
-	lara.gun_type = WEAPON_TORCH;
-	lara.flare_control_left = 1;
-	lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
-	lara.gun_status = LG_READY;
-	lara.left_arm.lock = 0;
-	lara.left_arm.frame_number = 0;
-	lara.left_arm.frame_base = anims[objects[TORCH_ANIM].anim_index].frame_ptr;
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[TORCH_ANIM].mesh_index + LM_LHAND * 2];
+	Lara.request_gun_type = WEAPON_TORCH;
+	Lara.gun_type = WEAPON_TORCH;
+	Lara.flare_control_left = 1;
+	Lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
+	Lara.gun_status = LG_READY;
+	Lara.left_arm.lock = 0;
+	Lara.left_arm.frame_number = 0;
+	Lara.left_arm.frame_base = anims[objects[TORCH_ANIM].anim_index].frame_ptr;
+	Lara.mesh_ptrs[LM_LHAND] = meshes[objects[TORCH_ANIM].mesh_index + LM_LHAND * 2];
 }
 
 void FlameTorchControl(short item_number)

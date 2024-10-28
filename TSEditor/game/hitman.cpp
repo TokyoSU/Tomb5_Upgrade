@@ -73,12 +73,12 @@ void HitmanControl(short item_number)
 	floor = GetFloor(x, y, z, &room_number);
 	farheight = GetHeight(floor, x, y, z);
 
-	if (item->box_number == lara_item->box_number || y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
+	if (item->box_number == LaraItem->box_number || y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
 		jump_ahead = 0;
 	else
 		jump_ahead = 1;
 
-	if (item->box_number == lara_item->box_number || y >= nearheight - 384 || y >= midheight - 384 || y >= farheight + 256 || y <= farheight - 256)
+	if (item->box_number == LaraItem->box_number || y >= nearheight - 384 || y >= midheight - 384 || y >= farheight + 256 || y <= farheight - 256)
 		long_jump_ahead = 0;
 	else
 		long_jump_ahead = 1;
@@ -96,7 +96,7 @@ void HitmanControl(short item_number)
 	if (item->ai_bits)
 		GetAITarget(hitman);
 	else
-		hitman->enemy = lara_item;
+		hitman->enemy = LaraItem;
 
 	CreatureAIInfo(item, &info);
 
@@ -153,48 +153,48 @@ void HitmanControl(short item_number)
 
 	if (item->hit_points <= 0)
 	{
-		if (item->current_anim_state == 43 && !lara.burn)
+		if (item->current_anim_state == 43 && !Lara.burn)
 		{
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;
 			GetLaraJointPos(&pos, LMX_FOOT_L);
-			left_foot_room = lara_item->room_number;
+			left_foot_room = LaraItem->room_number;
 			GetFloor(pos.x, pos.y, pos.z, &left_foot_room);
 
 			pos2.x = 0;
 			pos2.y = 0;
 			pos2.z = 0;
 			GetLaraJointPos(&pos2, LMX_FOOT_R);
-			right_foot_room = lara_item->room_number;
+			right_foot_room = LaraItem->room_number;
 			GetFloor(pos2.x, pos2.y, pos2.z, &right_foot_room);
 
 			if ((room[left_foot_room].flags & ROOM_UNDERWATER || room[right_foot_room].flags & ROOM_UNDERWATER) &&
 				(room[left_foot_room].FlipNumber == room[item->room_number].FlipNumber || room[right_foot_room].FlipNumber == room[item->room_number].FlipNumber))
 			{
 				LaraBurn();
-				lara.BurnBlue = 1;
-				lara.BurnCount = 48;
-				lara_item->hit_points = 0;
+				Lara.BurnBlue = 1;
+				Lara.BurnCount = 48;
+				LaraItem->hit_points = 0;
 			}
 		}
 	}
 	else
 	{
-		if (hitman->enemy == lara_item)
+		if (hitman->enemy == LaraItem)
 		{
 			larainfo.angle = info.angle;
 			larainfo.distance = info.distance;
 		}
 		else
 		{
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = LaraItem->pos.x_pos - item->pos.x_pos;
+			dz = LaraItem->pos.z_pos - item->pos.z_pos;
 			larainfo.angle = short(phd_atan(dz, dx) - item->pos.y_rot);
 			larainfo.distance = SQUARE(dz) + SQUARE(dx);
 		}
 
-		GetCreatureMood(item, &info, hitman->enemy != lara_item);
+		GetCreatureMood(item, &info, hitman->enemy != LaraItem);
 
 		if (room[item->room_number].flags & ROOM_NO_LENSFLARE)
 		{
@@ -211,12 +211,12 @@ void HitmanControl(short item_number)
 			}
 		}
 
-		CreatureMood(item, &info, hitman->enemy != lara_item);
+		CreatureMood(item, &info, hitman->enemy != LaraItem);
 		angle = CreatureTurn(item, hitman->maximum_turn);
 
-		if ((larainfo.distance < 0x400000 && lara_item->speed > 20 || item->hit_status || TargetVisible(item, &larainfo)) && !(item->ai_bits & FOLLOW))
+		if ((larainfo.distance < 0x400000 && LaraItem->speed > 20 || item->hit_status || TargetVisible(item, &larainfo)) && !(item->ai_bits & FOLLOW))
 		{
-			hitman->enemy = lara_item;
+			hitman->enemy = LaraItem;
 			AlertAllGuards(item_number);
 		}
 

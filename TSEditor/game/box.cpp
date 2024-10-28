@@ -73,8 +73,8 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 
 	if (!enemy)
 	{
-		enemy = lara_item;
-		creature->enemy = lara_item;
+		enemy = LaraItem;
+		creature->enemy = LaraItem;
 	}
 
 	zone = ground_zone[creature->LOT.zone][flip_status];
@@ -94,8 +94,8 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 
 	pivot = obj->pivot_length;
 
-	if (enemy == lara_item)
-		ang = lara.move_angle;
+	if (enemy == LaraItem)
+		ang = Lara.move_angle;
 	else
 		ang = enemy->pos.y_rot;
 
@@ -118,9 +118,9 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 	x = abs(x);
 	z = abs(z);
 
-	if (enemy == lara_item)
+	if (enemy == LaraItem)
 	{
-		state = lara_item->current_anim_state;
+		state = LaraItem->current_anim_state;
 
 		if (state == AS_DUCK || state == AS_DUCKROLL || (state > AS_MONKEY180 && state < AS_HANG2DUCK) || state == AS_DUCKROTL || state == AS_DUCKROTR )
 			y -= 384;
@@ -592,7 +592,7 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 		creature->LOT.target.z = enemy->pos.z_pos;
 		creature->LOT.required_box = enemy->box_number;
 
-		if (creature->LOT.fly && lara.water_status == LW_ABOVE_WATER)
+		if (creature->LOT.fly && Lara.water_status == LW_ABOVE_WATER)
 			creature->LOT.target.y += GetBestFrame(enemy)[2];
 
 		break;
@@ -690,7 +690,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 
 	if (enemy)
 	{
-		if (enemy->hit_points <= 0 && enemy == lara_item)
+		if (enemy->hit_points <= 0 && enemy == LaraItem)
 			creature->mood = BORED_MOOD;
 		else if (violent)
 		{
@@ -786,7 +786,7 @@ long CreatureCreature(short item_number)
 	{
 		item = &items[item_num];
 
-		if (item_num != item_number && item != lara_item && item->status == ITEM_ACTIVE && item->hit_points > 0)
+		if (item_num != item_number && item != LaraItem && item->status == ITEM_ACTIVE && item->hit_points > 0)
 		{
 			dx = abs(item->pos.x_pos - x);
 			dz = abs(item->pos.z_pos - z);
@@ -1493,29 +1493,29 @@ void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara
 	item->anim_number = objects[item->object_number].anim_index + kill_anim;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = kill_state;
-	lara_item->anim_number = lara_anim;
-	lara_item->frame_number = anims[lara_item->anim_number].frame_base;
-	lara_item->current_anim_state = AS_DEATH;
-	lara_item->goal_anim_state = AS_DEATH;
-	lara_item->pos.x_pos = item->pos.x_pos;
-	lara_item->pos.y_pos = item->pos.y_pos;
-	lara_item->pos.z_pos = item->pos.z_pos;
-	lara_item->pos.x_rot = item->pos.x_rot;
-	lara_item->pos.y_rot = item->pos.y_rot;
-	lara_item->pos.z_rot = item->pos.z_rot;
-	lara_item->fallspeed = 0;
-	lara_item->gravity_status = 0;
-	lara_item->speed = 0;
+	LaraItem->anim_number = lara_anim;
+	LaraItem->frame_number = anims[LaraItem->anim_number].frame_base;
+	LaraItem->current_anim_state = AS_DEATH;
+	LaraItem->goal_anim_state = AS_DEATH;
+	LaraItem->pos.x_pos = item->pos.x_pos;
+	LaraItem->pos.y_pos = item->pos.y_pos;
+	LaraItem->pos.z_pos = item->pos.z_pos;
+	LaraItem->pos.x_rot = item->pos.x_rot;
+	LaraItem->pos.y_rot = item->pos.y_rot;
+	LaraItem->pos.z_rot = item->pos.z_rot;
+	LaraItem->fallspeed = 0;
+	LaraItem->gravity_status = 0;
+	LaraItem->speed = 0;
 
-	if (lara_item->room_number != item->room_number)
-		ItemNewRoom(lara.item_number, item->room_number);
+	if (LaraItem->room_number != item->room_number)
+		ItemNewRoom(Lara.item_number, item->room_number);
 
-	AnimateItem(lara_item);
-	lara.gun_status = LG_HANDS_BUSY;
-	lara.gun_type = WEAPON_NONE;
-	lara.hit_direction = -1;
-	lara.air = -1;
-	camera.pos.room_number = lara_item->room_number;
+	AnimateItem(LaraItem);
+	Lara.gun_status = LG_HANDS_BUSY;
+	Lara.gun_type = WEAPON_NONE;
+	Lara.hit_direction = -1;
+	Lara.air = -1;
+	camera.pos.room_number = LaraItem->room_number;
 	ForcedFixedCamera.x = item->pos.x_pos + ((2048 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
 	ForcedFixedCamera.y = item->pos.y_pos - 1024;
 	ForcedFixedCamera.z = item->pos.z_pos + ((2048 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
@@ -1722,7 +1722,7 @@ void GetAITarget(CREATURE_INFO* creature)
 			GetHeight(floor, enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos);
 			TestTriggers(trigger_index, 1, 0);
 			creature->reached_goal = 1;
-			creature->enemy = lara_item;
+			creature->enemy = LaraItem;
 			item->ai_bits &= ~AMBUSH;
 
 			if (item->ai_bits != MODIFY)
@@ -1736,7 +1736,7 @@ void GetAITarget(CREATURE_INFO* creature)
 	{
 		if (creature->hurt_by_lara)
 		{
-			creature->enemy = lara_item;
+			creature->enemy = LaraItem;
 			creature->alerted = 1;
 			item->ai_bits &= ~FOLLOW;
 		}

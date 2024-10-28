@@ -67,27 +67,27 @@ void ControlPropeller(short item_number)
 		TriggerFanEffects(b, 1, 0, frame);
 		TriggerFanEffects(b, -1, 0, frame);
 
-		if (lara_item->pos.x_pos >= b[0] && lara_item->pos.x_pos <= b[1] && lara_item->pos.z_pos >= b[4] && lara_item->pos.z_pos <= b[5])
+		if (LaraItem->pos.x_pos >= b[0] && LaraItem->pos.x_pos <= b[1] && LaraItem->pos.z_pos >= b[4] && LaraItem->pos.z_pos <= b[5])
 		{
-			if (lara_item->pos.y_pos > b[3])
+			if (LaraItem->pos.y_pos > b[3])
 			{
-				if (lara_item->pos.y_pos - b[3] >= item->item_flags[0])
+				if (LaraItem->pos.y_pos - b[3] >= item->item_flags[0])
 					return;
 
-				dy = 96 * (item->item_flags[0] - (lara_item->pos.y_pos - b[3])) / item->item_flags[0];
+				dy = 96 * (item->item_flags[0] - (LaraItem->pos.y_pos - b[3])) / item->item_flags[0];
 			}
 			else
 			{
-				if (b[2] - lara_item->pos.y_pos >= item->item_flags[0])
+				if (b[2] - LaraItem->pos.y_pos >= item->item_flags[0])
 					return;
 
-				dy = 96 * (b[2] - lara_item->pos.y_pos - item->item_flags[0]) / item->item_flags[0];
+				dy = 96 * (b[2] - LaraItem->pos.y_pos - item->item_flags[0]) / item->item_flags[0];
 			}
 
 			if (item->current_anim_state == 1)
 				dy = frame * dy / 120;
 
-			lara_item->pos.y_pos += dy;
+			LaraItem->pos.y_pos += dy;
 		}
 
 		return;
@@ -136,15 +136,15 @@ void ControlPropeller(short item_number)
 	TriggerFanEffects(b, 2, item->pos.y_rot, frame);
 	TriggerFanEffects(b, -2, item->pos.y_rot, frame);
 
-	if (lara_item->pos.y_pos < b[2] || lara_item->pos.y_pos > b[3])
+	if (LaraItem->pos.y_pos < b[2] || LaraItem->pos.y_pos > b[3])
 		return;
 
 	if (Zaxis)
 	{
-		if (lara_item->pos.x_pos >= b[0] && lara_item->pos.x_pos <= b[1])
+		if (LaraItem->pos.x_pos >= b[0] && LaraItem->pos.x_pos <= b[1])
 		{
-			dz1 = abs(lara_item->pos.z_pos - b[4]);
-			dz2 = abs(lara_item->pos.z_pos - b[5]);
+			dz1 = abs(LaraItem->pos.z_pos - b[4]);
+			dz2 = abs(LaraItem->pos.z_pos - b[5]);
 
 			if (dz2 >= dz1)
 				Zaxis = -Zaxis;
@@ -158,7 +158,7 @@ void ControlPropeller(short item_number)
 				if (item->current_anim_state == 1)
 					dy = frame * dy / 120;
 
-				lara_item->pos.z_pos += dy;
+				LaraItem->pos.z_pos += dy;
 			}
 		}
 
@@ -166,10 +166,10 @@ void ControlPropeller(short item_number)
 	}
 	
 	//Xaxis
-	if (lara_item->pos.z_pos >= b[4] && lara_item->pos.z_pos <= b[5])
+	if (LaraItem->pos.z_pos >= b[4] && LaraItem->pos.z_pos <= b[5])
 	{
-		dx1 = abs(lara_item->pos.x_pos - b[0]);
-		dx2 = abs(lara_item->pos.x_pos - b[1]);
+		dx1 = abs(LaraItem->pos.x_pos - b[0]);
+		dx2 = abs(LaraItem->pos.x_pos - b[1]);
 
 		if (dx2 >= dx1)
 			Xaxis = -Xaxis;
@@ -183,7 +183,7 @@ void ControlPropeller(short item_number)
 			if (item->current_anim_state == 1)
 				dy = frame * dy / 120;
 
-			lara_item->pos.x_pos += dy;
+			LaraItem->pos.x_pos += dy;
 		}
 	}
 }
@@ -467,10 +467,10 @@ void ControlGenSlot1(short item_number)
 				GetLaraJointPos(&pos, i);
 
 				for (int j = 0; j < 5; j++)
-					DoBloodSplat(GetRandomControl() + pos.x - 128, (GetRandomControl() & 0xFF) + pos.y - 128, (GetRandomControl() & 0xFF) + pos.z - 128, 1, -1, lara_item->room_number);
+					DoBloodSplat(GetRandomControl() + pos.x - 128, (GetRandomControl() & 0xFF) + pos.y - 128, (GetRandomControl() & 0xFF) + pos.z - 128, 1, -1, LaraItem->room_number);
 			}
 
-			lara_item->hit_points = 0;
+			LaraItem->hit_points = 0;
 		}
 	}
 

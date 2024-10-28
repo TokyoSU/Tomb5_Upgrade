@@ -43,12 +43,12 @@ void ControlZipController(short item_number)
 	}
 	else if (item->item_flags[0] == 1)
 	{
-		if (lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH)
+		if (LaraItem->current_anim_state == AS_STOP && LaraItem->anim_number == ANIM_BREATH)
 		{
-			lara_item->goal_anim_state = AS_INTO_ZIP;
-			lara_item->current_anim_state = AS_INTO_ZIP;
-			lara_item->anim_number = ANIM_ZIP_IN;
-			lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+			LaraItem->goal_anim_state = AS_INTO_ZIP;
+			LaraItem->current_anim_state = AS_INTO_ZIP;
+			LaraItem->anim_number = ANIM_ZIP_IN;
+			LaraItem->frame_number = anims[LaraItem->anim_number].frame_base;
 			item->item_flags[0]++;
 			IsAtmospherePlaying = 0;
 			S_CDPlay(item->trigger_flags, 0);
@@ -63,7 +63,7 @@ void ControlZipController(short item_number)
 		}
 		else if (XATrack != item->trigger_flags)
 		{
-			lara_item->goal_anim_state = AS_OUT_ZIP;
+			LaraItem->goal_anim_state = AS_OUT_ZIP;
 			bDisableLaraControl = 0;
 			KillItem(item_number);
 		}
@@ -195,31 +195,31 @@ void TwogunControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(creature);
 		else
-			creature->enemy = lara_item;
+			creature->enemy = LaraItem;
 
 		CreatureAIInfo(item, &info);
 
-		if (creature->enemy == lara_item)
+		if (creature->enemy == LaraItem)
 		{
 			lara_info.angle = info.angle;
 			lara_info.distance = info.distance;
 		}
 		else
 		{
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = LaraItem->pos.x_pos - item->pos.x_pos;
+			dz = LaraItem->pos.z_pos - item->pos.z_pos;
 			lara_info.angle = short(phd_atan(dz, dx) - item->pos.y_rot);
 			lara_info.distance = SQUARE(dx) + SQUARE(dz);
 		}
 
-		GetCreatureMood(item, &info, creature->enemy != lara_item);
-		CreatureMood(item, &info, creature->enemy != lara_item);
+		GetCreatureMood(item, &info, creature->enemy != LaraItem);
+		CreatureMood(item, &info, creature->enemy != LaraItem);
 		angle = CreatureTurn(item, creature->maximum_turn);
 
-		if (((lara_info.distance < 0x400000 && (lara_info.angle < 0x4000 && lara_info.angle > -16384 || lara_item->speed > 20)) ||
-			item->hit_status || TargetVisible(item, &lara_info)) && abs(item->pos.y_pos - lara_item->pos.y_pos) < 1536)
+		if (((lara_info.distance < 0x400000 && (lara_info.angle < 0x4000 && lara_info.angle > -16384 || LaraItem->speed > 20)) ||
+			item->hit_status || TargetVisible(item, &lara_info)) && abs(item->pos.y_pos - LaraItem->pos.y_pos) < 1536)
 		{
-			creature->enemy = lara_item;
+			creature->enemy = LaraItem;
 			AlertAllGuards(item_number);
 		}
 
@@ -545,14 +545,14 @@ void FireTwogunWeapon(ITEM_INFO* item, long lr, long plasma)
 	TriggerTwogunPlasma(&s, angles, 16);
 	TriggerTwogunPlasma(&s, angles, 16);
 
-	if (lara.burn)
+	if (Lara.burn)
 		return;
 
 	hit = 0;
-	bounds = GetBoundsAccurate(lara_item);
-	x = lara_item->pos.x_pos + ((bounds[0] + bounds[1]) >> 1);
-	y = lara_item->pos.y_pos + ((bounds[2] + bounds[3]) >> 1);
-	z = lara_item->pos.z_pos + ((bounds[4] + bounds[5]) >> 1);
+	bounds = GetBoundsAccurate(LaraItem);
+	x = LaraItem->pos.x_pos + ((bounds[0] + bounds[1]) >> 1);
+	y = LaraItem->pos.y_pos + ((bounds[2] + bounds[3]) >> 1);
+	z = LaraItem->pos.z_pos + ((bounds[4] + bounds[5]) >> 1);
 	dist = phd_sqrt(SQUARE(x - s.x) + SQUARE(y - s.y) + SQUARE(z - s.z));
 
 	if (dist < 4096)
@@ -580,14 +580,14 @@ void FireTwogunWeapon(ITEM_INFO* item, long lr, long plasma)
 
 	if (hit)
 	{
-		if (lara_item->hit_points >= 501)
-			lara_item->hit_points -= 250;
+		if (LaraItem->hit_points >= 501)
+			LaraItem->hit_points -= 250;
 		else
 		{
 			LaraBurn();
-			lara.BurnBlue = 1;
-			lara.BurnCount = 48;
-			lara_item->hit_points = 0;
+			Lara.BurnBlue = 1;
+			Lara.BurnCount = 48;
+			LaraItem->hit_points = 0;
 		}
 	}
 }

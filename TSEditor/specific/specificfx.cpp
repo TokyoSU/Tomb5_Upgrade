@@ -1227,7 +1227,7 @@ void DoRain()
 	cbottom = f_bottom;
 	cright = f_right - 4.0F;
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	aSetViewMatrix();
 
 	for (int i = 0; i < rain_count; i++)
@@ -1238,9 +1238,9 @@ void DoRain()
 		{
 			clipFlag = 0;
 			clip = clipflags;
-			fx = float(rptr->x - lara_item->pos.x_pos - (SmokeWindX << 2));
-			fy = float(rptr->y - (rptr->yv << 3) - lara_item->pos.y_pos);
-			fz = float(rptr->z - lara_item->pos.z_pos - (SmokeWindZ << 2));
+			fx = float(rptr->x - LaraItem->pos.x_pos - (SmokeWindX << 2));
+			fy = float(rptr->y - (rptr->yv << 3) - LaraItem->pos.y_pos);
+			fz = float(rptr->z - LaraItem->pos.z_pos - (SmokeWindZ << 2));
 			mx = fx * D3DMView._11 + fy * D3DMView._21 + fz * D3DMView._31 + D3DMView._41;
 			my = fx * D3DMView._12 + fy * D3DMView._22 + fz * D3DMView._32 + D3DMView._42;
 			mz = fx * D3DMView._13 + fy * D3DMView._23 + fz * D3DMView._33 + D3DMView._43;
@@ -1281,9 +1281,9 @@ void DoRain()
 			*clip++ = clipFlag;
 			clipFlag = 0;
 
-			fx = float(rptr->x - lara_item->pos.x_pos);
-			fy = float(rptr->y - lara_item->pos.y_pos);
-			fz = float(rptr->z - lara_item->pos.z_pos);
+			fx = float(rptr->x - LaraItem->pos.x_pos);
+			fy = float(rptr->y - LaraItem->pos.y_pos);
+			fz = float(rptr->z - LaraItem->pos.z_pos);
 			mx = fx * D3DMView._11 + fy * D3DMView._21 + fz * D3DMView._31 + D3DMView._41;
 			my = fx * D3DMView._12 + fy * D3DMView._22 + fz * D3DMView._32 + D3DMView._42;
 			mz = fx * D3DMView._13 + fy * D3DMView._23 + fz * D3DMView._33 + D3DMView._43;
@@ -1762,7 +1762,7 @@ void S_DrawSparks()
 		NodeOffsets[i].GotIt = 0;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	aSetViewMatrix();
 
 	for (int i = 0; i < 1024; i++)
@@ -1842,9 +1842,9 @@ void S_DrawSparks()
 			z = sptr->z;
 		}
 
-		fX = float(x - lara_item->pos.x_pos);
-		fY = float(y - lara_item->pos.y_pos);
-		fZ = float(z - lara_item->pos.z_pos);
+		fX = float(x - LaraItem->pos.x_pos);
+		fY = float(y - LaraItem->pos.y_pos);
+		fZ = float(z - LaraItem->pos.z_pos);
 		fpos.x = fX * D3DMView._11 + fY * D3DMView._21 + D3DMView._31 * fZ + D3DMView._41;
 		fpos.y = fX * D3DMView._12 + fY * D3DMView._22 + D3DMView._32 * fZ + D3DMView._42;
 		fpos.z = fX * D3DMView._13 + fY * D3DMView._23 + D3DMView._33 * fZ + D3DMView._43;
@@ -2186,7 +2186,7 @@ void S_DrawSmokeSparks()
 	short ang;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
@@ -2206,12 +2206,12 @@ void S_DrawSmokeSparks()
 		else
 			is_mirror = 0;
 
-		dx = sptr->x - lara_item->pos.x_pos;
-		dy = sptr->y - lara_item->pos.y_pos;
-		dz = sptr->z - lara_item->pos.z_pos;
+		dx = sptr->x - LaraItem->pos.x_pos;
+		dy = sptr->y - LaraItem->pos.y_pos;
+		dz = sptr->z - LaraItem->pos.z_pos;
 
 		if (is_mirror)
-			dz = 2 * gfMirrorZPlane - lara_item->pos.z_pos - sptr->z;
+			dz = 2 * gfMirrorZPlane - LaraItem->pos.z_pos - sptr->z;
 
 		if (dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
 		{
@@ -2549,7 +2549,7 @@ void DrawBlood()
 	short ang;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 15];
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
@@ -2562,9 +2562,9 @@ void DrawBlood()
 		if (!bptr->On)
 			continue;
 
-		dx = bptr->x - lara_item->pos.x_pos;
-		dy = bptr->y - lara_item->pos.y_pos;
-		dz = bptr->z - lara_item->pos.z_pos;
+		dx = bptr->x - LaraItem->pos.x_pos;
+		dy = bptr->y - LaraItem->pos.y_pos;
+		dz = bptr->z - LaraItem->pos.z_pos;
 
 		if (dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
 			continue;
@@ -2658,7 +2658,7 @@ void DrawDrips()
 	pos = (long*)&tsv_buffer[1024];
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 
 	for (int i = 0; i < 32; i++)
 	{
@@ -2667,9 +2667,9 @@ void DrawDrips()
 		if (!drip->On)
 			continue;
 
-		pos[0] = drip->x - lara_item->pos.x_pos;
-		pos[1] = drip->y - lara_item->pos.y_pos;
-		pos[2] = drip->z - lara_item->pos.z_pos;
+		pos[0] = drip->x - LaraItem->pos.x_pos;
+		pos[1] = drip->y - LaraItem->pos.y_pos;
+		pos[2] = drip->z - LaraItem->pos.z_pos;
 
 		if (pos[0] < -0x5000 || pos[0] > 0x5000 || pos[1] < -0x5000 || pos[1] > 0x5000 || pos[2] < -0x5000 || pos[2] > 0x5000)
 			continue;
@@ -2782,9 +2782,9 @@ void DoUwEffect()
 			x = (rad * rcossin_tbl[ang]) >> (W2V_SHIFT - 2);
 			y = (GetRandomDraw() & 0x7FF) - 1024;
 			z = (rad * rcossin_tbl[ang + 1]) >> (W2V_SHIFT - 2);
-			p->x = lara_item->pos.x_pos + x;
-			p->y = lara_item->pos.y_pos + y;
-			p->z = lara_item->pos.z_pos + z;
+			p->x = LaraItem->pos.x_pos + x;
+			p->y = LaraItem->pos.y_pos + y;
+			p->z = LaraItem->pos.z_pos + z;
 
 			if (IsRoomOutside(p->x, p->y, p->z) < 0 || !(room[IsRoomOutsideNo].flags & ROOM_UNDERWATER))
 			{
@@ -2831,7 +2831,7 @@ void DoUwEffect()
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 
 	for (int i = 0; i < 256; i++)
 	{
@@ -2840,9 +2840,9 @@ void DoUwEffect()
 		if (!p->x)
 			continue;
 
-		x = p->x - lara_item->pos.x_pos;
-		y = p->y - lara_item->pos.y_pos;
-		z = p->z - lara_item->pos.z_pos;
+		x = p->x - LaraItem->pos.x_pos;
+		y = p->y - LaraItem->pos.y_pos;
+		z = p->z - LaraItem->pos.z_pos;
 		offsets[0] = x;
 		offsets[1] = y;
 		offsets[2] = z;
@@ -2933,7 +2933,7 @@ void DrawBubbles()
 	long dx, dy, dz, size, x1, y1, x2, y2;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	bubble = Bubbles;
 
 	XY = (long*)&tsv_buffer[0];
@@ -2948,9 +2948,9 @@ void DrawBubbles()
 			continue;
 		}
 
-		dx = bubble->pos.x - lara_item->pos.x_pos;
-		dy = bubble->pos.y - lara_item->pos.y_pos;
-		dz = bubble->pos.z - lara_item->pos.z_pos;
+		dx = bubble->pos.x - LaraItem->pos.x_pos;
+		dy = bubble->pos.y - LaraItem->pos.y_pos;
+		dz = bubble->pos.z - LaraItem->pos.z_pos;
 
 		if (dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
 		{
@@ -3194,7 +3194,7 @@ void DrawLightning()
 	short clipFlag;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 	aSetViewMatrix();
 
 	for (int i = 0; i < 16; i++)
@@ -3220,9 +3220,9 @@ void DrawLightning()
 		py3 = (float)l->Point[3].y - py;
 		pz3 = (float)l->Point[3].z - pz;
 
-		px = float(l->Point[0].x - lara_item->pos.x_pos);
-		py = float(l->Point[0].y - lara_item->pos.y_pos);
-		pz = float(l->Point[0].z - lara_item->pos.z_pos);
+		px = float(l->Point[0].x - LaraItem->pos.x_pos);
+		py = float(l->Point[0].y - LaraItem->pos.y_pos);
+		pz = float(l->Point[0].z - LaraItem->pos.z_pos);
 
 		r1 = rand;
 		n = 0;
@@ -5160,11 +5160,11 @@ void DrawLaserSightSprite()
 	long x1, y1, x2, y2, size;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 
-	x = float(LaserSightX - lara_item->pos.x_pos);
-	y = float(LaserSightY - lara_item->pos.y_pos);
-	z = float(LaserSightZ - lara_item->pos.z_pos);
+	x = float(LaserSightX - LaraItem->pos.x_pos);
+	y = float(LaserSightY - LaraItem->pos.y_pos);
+	z = float(LaserSightZ - LaraItem->pos.z_pos);
 	vec.x = aMXPtr->m00 * x + aMXPtr->m01 * y + aMXPtr->m02 * z + aMXPtr->m03;
 	vec.y = aMXPtr->m10 * x + aMXPtr->m11 * y + aMXPtr->m12 * z + aMXPtr->m13;
 	vec.z = aMXPtr->m20 * x + aMXPtr->m21 * y + aMXPtr->m22 * z + aMXPtr->m23;
@@ -5912,13 +5912,13 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
 	phd_PushUnitMatrix();
 	s = item->current_anim_state;
 
-	if (item == lara_item && s != AS_ALL4S && s != AS_ALL4TURNL && s != AS_ALL4TURNR && s != AS_CRAWL && s != AS_CRAWLBACK)	//position the grid
+	if (item == LaraItem && s != AS_ALL4S && s != AS_ALL4TURNL && s != AS_ALL4TURNR && s != AS_CRAWL && s != AS_CRAWLBACK)	//position the grid
 	{
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
 		GetLaraJointPos(&pos, LMX_TORSO);
-		room_number = lara_item->room_number;
+		room_number = LaraItem->room_number;
 		y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &room_number), pos.x, pos.y, pos.z);
 
 		if (y == NO_HEIGHT)
@@ -6086,13 +6086,13 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
 	phd_PushUnitMatrix();
 	s = item->current_anim_state;
 
-	if (item == lara_item && s != AS_ALL4S && s != AS_ALL4TURNL && s != AS_ALL4TURNR && s != AS_CRAWL && s != AS_CRAWLBACK)
+	if (item == LaraItem && s != AS_ALL4S && s != AS_ALL4TURNL && s != AS_ALL4TURNR && s != AS_CRAWL && s != AS_CRAWLBACK)
 	{
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
 		GetLaraJointPos(&pos, LMX_HIPS);
-		room_number = lara_item->room_number;
+		room_number = LaraItem->room_number;
 		pos.y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &room_number), pos.x, pos.y, pos.z);
 
 		if (pos.y == NO_HEIGHT)
@@ -6253,13 +6253,13 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item)
 	phd_PushUnitMatrix();
 	s = item->current_anim_state;
 
-	if (item == lara_item && s != AS_ALL4S && s != AS_ALL4TURNL && s != AS_ALL4TURNR && s != AS_CRAWL && s != AS_CRAWLBACK)	//position the grid
+	if (item == LaraItem && s != AS_ALL4S && s != AS_ALL4TURNL && s != AS_ALL4TURNR && s != AS_CRAWL && s != AS_CRAWLBACK)	//position the grid
 	{
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
 		GetLaraJointPos(&pos, LMX_TORSO);
-		room_number = lara_item->room_number;
+		room_number = LaraItem->room_number;
 		floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
 		y = GetHeight(floor, pos.x, pos.y, pos.z);
 

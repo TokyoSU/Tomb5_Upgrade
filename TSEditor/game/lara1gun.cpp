@@ -29,34 +29,34 @@ static char HKShotsFired = 0;
 
 void draw_shotgun_meshes(long weapon_type)
 {
-	lara.back_gun = 0;
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[WeaponObjectMesh(weapon_type)].mesh_index + 2 * LM_RHAND];
+	Lara.back_gun = 0;
+	Lara.mesh_ptrs[LM_RHAND] = meshes[objects[WeaponObjectMesh(weapon_type)].mesh_index + 2 * LM_RHAND];
 }
 
 void undraw_shotgun_meshes(long weapon_type)
 {
-	lara.back_gun = (short)WeaponObject(weapon_type);
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + 2 * LM_RHAND];
+	Lara.back_gun = (short)WeaponObject(weapon_type);
+	Lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + 2 * LM_RHAND];
 }
 
 void ready_shotgun(long weapon_type)
 {
-	lara.gun_status = LG_READY;
-	lara.target = 0;
+	Lara.gun_status = LG_READY;
+	Lara.target = 0;
 
-	lara.left_arm.x_rot = 0;
-	lara.left_arm.y_rot = 0;
-	lara.left_arm.z_rot = 0;
-	lara.left_arm.frame_number = 0;
-	lara.left_arm.lock = 0;
-	lara.left_arm.frame_base = objects[WeaponObject(weapon_type)].frame_base;
+	Lara.left_arm.x_rot = 0;
+	Lara.left_arm.y_rot = 0;
+	Lara.left_arm.z_rot = 0;
+	Lara.left_arm.frame_number = 0;
+	Lara.left_arm.lock = 0;
+	Lara.left_arm.frame_base = objects[WeaponObject(weapon_type)].frame_base;
 
-	lara.right_arm.x_rot = 0;
-	lara.right_arm.y_rot = 0;
-	lara.right_arm.z_rot = 0;
-	lara.right_arm.frame_number = 0;
-	lara.right_arm.lock = 0;
-	lara.right_arm.frame_base = lara.left_arm.frame_base;
+	Lara.right_arm.x_rot = 0;
+	Lara.right_arm.y_rot = 0;
+	Lara.right_arm.z_rot = 0;
+	Lara.right_arm.frame_number = 0;
+	Lara.right_arm.lock = 0;
+	Lara.right_arm.frame_base = Lara.left_arm.frame_base;
 }
 
 void RifleHandler(long weapon_type)
@@ -67,25 +67,25 @@ void RifleHandler(long weapon_type)
 
 	winfo = &weapons[weapon_type];
 
-	if (lara.gun_type != WEAPON_CROSSBOW || LaserSight)
+	if (Lara.gun_type != WEAPON_CROSSBOW || LaserSight)
 		LaraGetNewTarget(winfo);
 	else
-		lara.target = 0;
+		Lara.target = 0;
 
-	if (input & IN_ACTION)
+	if (KeyInput & IN_ACTION)
 		LaraTargetInfo(winfo);
 
-	AimWeapon(winfo, &lara.left_arm);
+	AimWeapon(winfo, &Lara.left_arm);
 
-	if (lara.left_arm.lock)
+	if (Lara.left_arm.lock)
 	{
-		lara.torso_x_rot = lara.left_arm.x_rot;
-		lara.torso_y_rot = lara.left_arm.y_rot;
+		Lara.torso_x_rot = Lara.left_arm.x_rot;
+		Lara.torso_y_rot = Lara.left_arm.y_rot;
 
 		if (camera.old_type != LOOK_CAMERA && !BinocularRange)
 		{
-			lara.head_y_rot = 0;
-			lara.head_x_rot = 0;
+			Lara.head_y_rot = 0;
+			Lara.head_x_rot = 0;
 		}
 	}
 
@@ -94,7 +94,7 @@ void RifleHandler(long weapon_type)
 	else
 		AnimateShotgun(weapon_type);
 
-	if (lara.right_arm.flash_gun)
+	if (Lara.right_arm.flash_gun)
 	{
 		r = (GetRandomControl() & 0x3F) + 192;
 		g = (GetRandomControl() & 0x1F) + 128;
@@ -102,11 +102,11 @@ void RifleHandler(long weapon_type)
 
 		if (weapon_type == WEAPON_SHOTGUN || weapon_type == WEAPON_HK)
 		{
-			pos.x = lara_item->pos.x_pos + (1024 * phd_sin(lara_item->pos.y_rot) >> W2V_SHIFT) + (GetRandomControl() & 0xFF);
-			pos.y = lara_item->pos.y_pos + ((GetRandomControl() & 0x7F) - 575);
-			pos.z = lara_item->pos.z_pos + (1024 * phd_cos(lara_item->pos.y_rot) >> W2V_SHIFT) + (GetRandomControl() & 0xFF);
+			pos.x = LaraItem->pos.x_pos + (1024 * phd_sin(LaraItem->pos.y_rot) >> W2V_SHIFT) + (GetRandomControl() & 0xFF);
+			pos.y = LaraItem->pos.y_pos + ((GetRandomControl() & 0x7F) - 575);
+			pos.z = LaraItem->pos.z_pos + (1024 * phd_cos(LaraItem->pos.y_rot) >> W2V_SHIFT) + (GetRandomControl() & 0xFF);
 
-			if (gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+			if (gfLevelFlags & GF_MIRROR && LaraItem->room_number == gfMirrorRoom)
 				TriggerDynamic_MIRROR(pos.x, pos.y, pos.z, 12, r, g, b);
 			else
 				TriggerDynamic(pos.x, pos.y, pos.z, 12, r, g, b);
@@ -118,7 +118,7 @@ void RifleHandler(long weapon_type)
 			pos.z = (GetRandomControl() & 0xFF) - 128;
 			GetLaraJointPos(&pos, LMX_HAND_R);
 
-			if (gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+			if (gfLevelFlags & GF_MIRROR && LaraItem->room_number == gfMirrorRoom)
 				TriggerDynamic_MIRROR(pos.x, pos.y, pos.z, 12, r, g, b);
 			else
 				TriggerDynamic(pos.x, pos.y, pos.z, 12, r, g, b);
@@ -134,18 +134,18 @@ void FireShotgun()
 	short angles[2];
 	short dangles[2];
 
-	angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
-	angles[1] = lara.left_arm.x_rot;
+	angles[0] = Lara.left_arm.y_rot + LaraItem->pos.y_rot;
+	angles[1] = Lara.left_arm.x_rot;
 
-	if (!lara.left_arm.lock)
+	if (!Lara.left_arm.lock)
 	{
-		angles[0] += lara.torso_y_rot;
-		angles[1] += lara.torso_x_rot;
+		angles[0] += Lara.torso_y_rot;
+		angles[1] += Lara.torso_x_rot;
 	}
 
 	fired = 0;
 
-	if (lara.shotgun_type_carried & W_AMMO1)
+	if (Lara.shotgun_type_carried & W_AMMO1)
 		scatter = 1820;
 	else
 		scatter = 5460;
@@ -155,7 +155,7 @@ void FireShotgun()
 		dangles[0] = short(angles[0] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 		dangles[1] = short(angles[1] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 
-		if (FireWeapon(WEAPON_SHOTGUN, lara.target, lara_item, &dangles[0]))
+		if (FireWeapon(WEAPON_SHOTGUN, Lara.target, LaraItem, &dangles[0]))
 			fired = 1;
 	}
 
@@ -174,15 +174,15 @@ void FireShotgun()
 		SmokeCountL = 32;
 		SmokeWeapon = WEAPON_SHOTGUN;
 
-		if (lara_item->mesh_bits)
+		if (LaraItem->mesh_bits)
 		{
 			for (int i = 0; i < 7; i++)
 				TriggerGunSmoke(pos.x, pos.y, pos.z, pos2.x - pos.x, pos2.y - pos.y, pos2.z - pos.z, 1, SmokeWeapon, 32);
 		}
 
-		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
-		SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x1400000 | SFX_SETPITCH);
-		SoundEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFX_DEFAULT);
+		Lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
+		SoundEffect(SFX_EXPLOSION1, &LaraItem->pos, 0x1400000 | SFX_SETPITCH);
+		SoundEffect(weapons[WEAPON_SHOTGUN].sample_num, &LaraItem->pos, SFX_DEFAULT);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -191,9 +191,9 @@ void FireHK(long running)
 {
 	short angles[2];
 
-	if (lara.hk_type_carried & W_AMMO1)
+	if (Lara.hk_type_carried & W_AMMO1)
 		HKTimer = 12;
-	else if (lara.hk_type_carried & W_AMMO2)
+	else if (Lara.hk_type_carried & W_AMMO2)
 	{
 		HKShotsFired++;
 
@@ -204,13 +204,13 @@ void FireHK(long running)
 		}
 	}
 
-	angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
-	angles[1] = lara.left_arm.x_rot;
+	angles[0] = Lara.left_arm.y_rot + LaraItem->pos.y_rot;
+	angles[1] = Lara.left_arm.x_rot;
 
-	if (!lara.left_arm.lock)
+	if (!Lara.left_arm.lock)
 	{
-		angles[0] += lara.torso_y_rot;
-		angles[1] += lara.torso_x_rot;
+		angles[0] += Lara.torso_y_rot;
+		angles[1] += Lara.torso_x_rot;
 	}
 
 	if (running)
@@ -224,12 +224,12 @@ void FireHK(long running)
 		weapons[WEAPON_HK].damage = 3;
 	}
 
-	if (FireWeapon(WEAPON_HK, lara.target, lara_item, angles))
+	if (FireWeapon(WEAPON_HK, Lara.target, LaraItem, angles))
 	{
 		SmokeCountL = 12;
 		SmokeWeapon = WEAPON_HK;
 		TriggerGunShell(1, GUNSHELL, WEAPON_HK);
-		lara.right_arm.flash_gun = weapons[WEAPON_HK].flash_time;
+		Lara.right_arm.flash_gun = weapons[WEAPON_HK].flash_time;
 	}
 }
 
@@ -244,8 +244,8 @@ void FireCrossbow(PHD_3DPOS* Start)
 	if (!ammo[0])
 		return;
 
-	lara.has_fired = 1;
-	lara.Fired = 1;
+	Lara.has_fired = 1;
+	Lara.Fired = 1;
 	item_number = CreateItem();
 
 	if (item_number == NO_ITEM)
@@ -254,7 +254,7 @@ void FireCrossbow(PHD_3DPOS* Start)
 	item = &items[item_number];
 	item->object_number = CROSSBOW_BOLT;
 	item->shade = -0x3DF0;
-	item->room_number = lara_item->room_number;
+	item->room_number = LaraItem->room_number;
 	item->pos.x_pos = Start->x_pos;
 	item->pos.y_pos = Start->y_pos;
 	item->pos.z_pos = Start->z_pos;
@@ -322,10 +322,10 @@ void draw_shotgun(long weapon_type)
 {
 	ITEM_INFO* item;
 
-	if (lara.weapon_item == NO_ITEM)
+	if (Lara.weapon_item == NO_ITEM)
 	{
-		lara.weapon_item = CreateItem();
-		item = &items[lara.weapon_item];
+		Lara.weapon_item = CreateItem();
+		item = &items[Lara.weapon_item];
 		item->object_number = (short)WeaponObject(weapon_type);
 		item->anim_number = objects[item->object_number].anim_index + 1;
 		item->frame_number = anims[item->anim_number].frame_base;
@@ -333,11 +333,11 @@ void draw_shotgun(long weapon_type)
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 		item->room_number = NO_ROOM;
-		lara.left_arm.frame_base = objects[item->object_number].frame_base; 
-		lara.right_arm.frame_base = objects[item->object_number].frame_base;
+		Lara.left_arm.frame_base = objects[item->object_number].frame_base; 
+		Lara.right_arm.frame_base = objects[item->object_number].frame_base;
 	}
 	else
-		item = &items[lara.weapon_item];
+		item = &items[Lara.weapon_item];
 
 	AnimateItem(item);
 
@@ -345,45 +345,45 @@ void draw_shotgun(long weapon_type)
 		ready_shotgun(weapon_type);
 	else if (item->frame_number - anims[item->anim_number].frame_base == weapons[weapon_type].draw_frame)
 		draw_shotgun_meshes(weapon_type);
-	else if (lara.water_status == LW_UNDERWATER)
+	else if (Lara.water_status == LW_UNDERWATER)
 		item->goal_anim_state = 6;
 
-	lara.left_arm.frame_base = anims[item->anim_number].frame_ptr; 
-	lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
-	lara.left_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base; 
-	lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
-	lara.left_arm.anim_number = item->anim_number; 
-	lara.right_arm.anim_number = item->anim_number;
+	Lara.left_arm.frame_base = anims[item->anim_number].frame_ptr; 
+	Lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
+	Lara.left_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base; 
+	Lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
+	Lara.left_arm.anim_number = item->anim_number; 
+	Lara.right_arm.anim_number = item->anim_number;
 }
 
 void undraw_shotgun(long weapon_type)
 {
 	ITEM_INFO* item; 
 
-	item = &items[lara.weapon_item];
+	item = &items[Lara.weapon_item];
 	item->goal_anim_state = 3;
 	AnimateItem(item);
 
 	if (item->status == ITEM_DEACTIVATED)
 	{
-		lara.gun_status = LG_NO_ARMS;
-		lara.target = 0;
-		lara.right_arm.lock = 0;
-		lara.left_arm.lock = 0;
-		KillItem(lara.weapon_item);
-		lara.weapon_item = NO_ITEM;
-		lara.right_arm.frame_number = 0;
-		lara.left_arm.frame_number = 0;
+		Lara.gun_status = LG_NO_ARMS;
+		Lara.target = 0;
+		Lara.right_arm.lock = 0;
+		Lara.left_arm.lock = 0;
+		KillItem(Lara.weapon_item);
+		Lara.weapon_item = NO_ITEM;
+		Lara.right_arm.frame_number = 0;
+		Lara.left_arm.frame_number = 0;
 	}
 	else if (item->current_anim_state == 3 && anims[item->anim_number].frame_base == item->frame_number - 21)
 		undraw_shotgun_meshes(weapon_type);
 
-	lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
-	lara.left_arm.frame_base = anims[item->anim_number].frame_ptr;
-	lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
-	lara.left_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
-	lara.right_arm.anim_number = item->anim_number;
-	lara.left_arm.anim_number = item->anim_number;
+	Lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
+	Lara.left_arm.frame_base = anims[item->anim_number].frame_ptr;
+	Lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
+	Lara.left_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
+	Lara.right_arm.anim_number = item->anim_number;
+	Lara.left_arm.anim_number = item->anim_number;
 }
 
 void AnimateShotgun(long weapon_type)
@@ -416,13 +416,13 @@ void AnimateShotgun(long weapon_type)
 
 		GetLaraJointPos(&pos, LMX_HAND_R);
 
-		if (lara_item->mesh_bits)
+		if (LaraItem->mesh_bits)
 			TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, SmokeWeapon, SmokeCountL);
 	}
 
-	item = &items[lara.weapon_item];
+	item = &items[Lara.weapon_item];
 
-	if (weapon_type == WEAPON_HK && lara_item->speed)
+	if (weapon_type == WEAPON_HK && LaraItem->speed)
 		running = 1;
 	else
 		running = 0;
@@ -434,9 +434,9 @@ void AnimateShotgun(long weapon_type)
 		HKTimer = 0;
 		HKShotsFired = 0;
 
-		if (lara.water_status == LW_UNDERWATER || running)
+		if (Lara.water_status == LW_UNDERWATER || running)
 			item->goal_anim_state = 6;
-		else if (input & IN_ACTION && !lara.target || lara.left_arm.lock)
+		else if (KeyInput & IN_ACTION && !Lara.target || Lara.left_arm.lock)
 			item->goal_anim_state = 2;
 		else
 			item->goal_anim_state = 4;
@@ -449,9 +449,9 @@ void AnimateShotgun(long weapon_type)
 		{
 			item->goal_anim_state = 4;
 
-			if (lara.water_status != LW_UNDERWATER && !running)
+			if (Lara.water_status != LW_UNDERWATER && !running)
 			{
-				if (input & IN_ACTION && (!lara.target || lara.left_arm.lock))
+				if (KeyInput & IN_ACTION && (!Lara.target || Lara.left_arm.lock))
 				{
 					if (weapon_type == WEAPON_CROSSBOW)
 					{
@@ -460,7 +460,7 @@ void AnimateShotgun(long weapon_type)
 					}
 					else if (weapon_type == WEAPON_HK)
 					{
-						if ((lara.hk_type_carried & (W_AMMO1 | W_AMMO2)) && HKTimer)
+						if ((Lara.hk_type_carried & (W_AMMO1 | W_AMMO2)) && HKTimer)
 							item->goal_anim_state = 0;
 						else
 						{
@@ -468,12 +468,12 @@ void AnimateShotgun(long weapon_type)
 							m16_firing = 1;
 							item->goal_anim_state = 2;
 
-							if (lara.hk_type_carried & W_SILENCER)
+							if (Lara.hk_type_carried & W_SILENCER)
 								SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 							else
 							{
-								SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
-								SoundEffect(SFX_HK_FIRE, &lara_item->pos, SFX_DEFAULT);
+								SoundEffect(SFX_EXPLOSION1, &LaraItem->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
+								SoundEffect(SFX_HK_FIRE, &LaraItem->pos, SFX_DEFAULT);
 							}
 						}
 					}
@@ -483,28 +483,28 @@ void AnimateShotgun(long weapon_type)
 						item->goal_anim_state = 2;
 					}
 				}
-				else if (lara.left_arm.lock)
+				else if (Lara.left_arm.lock)
 					item->goal_anim_state = 0;
 			}
 
-			if (item->goal_anim_state != 2 && m16_firing && !(lara.hk_type_carried & W_SILENCER))
+			if (item->goal_anim_state != 2 && m16_firing && !(Lara.hk_type_carried & W_SILENCER))
 			{
 				StopSoundEffect(SFX_HK_FIRE);
-				SoundEffect(SFX_HK_STOP, &lara_item->pos, SFX_DEFAULT);
+				SoundEffect(SFX_HK_STOP, &LaraItem->pos, SFX_DEFAULT);
 				m16_firing = 0;
 			}
 		}
 		else if (m16_firing)
 		{
-			if (lara.hk_type_carried & W_SILENCER)
+			if (Lara.hk_type_carried & W_SILENCER)
 				SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 			else
 			{
-				SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
-				SoundEffect(SFX_HK_FIRE, &lara_item->pos, SFX_DEFAULT);
+				SoundEffect(SFX_EXPLOSION1, &LaraItem->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
+				SoundEffect(SFX_HK_FIRE, &LaraItem->pos, SFX_DEFAULT);
 			}
 		}
-		else if (weapon_type == WEAPON_SHOTGUN && !(input & IN_ACTION) && !lara.left_arm.lock)
+		else if (weapon_type == WEAPON_SHOTGUN && !(KeyInput & IN_ACTION) && !Lara.left_arm.lock)
 			item->goal_anim_state = 4;
 
 		if (item->frame_number - anims[item->anim_number].frame_base == 12 && weapon_type == WEAPON_SHOTGUN)
@@ -517,9 +517,9 @@ void AnimateShotgun(long weapon_type)
 		HKTimer = 0;
 		HKShotsFired = 0;
 
-		if (lara.water_status != LW_UNDERWATER && !running)
+		if (Lara.water_status != LW_UNDERWATER && !running)
 			item->goal_anim_state = 0;
-		else if (input & IN_ACTION && !lara.target || lara.left_arm.lock)
+		else if (KeyInput & IN_ACTION && !Lara.target || Lara.left_arm.lock)
 			item->goal_anim_state = 8;
 		else
 			item->goal_anim_state = 7;
@@ -534,9 +534,9 @@ void AnimateShotgun(long weapon_type)
 
 			if (running)
 			{
-				if (input & IN_ACTION && (!lara.target || lara.left_arm.lock))
+				if (KeyInput & IN_ACTION && (!Lara.target || Lara.left_arm.lock))
 				{
-					if ((lara.hk_type_carried & (W_AMMO1 | W_AMMO2)) && HKTimer)
+					if ((Lara.hk_type_carried & (W_AMMO1 | W_AMMO2)) && HKTimer)
 						item->goal_anim_state = 6;
 					else
 					{
@@ -544,34 +544,34 @@ void AnimateShotgun(long weapon_type)
 						m16_firing = 1;
 						item->goal_anim_state = 8;
 
-						if (lara.hk_type_carried & W_SILENCER)
+						if (Lara.hk_type_carried & W_SILENCER)
 							SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 						else
 						{
-							SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
-							SoundEffect(SFX_HK_FIRE, &lara_item->pos, SFX_DEFAULT);
+							SoundEffect(SFX_EXPLOSION1, &LaraItem->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
+							SoundEffect(SFX_HK_FIRE, &LaraItem->pos, SFX_DEFAULT);
 						}
 					}
 				}
-				else if (lara.left_arm.lock)
+				else if (Lara.left_arm.lock)
 					item->goal_anim_state = 6;
 			}
 
-			if (item->goal_anim_state != 8 && m16_firing && !(lara.hk_type_carried & W_SILENCER))
+			if (item->goal_anim_state != 8 && m16_firing && !(Lara.hk_type_carried & W_SILENCER))
 			{
 				StopSoundEffect(SFX_HK_FIRE);
-				SoundEffect(SFX_HK_STOP, &lara_item->pos, SFX_DEFAULT);
+				SoundEffect(SFX_HK_STOP, &LaraItem->pos, SFX_DEFAULT);
 				m16_firing = 0;
 			}
 		}
 		else if (m16_firing)
 		{
-			if (lara.hk_type_carried & W_SILENCER)
+			if (Lara.hk_type_carried & W_SILENCER)
 				SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 			else
 			{
-				SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
-				SoundEffect(SFX_HK_FIRE, &lara_item->pos, SFX_DEFAULT);
+				SoundEffect(SFX_EXPLOSION1, &LaraItem->pos, 0x5000800 | SFX_SETPITCH | SFX_SETVOL);
+				SoundEffect(SFX_HK_FIRE, &LaraItem->pos, SFX_DEFAULT);
 			}
 		}
 
@@ -579,12 +579,12 @@ void AnimateShotgun(long weapon_type)
 	}
 
 	AnimateItem(item);
-	lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
-	lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
-	lara.right_arm.anim_number = item->anim_number;
-	lara.left_arm.frame_base = lara.right_arm.frame_base;
-	lara.left_arm.frame_number = lara.right_arm.frame_number;
-	lara.left_arm.anim_number = lara.right_arm.anim_number;
+	Lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
+	Lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
+	Lara.right_arm.anim_number = item->anim_number;
+	Lara.left_arm.frame_base = Lara.right_arm.frame_base;
+	Lara.left_arm.frame_number = Lara.right_arm.frame_number;
+	Lara.left_arm.anim_number = Lara.right_arm.anim_number;
 }
 
 void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item)
@@ -592,11 +592,11 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item)
 	if (baddie->flags & 0x8000)
 		return;
 
-	if (baddie == lara_item && lara_item->hit_points > 0)
+	if (baddie == LaraItem && LaraItem->hit_points > 0)
 	{
-		lara_item->hit_points -= 50;
+		LaraItem->hit_points -= 50;
 
-		if (!(room[item->room_number].flags & ROOM_UNDERWATER) && lara_item->hit_points <= 50)
+		if (!(room[item->room_number].flags & ROOM_UNDERWATER) && LaraItem->hit_points <= 50)
 			LaraBurn();
 	}
 	else if (!item->item_flags[2])
@@ -607,7 +607,7 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item)
 		{
 			HitTarget(baddie, 0, 30, 1);
 
-			if (baddie != lara_item)
+			if (baddie != LaraItem)
 			{
 				savegame.Game.AmmoHits++;
 

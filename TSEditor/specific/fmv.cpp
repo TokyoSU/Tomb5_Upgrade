@@ -129,7 +129,7 @@ long PlayFmv(long num)
 		g_Window.Update();
 		if (G_dxptr->WaitAtBeginScene)
 			continue;
-		if ((input & IN_OPTION) || (input & IN_DRAW) || !g_Window.IsOpened())
+		if ((KeyInput & IN_OPTION) || (KeyInput & IN_DRAW) || !g_Window.IsOpened())
 			break;
 		double current_time = double(SDL_GetTicks()) / 1000.0;
 		double elapsed_time = current_time - m_lastTime;

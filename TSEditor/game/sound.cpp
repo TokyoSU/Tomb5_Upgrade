@@ -19,7 +19,7 @@ bool SayNo()
 {
 	// NOTE: Changed pos from NULL to &lara_item->pos and flags from ALWAYS to DEFAULT,
 	// Only allow the sound NO to be on LAND and near LARA.
-	return SoundEffect(SFX_LARA_NO, &lara_item->pos, SFX_DEFAULT);
+	return SoundEffect(SFX_LARA_NO, &LaraItem->pos, SFX_DEFAULT);
 }
 
 void SOUND_Init()

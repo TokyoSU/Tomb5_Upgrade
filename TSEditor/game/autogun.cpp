@@ -31,7 +31,7 @@ void ControlMotionSensors(short item_number)
 	}
 	else if (item->item_flags[2])
 	{
-		phd_GetVectorAngles(lara_item->pos.x_pos - item->pos.x_pos, lara_item->pos.y_pos - item->pos.y_pos - 384, lara_item->pos.z_pos - item->pos.z_pos, angles);
+		phd_GetVectorAngles(LaraItem->pos.x_pos - item->pos.x_pos, LaraItem->pos.y_pos - item->pos.y_pos - 384, LaraItem->pos.z_pos - item->pos.z_pos, angles);
 		InterpolateAngle(angles[0], &item->pos.y_rot, 0, 3);
 		InterpolateAngle(angles[1], &item->pos.x_rot, 0, 3);
 	}
@@ -48,7 +48,7 @@ void ControlMotionSensors(short item_number)
 		if (abs(diff) < 256)
 			item->item_flags[0] ^= 1;
 
-		state = lara_item->current_anim_state;
+		state = LaraItem->current_anim_state;
 
 		if (state != AS_WALK && state != AS_STOP && state != AS_STEPLEFT && state != AS_STEPRIGHT && state != AS_BACK &&
 			state != AS_TURN_R && state != AS_TURN_L && state != AS_POSE && state != AS_INTO_ZIP && state != AS_ZIP &&
@@ -138,8 +138,8 @@ void AutogunControl(short item_number)
 				pos2.y = 0;
 				pos2.z = 0;
 				GetLaraJointPos((PHD_VECTOR*)&pos2, GetRandomControl() % 15);
-				DoBloodSplat(pos2.x, pos2.y, pos2.z, (GetRandomControl() & 3) + 3, short(GetRandomControl() << 1), lara_item->room_number);
-				lara_item->hit_points -= 20;
+				DoBloodSplat(pos2.x, pos2.y, pos2.z, (GetRandomControl() & 3) + 3, short(GetRandomControl() << 1), LaraItem->room_number);
+				LaraItem->hit_points -= 20;
 			}
 			else
 			{

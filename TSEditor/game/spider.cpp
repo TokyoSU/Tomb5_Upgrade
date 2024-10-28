@@ -123,15 +123,15 @@ void UpdateSpiders()
 				fx->pos.y_pos += fx->fallspeed;
 				fx->pos.z_pos += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
 				fx->fallspeed += 6;
-				dx = lara_item->pos.x_pos - fx->pos.x_pos;
-				dy = lara_item->pos.y_pos - fx->pos.y_pos;
-				dz = lara_item->pos.z_pos - fx->pos.z_pos;
+				dx = LaraItem->pos.x_pos - fx->pos.x_pos;
+				dy = LaraItem->pos.y_pos - fx->pos.y_pos;
+				dz = LaraItem->pos.z_pos - fx->pos.z_pos;
 				angle = (short)phd_atan(dz, dx) - fx->pos.y_rot;
 
 				if (abs(dz) < 85 && abs(dy) < 85 && abs(dx) < 85)
 				{
-					lara_item->hit_points -= 3;
-					lara_item->hit_status = 1;
+					LaraItem->hit_points -= 3;
+					LaraItem->hit_status = 1;
 					TriggerBlood(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->pos.y_rot, 1);
 				}
 

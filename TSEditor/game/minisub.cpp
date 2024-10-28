@@ -169,9 +169,9 @@ void TorpedoControl(short item_number)
 
 		if (!found)
 		{
-			target.x = lara_item->pos.x_pos;
-			target.y = lara_item->pos.y_pos;
-			target.z = lara_item->pos.z_pos;
+			target.x = LaraItem->pos.x_pos;
+			target.y = LaraItem->pos.y_pos;
+			target.z = LaraItem->pos.z_pos;
 		}
 	}
 	else
@@ -261,21 +261,21 @@ void TorpedoControl(short item_number)
 	{
 		TriggerUnderwaterExplosion(item);
 		SoundEffect(SFX_UNDERWATER_EXPLOSION, &item->pos, SFX_ALWAYS);
-		SoundEffect(SFX_LARA_UNDERWATER_HIT, &lara_item->pos, SFX_ALWAYS);
-		lara_item->hit_points -= 200;
-		lara_item->hit_status = 1;
+		SoundEffect(SFX_LARA_UNDERWATER_HIT, &LaraItem->pos, SFX_ALWAYS);
+		LaraItem->hit_points -= 200;
+		LaraItem->hit_status = 1;
 
-		if (lara.Anxiety < 127)
-			lara.Anxiety += 128;
+		if (Lara.Anxiety < 127)
+			Lara.Anxiety += 128;
 		else
-			lara.Anxiety--;
+			Lara.Anxiety--;
 
 		KillItem(item_number);
 		return;
 	}
 
-	if (ItemNearLara(&item->pos, 400) && lara.Anxiety < 224)
-		lara.Anxiety += 32;
+	if (ItemNearLara(&item->pos, 400) && Lara.Anxiety < 224)
+		Lara.Anxiety += 32;
 
 	if (room_number != item->room_number)
 		ItemNewRoom(item_number, room_number);
@@ -427,22 +427,22 @@ void MinisubControl(short item_number)
 	if (item->ai_bits)
 		GetAITarget(minisub);
 	else
-		minisub->enemy = lara_item;
+		minisub->enemy = LaraItem;
 
 	CreatureAIInfo(item, &info);
 	GetCreatureMood(item, &info, 1);
 	CreatureMood(item, &info, 1);
 	angle = CreatureTurn(item, minisub->maximum_turn);
 
-	if (minisub->enemy == lara_item)
+	if (minisub->enemy == LaraItem)
 	{
 		lara_info.angle = info.angle;
 		lara_info.distance = info.distance;
 	}
 	else
 	{
-		x = lara_item->pos.x_pos - item->pos.x_pos;
-		z = lara_item->pos.z_pos - item->pos.z_pos;
+		x = LaraItem->pos.x_pos - item->pos.x_pos;
+		z = LaraItem->pos.z_pos - item->pos.z_pos;
 		lara_info.angle = short(phd_atan(z, x) - item->pos.y_rot);
 		lara_info.distance = SQUARE(x) + SQUARE(z);
 	}
@@ -471,7 +471,7 @@ void MinisubControl(short item_number)
 		minisub->flags++;
 
 	enemy = minisub->enemy;
-	minisub->enemy = lara_item;
+	minisub->enemy = LaraItem;
 
 	if (!Targetable(item, &lara_info))
 		item->goal_anim_state = 1;
@@ -634,7 +634,7 @@ void JellyControl(short item_number)
 	if (item->ai_bits)
 		GetAITarget(jelly);
 	else
-		jelly->enemy = lara_item;
+		jelly->enemy = LaraItem;
 
 	CreatureAIInfo(item, &info);
 	GetCreatureMood(item, &info, 0);

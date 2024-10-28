@@ -71,7 +71,7 @@ void SniperControl(short item_number)
 			if (item->ai_bits)
 				GetAITarget(sniper);
 			else if (sniper->hurt_by_lara)
-				sniper->enemy = lara_item;
+				sniper->enemy = LaraItem;
 
 			CreatureAIInfo(item, &info);
 			GetCreatureMood(item, &info, 1);

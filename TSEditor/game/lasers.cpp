@@ -46,7 +46,7 @@ void ControlLasers(short item_number)
 	if (item->item_flags[3])
 		item->item_flags[3] -= 2;
 
-	if (item->room_number == lara_item->room_number)
+	if (item->room_number == LaraItem->room_number)
 	{
 		laser = (LASER_STRUCT*)item->data;
 		bbox[0] = item->pos.x_pos + laser->v1[0].x;
@@ -58,13 +58,13 @@ void ControlLasers(short item_number)
 
 		if (CheckLaserBox(bbox))
 		{
-			if (!lara.burn && item->trigger_flags & 2)
+			if (!Lara.burn && item->trigger_flags & 2)
 			{
 				LaraBurn();
-				lara.BurnCount = 24;
+				Lara.BurnCount = 24;
 
-				if (lara_item->hit_points > 0)
-					lara_item->hit_points = 0;
+				if (LaraItem->hit_points > 0)
+					LaraItem->hit_points = 0;
 			}
 
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
@@ -91,7 +91,7 @@ void ControlSteamLasers(short item_number)
 
 	item->item_flags[0] = (256 * phd_sin(256 * (GlobalCounter + (item->trigger_flags << 5))) >> W2V_SHIFT) - ((item->trigger_flags & 1) << 8);
 
-	if (item->room_number == lara_item->room_number)
+	if (item->room_number == LaraItem->room_number)
 	{
 		laser = (STEAMLASER_STRUCT*)item->data;
 		bbox[0] = item->pos.x_pos + laser->v1[0].x;
@@ -103,13 +103,13 @@ void ControlSteamLasers(short item_number)
 
 		if (SteamLasers[(GlobalCounter >> 5) & 7][item->trigger_flags])
 		{
-			if (CheckLaserBox(bbox) && !lara.burn)
+			if (CheckLaserBox(bbox) && !Lara.burn)
 			{
 				LaraBurn();
-				lara.BurnCount = 24;
+				Lara.BurnCount = 24;
 
-				if (lara_item->hit_points > 0)
-					lara_item->hit_points = 0;
+				if (LaraItem->hit_points > 0)
+					LaraItem->hit_points = 0;
 
 				item->item_flags[3] = 64;
 			}
@@ -192,7 +192,7 @@ void ControlFloorLasers(short item_number)
 				item->item_flags[2] = (GetRandomControl() & 0x7F) + 1024;
 		}
 		
-		if (item->room_number == lara_item->room_number && lara_item->hit_points > 0)
+		if (item->room_number == LaraItem->room_number && LaraItem->hit_points > 0)
 		{
 			bbox[0] = item->pos.x_pos + laser->v1.x;
 			bbox[1] = item->pos.x_pos + laser->v4.x;
@@ -201,13 +201,13 @@ void ControlFloorLasers(short item_number)
 			bbox[4] = item->pos.z_pos + laser->v1.z;
 			bbox[5] = item->pos.z_pos + laser->v4.z;
 
-			if (CheckLaserBox(bbox) && !lara.burn)
+			if (CheckLaserBox(bbox) && !Lara.burn)
 			{
 				LaraBurn();
-				lara.BurnCount = 24;
+				Lara.BurnCount = 24;
 
-				if (lara_item->hit_points > 0)
-					lara_item->hit_points = 0;
+				if (LaraItem->hit_points > 0)
+					LaraItem->hit_points = 0;
 
 				item->item_flags[3] = (GetRandomControl() & 0xF) + 48;
 			}
@@ -280,19 +280,19 @@ long CheckLaserBox(long* bounds)
 		bounds[5] = swp;
 	}
 
-	lbounds = GetBoundsAccurate(lara_item);
+	lbounds = GetBoundsAccurate(LaraItem);
 	phd_PushUnitMatrix();
-	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
+	phd_RotYXZ(LaraItem->pos.y_rot, LaraItem->pos.x_rot, LaraItem->pos.z_rot);
 	phd_SetTrans(0, 0, 0);
 	mRotBoundingBoxNoPersp(lbounds, rbounds);
 	phd_PopMatrix();
 
-	DeadlyBounds[0] = lara_item->pos.x_pos + rbounds[0];
-	DeadlyBounds[1] = lara_item->pos.x_pos + rbounds[1];
-	DeadlyBounds[2] = lara_item->pos.y_pos + rbounds[2];
-	DeadlyBounds[3] = lara_item->pos.y_pos + rbounds[3];
-	DeadlyBounds[4] = lara_item->pos.z_pos + rbounds[4];
-	DeadlyBounds[5] = lara_item->pos.z_pos + rbounds[5];
+	DeadlyBounds[0] = LaraItem->pos.x_pos + rbounds[0];
+	DeadlyBounds[1] = LaraItem->pos.x_pos + rbounds[1];
+	DeadlyBounds[2] = LaraItem->pos.y_pos + rbounds[2];
+	DeadlyBounds[3] = LaraItem->pos.y_pos + rbounds[3];
+	DeadlyBounds[4] = LaraItem->pos.z_pos + rbounds[4];
+	DeadlyBounds[5] = LaraItem->pos.z_pos + rbounds[5];
 
 	return bounds[1] >= DeadlyBounds[0] && bounds[0] <= DeadlyBounds[1] &&
 		bounds[3] >= DeadlyBounds[2] && bounds[2] <= DeadlyBounds[3] &&

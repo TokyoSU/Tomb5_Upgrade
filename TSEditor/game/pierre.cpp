@@ -123,7 +123,7 @@ void PierreControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(pierre);
 		else
-			pierre->enemy = lara_item;
+			pierre->enemy = LaraItem;
 
 		CreatureAIInfo(item, &info);
 
@@ -140,7 +140,7 @@ void PierreControl(short item_number)
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
 
-		if (info.distance < 0x400000 && lara_item->speed > 20 || item->hit_status || TargetVisible(item, &info))
+		if (info.distance < 0x400000 && LaraItem->speed > 20 || item->hit_status || TargetVisible(item, &info))
 		{
 			item->ai_bits &= ~GUARD;
 			pierre->alerted = 1;

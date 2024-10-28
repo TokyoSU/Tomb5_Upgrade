@@ -123,8 +123,8 @@ void KillItem(short item_num)
 		}
 	}
 
-	if (item == lara.target)
-		lara.target = 0;
+	if (item == Lara.target)
+		Lara.target = 0;
 
 	if (item_num < level_items)
 		item->flags |= IFL_CLEARBODY;

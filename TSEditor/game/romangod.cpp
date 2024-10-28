@@ -348,8 +348,8 @@ void RomangodControl(short item_number)
 			}
 			else if (item->frame_number > anims[item->anim_number].frame_base + 54 && item->frame_number < anims[item->anim_number].frame_base + 74 && item->touch_bits)
 			{
-				lara_item->hit_points -= 40;
-				lara_item->hit_status = 1;
+				LaraItem->hit_points -= 40;
+				LaraItem->hit_status = 1;
 			}
 			else if (item->frame_number == anims[item->anim_number].frame_end)
 			{
@@ -364,7 +364,7 @@ void RomangodControl(short item_number)
 		}
 		else
 		{
-			roman->enemy = lara_item;
+			roman->enemy = LaraItem;
 			CreatureAIInfo(item, &info);
 			GetCreatureMood(item, &info, 1);
 			CreatureMood(item, &info, 1);
@@ -548,7 +548,7 @@ void RomangodControl(short item_number)
 						{
 							if (!((r->mesh[i].z ^ s.z) & 0xFFFFFC00) && !((r->mesh[i].x ^ s.x) & 0xFFFFFC00) && r->mesh[i].static_number >= 50 && r->mesh[i].static_number <= 59)
 							{
-								ShatterObject(0, &r->mesh[i], -64, lara_item->room_number, 0);
+								ShatterObject(0, &r->mesh[i], -64, LaraItem->room_number, 0);
 								SoundEffect(ShatterSounds[gfCurrentLevel][r->mesh[i].static_number - 50], (PHD_3DPOS*) &r->mesh[i].x, SFX_DEFAULT);
 								r->mesh[i].Flags &= ~0x1;
 								floor->stopper = 0;
@@ -560,8 +560,8 @@ void RomangodControl(short item_number)
 
 					if (!roman->flags && item->touch_bits & 0xC000)
 					{
-						lara_item->hit_points -= 200;
-						lara_item->hit_status = 1;
+						LaraItem->hit_points -= 200;
+						LaraItem->hit_status = 1;
 						CreatureEffectT(item, &romangod_hit, 20, item->pos.y_rot, DoBloodSplat);
 						SoundEffect(SFX_LARA_THUD, &item->pos, SFX_DEFAULT);
 						roman->flags = 1;

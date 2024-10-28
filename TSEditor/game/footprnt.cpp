@@ -36,7 +36,7 @@ void AddFootprint(ITEM_INFO* item)
 	floor = GetFloor(pos.x, pos.y, pos.z, &room_num);
 
 	if (floor->fx != 6 && floor->fx != 5 && floor->fx != 11)
-		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &lara_item->pos, 0);
+		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &LaraItem->pos, 0);
 
 	if (tomb5.footprints && floor->fx < 3 && (gfCurrentLevel == LVL5_BASE || !OnObject))
 	{
@@ -103,7 +103,7 @@ void S_DrawFootPrints()
 				x = long(pos[j].x * aMXPtr->m00 + pos[j].z * aMXPtr->m02 + aMXPtr->m03);
 				z = long(pos[j].x * aMXPtr->m20 + pos[j].z * aMXPtr->m22 + aMXPtr->m23);
 
-				room_number = lara_item->room_number;
+				room_number = LaraItem->room_number;
 				floor = GetFloor(x, print->y, z, &room_number);
 				pos[j].y = (float)GetHeight(floor, x, print->y, z) - print->y;
 
@@ -168,10 +168,10 @@ void GetProperFootPos(PHD_VECTOR* pos)
 	right_foot.z = 0;
 	GetLaraJointPos(&right_foot, LMX_FOOT_R);
 
-	frame = lara_item->frame_number;
-	base = anims[lara_item->anim_number].frame_base;
+	frame = LaraItem->frame_number;
+	base = anims[LaraItem->anim_number].frame_base;
 
-	switch (lara_item->anim_number)
+	switch (LaraItem->anim_number)
 	{
 	case 7:	//run to walk right
 		pos->x = right_foot.x;
@@ -365,7 +365,7 @@ void GetProperFootPos(PHD_VECTOR* pos)
 		pos->x = right_foot.x;
 		pos->y = right_foot.y;
 		pos->z = right_foot.z;
-		room_number = lara_item->room_number;
+		room_number = LaraItem->room_number;
 		floor = GetFloor(pos->x, pos->y, pos->z, &room_number);
 
 		if (floor->fx < 3 && !OnObject)	//add right foot print
@@ -374,7 +374,7 @@ void GetProperFootPos(PHD_VECTOR* pos)
 			print->x = pos->x;
 			print->y = GetHeight(floor, pos->x, pos->y, pos->z);
 			print->z = pos->z;
-			print->YRot = lara_item->pos.y_rot;
+			print->YRot = LaraItem->pos.y_rot;
 			print->Active = 512;
 			FootPrintNum = FootPrintNum + 1 & 0x1F;
 		}
@@ -426,9 +426,9 @@ void GetProperFootPos(PHD_VECTOR* pos)
 		break;
 
 	default:
-		room_number = lara_item->room_number;
-		floor = GetFloor(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_number);
-		height = GetHeight(floor, lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+		room_number = LaraItem->room_number;
+		floor = GetFloor(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, &room_number);
+		height = GetHeight(floor, LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos);
 
 		if (abs(left_foot.y - height) < abs(right_foot.y - height))
 		{

@@ -38,9 +38,9 @@ void DoSubsuitStuff()
 	if (SubHitCount)
 		SubHitCount--;
 
-	anx = lara.Anxiety;
+	anx = Lara.Anxiety;
 
-	if (lara.Anxiety > 127)
+	if (Lara.Anxiety > 127)
 		anx = 127;
 
 	BreathCount++;
@@ -52,14 +52,14 @@ void DoSubsuitStuff()
 		vol = BVols[anx >> 4];
 		ZeroStressCount = (short)anx;
 
-		if (lara_item->hit_points > 0)
+		if (LaraItem->hit_points > 0)
 			SoundEffect(SFX_LARA_SUB_BREATHE, 0, (pitch << 8) | (vol << 8) | SFX_ALWAYS | SFX_SETPITCH | SFX_SETVOL);
 
 		BreathCount = short(-40 - (30 * (128 - anx) >> 7));
 
-		if (lara.Anxiety)
+		if (Lara.Anxiety)
 		{
-			anx = lara.Anxiety;
+			anx = Lara.Anxiety;
 
 			if (anx > 128)
 				anx -= 16;
@@ -69,7 +69,7 @@ void DoSubsuitStuff()
 			if (anx < 0)
 				anx = 0;
 
-			lara.Anxiety = (uchar)anx;
+			Lara.Anxiety = (uchar)anx;
 			BreathDelay = 0;
 		}
 		else if (BreathDelay < 16)
@@ -86,13 +86,13 @@ void DoSubsuitStuff()
 	d.z = -128;
 	GetLaraJointPos(&d, LMX_TORSO);
 
-	LaraTorch(&s, &d, lara_item->pos.y_rot, 255);
+	LaraTorch(&s, &d, LaraItem->pos.y_rot, 255);
 	TriggerEngineEffects();
 
-	if (lara.ChaffTimer)
-		lara.ChaffTimer--;
+	if (Lara.ChaffTimer)
+		Lara.ChaffTimer--;
 
-	if (dbinput & IN_SPRINT && !lara.ChaffTimer)
+	if (dbinput & IN_SPRINT && !Lara.ChaffTimer)
 		FireChaff();
 }
 
@@ -105,7 +105,7 @@ void FireChaff()
 	long h;
 	short item_number;
 
-	if (!lara.puzzleitems[0])
+	if (!Lara.puzzleitems[0])
 		return;
 
 	item_number = CreateItem();
@@ -113,19 +113,19 @@ void FireChaff()
 	if (item_number == NO_ITEM)
 		return;
 
-	SoundEffect(SFX_UNDERWATER_CHAFF, &lara_item->pos, SFX_ALWAYS);
+	SoundEffect(SFX_UNDERWATER_CHAFF, &LaraItem->pos, SFX_ALWAYS);
 
 	item = &items[item_number];
 	item->object_number = CHAFF;
 	item->shade = -15856;
-	lara.puzzleitems[0]--;
+	Lara.puzzleitems[0]--;
 
 	pos.x = 0;
 	pos.y = -112;
 	pos.z = -112;
 	GetLaraJointPos(&pos, LMX_TORSO);
 
-	item->room_number = lara_item->room_number;
+	item->room_number = LaraItem->room_number;
 	floor = GetFloor(pos.x, pos.y, pos.z, &item->room_number);
 	h = GetHeight(floor, pos.x, pos.y, pos.z);
 
@@ -137,20 +137,20 @@ void FireChaff()
 	}
 	else
 	{
-		item->pos.x_pos = lara_item->pos.x_pos;
+		item->pos.x_pos = LaraItem->pos.x_pos;
 		item->pos.y_pos = pos.y;
-		item->pos.z_pos = lara_item->pos.z_pos;
-		item->room_number = lara_item->room_number;
+		item->pos.z_pos = LaraItem->pos.z_pos;
+		item->room_number = LaraItem->room_number;
 	}
 
 	InitialiseItem(item_number);
 	item->pos.x_rot = 0;
-	item->pos.y_rot = lara_item->pos.y_rot - 0x8000;
+	item->pos.y_rot = LaraItem->pos.y_rot - 0x8000;
 	item->pos.z_rot = 0;
 	item->speed = 32;
 	item->fallspeed = -128;
 	AddActiveItem(item_number);
-	lara.ChaffTimer = 150;
+	Lara.ChaffTimer = 150;
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -241,9 +241,9 @@ void GetLaraJointPosRot(PHD_VECTOR* pos, long node, long rot, SVECTOR* sv)
 	pos->x = (long)aMXPtr->m03;
 	pos->y = (long)aMXPtr->m13;
 	pos->z = (long)aMXPtr->m23;
-	pos->x += lara_item->pos.x_pos;
-	pos->y += lara_item->pos.y_pos;
-	pos->z += lara_item->pos.z_pos;
+	pos->x += LaraItem->pos.x_pos;
+	pos->y += LaraItem->pos.y_pos;
+	pos->z += LaraItem->pos.z_pos;
 	phd_PopMatrix();
 }
 
@@ -309,7 +309,7 @@ void TriggerEngineEffects()
 	PHD_VECTOR pos2;
 	short x, lp, n;
 
-	if (lara.water_status == LW_FLYCHEAT)
+	if (Lara.water_status == LW_FLYCHEAT)
 		return;
 
 	x = -80;

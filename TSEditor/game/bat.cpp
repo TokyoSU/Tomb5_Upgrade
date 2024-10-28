@@ -123,13 +123,13 @@ void UpdateBats()
 	if (!objects[BAT].loaded)
 		return;
 
-	lb = GetBoundsAccurate(lara_item);
-	bounds[0] = lara_item->pos.x_pos + lb[0] - (lb[0] >> 2);
-	bounds[1] = lara_item->pos.x_pos + lb[1] - (lb[1] >> 2);
-	bounds[2] = lara_item->pos.y_pos + lb[2] - (lb[2] >> 2);
-	bounds[3] = lara_item->pos.y_pos + lb[3] - (lb[3] >> 2);
-	bounds[4] = lara_item->pos.z_pos + lb[4] - (lb[4] >> 2);
-	bounds[5] = lara_item->pos.z_pos + lb[5] - (lb[5] >> 2);
+	lb = GetBoundsAccurate(LaraItem);
+	bounds[0] = LaraItem->pos.x_pos + lb[0] - (lb[0] >> 2);
+	bounds[1] = LaraItem->pos.x_pos + lb[1] - (lb[1] >> 2);
+	bounds[2] = LaraItem->pos.y_pos + lb[2] - (lb[2] >> 2);
+	bounds[3] = LaraItem->pos.y_pos + lb[3] - (lb[3] >> 2);
+	bounds[4] = LaraItem->pos.z_pos + lb[4] - (lb[4] >> 2);
+	bounds[5] = LaraItem->pos.z_pos + lb[5] - (lb[5] >> 2);
 	closestdist = 0xFFFFFFF;
 	closestnum = -1;
 
@@ -140,7 +140,7 @@ void UpdateBats()
 		if (!fx->On)
 			continue;
 
-		if ((lara.burn || lara_item->hit_points <= 0) && fx->Counter > 90 && !(GetRandomControl() & 7))
+		if ((Lara.burn || LaraItem->hit_points <= 0) && fx->Counter > 90 && !(GetRandomControl() & 7))
 			fx->Counter = 90;
 
 		fx->Counter--;
@@ -158,11 +158,11 @@ void UpdateBats()
 			fx->ZTarget = (GetRandomControl() & 0x7F) - 64;
 		}
 
-		phd_GetVectorAngles(lara_item->pos.x_pos + (fx->XTarget << 3) - fx->pos.x_pos,
-			lara_item->pos.y_pos - fx->LaraTarget - fx->pos.y_pos,
-			lara_item->pos.z_pos + (fx->ZTarget << 3) - fx->pos.z_pos, angles);
-		ox = SQUARE(lara_item->pos.x_pos - fx->pos.x_pos);
-		oz = SQUARE(lara_item->pos.z_pos - fx->pos.z_pos);
+		phd_GetVectorAngles(LaraItem->pos.x_pos + (fx->XTarget << 3) - fx->pos.x_pos,
+			LaraItem->pos.y_pos - fx->LaraTarget - fx->pos.y_pos,
+			LaraItem->pos.z_pos + (fx->ZTarget << 3) - fx->pos.z_pos, angles);
+		ox = SQUARE(LaraItem->pos.x_pos - fx->pos.x_pos);
+		oz = SQUARE(LaraItem->pos.z_pos - fx->pos.z_pos);
 
 		if (ox + oz < closestdist)
 		{
@@ -227,8 +227,8 @@ void UpdateBats()
 			{
 				TriggerBlood(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, GetRandomControl() << 1, 2);
 
-				if (lara_item->hit_points > 0)
-					lara_item->hit_points -= 2;
+				if (LaraItem->hit_points > 0)
+					LaraItem->hit_points -= 2;
 			}
 		}
 	}

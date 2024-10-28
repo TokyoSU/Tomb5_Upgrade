@@ -58,10 +58,10 @@ void DrawGameInfo(long timed)
 		if (DashTimer < 120)
 			S_DrawDashBar(100 * DashTimer / 120);
 
-		if (lara.target)
+		if (Lara.target)
 		{
-			if (tomb5.enemy_bars && lara.target->hit_points > 0)
-				S_DrawEnemyBar(100 * lara.target->hit_points / objects[lara.target->object_number].hit_points);
+			if (tomb5.enemy_bars && Lara.target->hit_points > 0)
+				S_DrawEnemyBar(100 * Lara.target->hit_points / objects[Lara.target->object_number].hit_points);
 		}
 
 		if (gfLevelFlags & GF_TIMER && savegame.Level.Timer && savegame.Level.Timer < 0x1A5E0)
@@ -77,14 +77,14 @@ void DrawGameInfo(long timed)
 			PrintString(92, 24, 0, buf, 0);
 		}
 
-		if (tomb5.ammo_counter && lara.gun_status == LG_READY)
+		if (tomb5.ammo_counter && Lara.gun_status == LG_READY)
 		{
-			ammo = *get_current_ammo_pointer(lara.gun_type);
+			ammo = *get_current_ammo_pointer(Lara.gun_type);
 
 			if (ammo != -1)
 			{
 
-				if (lara.gun_type == WEAPON_SHOTGUN)
+				if (Lara.gun_type == WEAPON_SHOTGUN)
 					ammo /= 6;
 
 				sprintf(&buf[0], "%i", ammo);
@@ -109,7 +109,7 @@ void DrawHealthBar(long flash_state)
 	static long old_hitpoints;
 	long hitpoints;
 
-	hitpoints = lara_item->hit_points;
+	hitpoints = LaraItem->hit_points;
 
 	if (hitpoints < 0)
 		hitpoints = 0;
@@ -132,7 +132,7 @@ void DrawHealthBar(long flash_state)
 		else
 			S_DrawHealthBar(0);
 	}
-	else if (health_bar_timer > 0 || lara.gun_status == LG_READY && lara.gun_type != WEAPON_TORCH || lara.poisoned >= 256)
+	else if (health_bar_timer > 0 || Lara.gun_status == LG_READY && Lara.gun_type != WEAPON_TORCH || Lara.poisoned >= 256)
 			S_DrawHealthBar(hitpoints / 10);
 
 	if (PoisonFlag)
@@ -143,10 +143,10 @@ void DrawAirBar(long flash_state)
 {
 	long air;
 
-	if (lara.air == 1800 || lara_item->hit_points <= 0)
+	if (Lara.air == 1800 || LaraItem->hit_points <= 0)
 		return;
 
-	air = lara.air;
+	air = Lara.air;
 
 	if (air < 0)
 		air = 0;
@@ -158,12 +158,12 @@ void DrawAirBar(long flash_state)
 	else
 		S_DrawAirBar(0);
 
-	if (lara.Gassed)
+	if (Lara.Gassed)
 	{
-		if (lara.dpoisoned < 2048)
-			lara.dpoisoned += 2;
+		if (Lara.dpoisoned < 2048)
+			Lara.dpoisoned += 2;
 
-		lara.Gassed = 0;
+		Lara.Gassed = 0;
 	}
 }
 

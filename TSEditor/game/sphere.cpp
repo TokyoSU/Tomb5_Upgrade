@@ -382,7 +382,7 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 	touch_bits = 0;
 	nItemSpheres = GetSpheres(item, Slist, 1);
 
-	if (l != lara_item)
+	if (l != LaraItem)
 		GotLaraSpheres = 0;
 
 	if (GotLaraSpheres)
@@ -392,7 +392,7 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 		nLaraSpheres = GetSpheres(l, LaraSpheres, 1);
 		NumLaraSpheres = nLaraSpheres;
 
-		if (l == lara_item)
+		if (l == LaraItem)
 			GotLaraSpheres = 1;
 	}
 

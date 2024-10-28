@@ -84,16 +84,16 @@ void ControlElectricalCables(short item_number)
 	if (item->item_flags[0] > 2)
 	{
 		rand = ((GetRandomControl() & 0x1F) + 8) * item->item_flags[0];
-		TriggerDynamic(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, item->item_flags[0], 0, rand, rand);
+		TriggerDynamic(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, item->item_flags[0], 0, rand, rand);
 		item->item_flags[0] -= 2;
 	}
 
 	if (TriggerActive(item))
 	{
 		SoundEffect(SFX_ELECTRIC_WIRES, &item->pos, SFX_DEFAULT);
-		ffar = abs(lara_item->pos.x_pos - item->pos.x_pos) > 2048;
-		ffar += abs(lara_item->pos.y_pos - item->pos.y_pos) > 4096;
-		ffar += abs(lara_item->pos.z_pos - item->pos.z_pos) > 2048;
+		ffar = abs(LaraItem->pos.x_pos - item->pos.x_pos) > 2048;
+		ffar += abs(LaraItem->pos.y_pos - item->pos.y_pos) > 4096;
+		ffar += abs(LaraItem->pos.z_pos - item->pos.z_pos) > 2048;
 		rand = (GetRandomControl() & 0x1F) - 16;
 
 		for (int i = 0; i < 3; i++)
@@ -114,7 +114,7 @@ void ControlElectricalCables(short item_number)
 
 	AnimateItem(item);
 
-	if (!lara.burn && !ns && !ffar)
+	if (!Lara.burn && !ns && !ffar)
 	{
 		GetLaraDeadlyBounds();
 
@@ -132,9 +132,9 @@ void ControlElectricalCables(short item_number)
 
 				item->item_flags[0] = 28;
 				LaraBurn();
-				lara.BurnCount = 48;
-				lara.BurnBlue = 1;
-				lara_item->hit_points = 0;
+				Lara.BurnCount = 48;
+				Lara.BurnBlue = 1;
+				LaraItem->hit_points = 0;
 				return;
 			}
 		}
@@ -170,7 +170,7 @@ void ControlElectricalCables(short item_number)
 		}
 	}
 
-	if (!ns && !lara.burn && in_water)
+	if (!ns && !Lara.burn && in_water)
 	{
 		flip = room[wr].FlipNumber;
 
@@ -178,33 +178,33 @@ void ControlElectricalCables(short item_number)
 		pos.y = 0;
 		pos.z = 0;
 		GetLaraJointPos(&pos, LMX_FOOT_L);
-		room_num = lara_item->room_number;
+		room_num = LaraItem->room_number;
 		GetFloor(pos.x, pos.y, pos.z, &room_num);
 
 		pos2.x = 0;
 		pos2.y = 0;
 		pos2.z = 0;
 		GetLaraJointPos(&pos2, LMX_FOOT_R);
-		room2_num = lara_item->room_number;
+		room2_num = LaraItem->room_number;
 		GetFloor(pos2.x, pos2.y, pos2.z, &room2_num);
 
 		if (room[room_num].FlipNumber == flip || room[room2_num].FlipNumber == flip)
 		{
-			if (lara_item->hit_points > 32)
+			if (LaraItem->hit_points > 32)
 			{
-				SoundEffect(SFX_LARA_ELECTRIC_CRACKLES, &lara_item->pos, SFX_DEFAULT);
+				SoundEffect(SFX_LARA_ELECTRIC_CRACKLES, &LaraItem->pos, SFX_DEFAULT);
 				TriggerLaraSparks(0);
 				TriggerLaraSparks(1);
 				TriggerDynamic(pos.x, pos.y, pos.z, 8, 0, GetRandomControl() & 127, (GetRandomControl() & 63) + 128);
-				lara_item->hit_points -= 10;
+				LaraItem->hit_points -= 10;
 				return;
 			}
 
 			item->item_flags[0] = 28;
 			LaraBurn();
-			lara.BurnCount = 48;
-			lara.BurnBlue = 1;
-			lara_item->hit_points = 0;
+			Lara.BurnCount = 48;
+			Lara.BurnBlue = 1;
+			LaraItem->hit_points = 0;
 		}
 	}
 }
@@ -270,7 +270,7 @@ void ControlWreckingBall(short item_number)
 	TLara = 1;
 	baseitem = &items[item->item_flags[3]];
 
-	if (lara_item->pos.x_pos >= 45056 && lara_item->pos.x_pos <= 57344 && lara_item->pos.z_pos >= 26624 && lara_item->pos.z_pos <= 43008 || item->item_flags[2] < 900)
+	if (LaraItem->pos.x_pos >= 45056 && LaraItem->pos.x_pos <= 57344 && LaraItem->pos.z_pos >= 26624 && LaraItem->pos.z_pos <= 43008 || item->item_flags[2] < 900)
 	{
 		if (item->item_flags[2] < 900)
 		{
@@ -286,8 +286,8 @@ void ControlWreckingBall(short item_number)
 		}
 		else
 		{
-			Tx = lara_item->pos.x_pos;
-			Tz = lara_item->pos.z_pos;
+			Tx = LaraItem->pos.x_pos;
+			Tz = LaraItem->pos.z_pos;
 		}
 	}
 	else
@@ -575,10 +575,10 @@ void CookerFlameControl(short item_number)
 
 	if (TriggerActive(item))
 	{
-		if (!lara.burn &&
-			abs(lara_item->pos.x_pos - item->pos.x_pos) < 256 &&
-			abs(lara_item->pos.z_pos - item->pos.z_pos) < 256 &&
-			item->pos.y_pos - lara_item->pos.y_pos < 128)
+		if (!Lara.burn &&
+			abs(LaraItem->pos.x_pos - item->pos.x_pos) < 256 &&
+			abs(LaraItem->pos.z_pos - item->pos.z_pos) < 256 &&
+			item->pos.y_pos - LaraItem->pos.y_pos < 128)
 			LaraBurn();
 
 		item->item_flags[0] = (GetRandomControl() + item->item_flags[0]) & 0x1FF;

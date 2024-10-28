@@ -64,7 +64,7 @@ static void save_tomb5_data()
 static void load_tomb5_data()
 {
 	if (tomb5_save_size <= offsetof(tomb5_save_info, LHolster))
-		LHolster = lara.holster;
+		LHolster = Lara.holster;
 	else
 		LHolster = tomb5_save.LHolster;
 
@@ -77,23 +77,23 @@ void SaveLaraData()
 	ITEM_INFO* item;
 
 	for (int i = 0; i < 15; i++)
-		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] - (long)mesh_base);
+		Lara.mesh_ptrs[i] = (short*)((long)Lara.mesh_ptrs[i] - (long)mesh_base);
 
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
-	lara.GeneralPtr = (void*)((long)lara.GeneralPtr - (long)malloc_buffer);
-	memcpy(&savegame.Lara, &lara, sizeof(savegame.Lara));
+	Lara.left_arm.frame_base = (short*)((long)Lara.left_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.right_arm.frame_base = (short*)((long)Lara.right_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.GeneralPtr = (void*)((long)Lara.GeneralPtr - (long)malloc_buffer);
+	memcpy(&savegame.Lara, &Lara, sizeof(savegame.Lara));
 
 	for (int i = 0; i < 15; i++)
-		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)mesh_base);
+		Lara.mesh_ptrs[i] = (short*)((long)Lara.mesh_ptrs[i] + (long)mesh_base);
 
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
+	Lara.left_arm.frame_base = (short*)((long)Lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.right_arm.frame_base = (short*)((long)Lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.GeneralPtr = (void*)((long)Lara.GeneralPtr + (long)malloc_buffer);
 
-	if (lara.weapon_item != NO_ITEM)
+	if (Lara.weapon_item != NO_ITEM)
 	{
-		item = &items[lara.weapon_item];
+		item = &items[Lara.weapon_item];
 		savegame.WeaponObject = item->object_number;
 		savegame.WeaponAnim = item->anim_number;
 		savegame.WeaponFrame = item->frame_number;
@@ -113,7 +113,7 @@ void RestoreLaraData(long FullSave)
 
 	if (!FullSave)
 	{
-		savegame.Lara.item_number = lara.item_number;
+		savegame.Lara.item_number = Lara.item_number;
 
 		if (savegame.Lara.IsMoving)
 		{
@@ -122,34 +122,34 @@ void RestoreLaraData(long FullSave)
 		}
 	}
 
-	memcpy(&lara, &savegame.Lara, sizeof(lara));
-	lara.target = 0;
-	lara.spaz_effect = 0;
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
+	memcpy(&Lara, &savegame.Lara, sizeof(Lara));
+	Lara.target = 0;
+	Lara.spaz_effect = 0;
+	Lara.left_arm.frame_base = (short*)((long)Lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.right_arm.frame_base = (short*)((long)Lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.GeneralPtr = (void*)((long)Lara.GeneralPtr + (long)malloc_buffer);
 
-	if (lara.burn)
+	if (Lara.burn)
 	{
 		flag = 0;
-		lara.burn = 0;
+		Lara.burn = 0;
 
-		if (lara.BurnSmoke)
+		if (Lara.BurnSmoke)
 		{
-			lara.BurnSmoke = 0;
+			Lara.BurnSmoke = 0;
 			flag = 1;
 		}
 
 		LaraBurn();
 
 		if (flag)
-			lara.BurnSmoke = 1;
+			Lara.BurnSmoke = 1;
 	}
 
-	if (lara.weapon_item != -1)
+	if (Lara.weapon_item != -1)
 	{
-		lara.weapon_item = CreateItem();
-		item = &items[lara.weapon_item];
+		Lara.weapon_item = CreateItem();
+		item = &items[Lara.weapon_item];
 		item->object_number = savegame.WeaponObject;
 		item->anim_number = savegame.WeaponAnim;
 		item->frame_number = savegame.WeaponFrame;
@@ -160,7 +160,7 @@ void RestoreLaraData(long FullSave)
 	}
 
 	for (int i = 0; i < 15; i++)
-		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)mesh_base);
+		Lara.mesh_ptrs[i] = (short*)((long)Lara.mesh_ptrs[i] + (long)mesh_base);
 
 	_CutSceneTriggered1 = savegame.CutSceneTriggered1;
 	_CutSceneTriggered2 = savegame.CutSceneTriggered2;
@@ -612,7 +612,7 @@ void SaveLevelData(long FullSave)
 			}
 		}
 
-		if (lara.RopePtr != -1)
+		if (Lara.RopePtr != -1)
 			SaveRope();
 	}
 }
@@ -1040,7 +1040,7 @@ void RestoreLevelData(long FullSave)
 			}
 		}
 
-		if (lara.RopePtr != -1)
+		if (Lara.RopePtr != -1)
 			LoadRope();
 	}
 

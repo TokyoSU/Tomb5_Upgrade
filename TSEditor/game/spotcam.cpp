@@ -119,22 +119,22 @@ void InitialiseSpotCam(short Sequence)
 	BinocularRange = 0;
 	LaserSight = 0;
 	AlterFOV(GAME_FOV);
-	lara_item->mesh_bits = -1;
-	lara.Busy = 0;
+	LaraItem->mesh_bits = -1;
+	Lara.Busy = 0;
 	CameraFade = -1;
 	LastFov = CurrentFov;
-	lara.head_x_rot = 0;
-	lara.head_y_rot = 0;
-	lara.torso_x_rot = 0;
-	lara.torso_y_rot = 0;
+	Lara.head_x_rot = 0;
+	Lara.head_y_rot = 0;
+	Lara.torso_x_rot = 0;
+	Lara.torso_y_rot = 0;
 	camera.bounce = 0;
 	LastSequence = Sequence;
 	bTrackCamInit = 0;
 	spotcam_timer = 0;
 	spotcam_loopcnt = 0;
 	bDisableLaraControl = 0;
-	LaraHealth = lara_item->hit_points;
-	LaraAir = lara.air;
+	LaraHealth = LaraItem->hit_points;
+	LaraAir = Lara.air;
 	InitialCameraPosition.x = camera.pos.x;
 	InitialCameraPosition.y = camera.pos.y;
 	InitialCameraPosition.z = camera.pos.z;
@@ -142,9 +142,9 @@ void InitialiseSpotCam(short Sequence)
 	InitialCameraTarget.y = camera.target.y;
 	InitialCameraTarget.z = camera.target.z;
 	InitialCameraRoom = camera.pos.room_number;
-	LaraFixedPosition.x = lara_item->pos.x_pos;
-	LaraFixedPosition.y = lara_item->pos.y_pos;
-	LaraFixedPosition.z = lara_item->pos.z_pos;
+	LaraFixedPosition.x = LaraItem->pos.x_pos;
+	LaraFixedPosition.y = LaraItem->pos.y_pos;
+	LaraFixedPosition.z = LaraItem->pos.z_pos;
 	current_sequence = Sequence;
 	current_spline_camera = 0;
 
@@ -329,8 +329,8 @@ void CalculateSpotCams()
 
 	if (bDisableLaraControl)
 	{
-		lara_item->hit_points = (short)LaraHealth;
-		lara.air = (short)LaraAir;
+		LaraItem->hit_points = (short)LaraHealth;
+		Lara.air = (short)LaraAir;
 	}
 
 	if (s->flags & SP_TRACKCAMERA)
@@ -378,9 +378,9 @@ void CalculateSpotCams()
 	{
 		cp = 0;
 		cs = 0x2000;
-		lx = lara_item->pos.x_pos;
-		ly = lara_item->pos.y_pos;
-		lz = lara_item->pos.z_pos;
+		lx = LaraItem->pos.x_pos;
+		ly = LaraItem->pos.y_pos;
+		lz = LaraItem->pos.z_pos;
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -431,10 +431,10 @@ void CalculateSpotCams()
 	if (tomb5.cutseq_skipper && keymap[SDL_SCANCODE_ESCAPE] && gfCurrentLevel != LVL5_TITLE)
 		current_spline_position = 0x10000;
 
-	if (!(input & IN_LOOK))
+	if (!(KeyInput & IN_LOOK))
 		bFirstLook = 0;
 
-	if (s->flags & SP_NOBREAK || !(input & IN_LOOK) || gfGameMode == 1)
+	if (s->flags & SP_NOBREAK || !(KeyInput & IN_LOOK) || gfGameMode == 1)
 	{
 		camera.pos.x = cpx;
 		camera.pos.y = cpy;
@@ -442,9 +442,9 @@ void CalculateSpotCams()
 
 		if (s->flags & (SP_TARGETLARA | SP_TRACKCAMERA))
 		{
-			camera.target.x = lara_item->pos.x_pos;
-			camera.target.y = lara_item->pos.y_pos;
-			camera.target.z = lara_item->pos.z_pos;
+			camera.target.x = LaraItem->pos.x_pos;
+			camera.target.y = LaraItem->pos.y_pos;
+			camera.target.z = LaraItem->pos.z_pos;
 		}
 		else
 		{

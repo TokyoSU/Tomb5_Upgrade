@@ -24,14 +24,14 @@ void TriggerLaraBlood()
 {
 	for (long lp = 0, node = 1; lp < 15; lp++)
 	{
-		if (lara_item->touch_bits & node)
+		if (LaraItem->touch_bits & node)
 		{
 			PHD_VECTOR pos;
 			pos.x = (GetRandomControl() & 0x1F) - 16;
 			pos.y = (GetRandomControl() & 0x1F) - 16;
 			pos.z = (GetRandomControl() & 0x1F) - 16;
 			GetLaraJointPos(&pos, LM[lp]);
-			DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 7) + 8, short(GetRandomControl() << 1), lara_item->room_number);
+			DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 7) + 8, short(GetRandomControl() << 1), LaraItem->room_number);
 		}
 		node <<= 1;
 	}
@@ -55,7 +55,7 @@ void GetCollisionInfo(COLL_INFO* coll, long xpos, long ypos, long zpos, short ro
 
 	y = ypos - objheight;
 	yT = y - 160;
-	fspeed = short(yT - lara_item->fallspeed);
+	fspeed = short(yT - LaraItem->fallspeed);
 	coll->coll_type = CT_NONE;
 	coll->shift.x = 0;
 	coll->shift.y = 0;
@@ -77,7 +77,7 @@ void GetCollisionInfo(COLL_INFO* coll, long xpos, long ypos, long zpos, short ro
 	coll->mid_ceiling = ceiling;
 	coll->mid_type = height_type;
 	coll->trigger = trigger_index;
-	tilt_type = GetTiltType(floor, xpos, lara_item->pos.y_pos, zpos);
+	tilt_type = GetTiltType(floor, xpos, LaraItem->pos.y_pos, zpos);
 	coll->tilt_x = (char)tilt_type;
 	coll->tilt_z = tilt_type >> 8;
 
@@ -565,7 +565,7 @@ void CreatureCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)
 	{
 		if (TestCollision(item, laraitem))
 		{
-			if (coll->enable_baddie_push || lara.water_status == LW_UNDERWATER || lara.water_status == LW_SURFACE)
+			if (coll->enable_baddie_push || Lara.water_status == LW_UNDERWATER || Lara.water_status == LW_SURFACE)
 				ItemPushLara(item, laraitem, coll, coll->enable_spaz, 0);
 			else
 			{
@@ -581,11 +581,11 @@ void CreatureCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)
 
 					if (bounds[3] - bounds[2] > 256)
 					{
-						lara.hit_direction = ushort((laraitem->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
-						lara.hit_frame++;
+						Lara.hit_direction = ushort((laraitem->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
+						Lara.hit_frame++;
 
-						if (lara.hit_frame > 30)
-							lara.hit_frame = 30;
+						if (Lara.hit_frame > 30)
+							Lara.hit_frame = 30;
 					}
 				}
 			}
@@ -635,10 +635,10 @@ void TestForObjectOnLedge(ITEM_INFO* item, COLL_INFO* coll)
 		s.y = -512;
 		s.z = -128;
 		GetLaraJointPos((PHD_VECTOR*)&s, LMX_TORSO);
-		s.room_number = lara_item->room_number;
-		d.x = s.x + ((768 * phd_sin(lara_item->pos.y_rot)) >> W2V_SHIFT);
+		s.room_number = LaraItem->room_number;
+		d.x = s.x + ((768 * phd_sin(LaraItem->pos.y_rot)) >> W2V_SHIFT);
 		d.y = s.y;
-		d.z = s.z + ((768 * phd_cos(lara_item->pos.y_rot)) >> W2V_SHIFT);
+		d.z = s.z + ((768 * phd_cos(LaraItem->pos.y_rot)) >> W2V_SHIFT);
 		LOS(&s, &d);
 		objectonlos2 = ObjectOnLOS2(&s, &d, &v, &StaticMesh);
 
@@ -772,7 +772,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 				continue;
 			}
 
-			if (!StoreLara && item2 == lara_item)	//don't get lara if we don't want her
+			if (!StoreLara && item2 == LaraItem)	//don't get lara if we don't want her
 			{
 				item_number = next_item;
 				continue;
@@ -880,10 +880,10 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* laraitem)
 
 		if (abs(height - laraitem->pos.y_pos) > 512)
 		{
-			if (lara.IsMoving)
+			if (Lara.IsMoving)
 			{
-				lara.IsMoving = 0;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.IsMoving = 0;
+				Lara.gun_status = LG_NO_ARMS;
 			}
 
 			return 0;
@@ -922,9 +922,9 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 		pos->z_pos += shift * dz >> 16;
 	}
 
-	if (!lara.IsMoving)
+	if (!Lara.IsMoving)
 	{
-		if (lara.water_status != LW_UNDERWATER)
+		if (Lara.water_status != LW_UNDERWATER)
 		{
 			ang = ulong(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 0x2000) / 0x4000;
 			quad = ushort(dest->y_rot + 0x2000) / 0x4000;
@@ -934,39 +934,39 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 			switch (ang)
 			{
 			case 0:
-				lara_item->anim_number = 65;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
-				lara_item->goal_anim_state = AS_STEPLEFT;
-				lara_item->current_anim_state = AS_STEPLEFT;
+				LaraItem->anim_number = 65;
+				LaraItem->frame_number = anims[LaraItem->anim_number].frame_base;
+				LaraItem->goal_anim_state = AS_STEPLEFT;
+				LaraItem->current_anim_state = AS_STEPLEFT;
 				break;
 
 			case 1:
-				lara_item->anim_number = 1;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
-				lara_item->goal_anim_state = AS_WALK;
-				lara_item->current_anim_state = AS_WALK;
+				LaraItem->anim_number = 1;
+				LaraItem->frame_number = anims[LaraItem->anim_number].frame_base;
+				LaraItem->goal_anim_state = AS_WALK;
+				LaraItem->current_anim_state = AS_WALK;
 				break;
 
 			case 2:
-				lara_item->anim_number = 67;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
-				lara_item->goal_anim_state = AS_STEPRIGHT;
-				lara_item->current_anim_state = AS_STEPRIGHT;
+				LaraItem->anim_number = 67;
+				LaraItem->frame_number = anims[LaraItem->anim_number].frame_base;
+				LaraItem->goal_anim_state = AS_STEPRIGHT;
+				LaraItem->current_anim_state = AS_STEPRIGHT;
 				break;
 
 			default:
-				lara_item->anim_number = 40;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
-				lara_item->goal_anim_state = AS_BACK;
-				lara_item->current_anim_state = AS_BACK;
+				LaraItem->anim_number = 40;
+				LaraItem->frame_number = anims[LaraItem->anim_number].frame_base;
+				LaraItem->goal_anim_state = AS_BACK;
+				LaraItem->current_anim_state = AS_BACK;
 				break;
 			}
 
-			lara.gun_status = LG_HANDS_BUSY;
+			Lara.gun_status = LG_HANDS_BUSY;
 		}
 
-		lara.IsMoving = 1;
-		lara.MoveCount = 0;
+		Lara.IsMoving = 1;
+		Lara.MoveCount = 0;
 	}
 
 	adiff = dest->x_rot - pos->x_rot;
@@ -1111,7 +1111,7 @@ void UpdateLaraRoom(ITEM_INFO* item, long height)
 	item->floor = GetHeight(floor, x, y, z);
 
 	if (item->room_number != room_number)
-		ItemNewRoom(lara.item_number, room_number);
+		ItemNewRoom(Lara.item_number, room_number);
 }
 
 void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
@@ -1127,7 +1127,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 	short nearby_rooms[22];
 
 	l->hit_status = 0;
-	lara.hit_direction = -1;
+	Lara.hit_direction = -1;
 
 	if (l->hit_points <= 0)
 		return;
@@ -1211,8 +1211,8 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 		}
 	}
 
-	if (lara.hit_direction == -1)
-		lara.hit_frame = 0;
+	if (Lara.hit_direction == -1)
+		Lara.hit_frame = 0;
 }
 
 long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, long BigPush)
@@ -1273,15 +1273,15 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		z = (bounds[4] + bounds[5]) / 2;
 		dx -= (c * x + s * z) >> W2V_SHIFT;
 		dz -= (c * z - s * x) >> W2V_SHIFT;
-		lara.hit_direction = ushort(l->pos.y_rot - phd_atan(dz, dx) - 0x6000) >> W2V_SHIFT;
+		Lara.hit_direction = ushort(l->pos.y_rot - phd_atan(dz, dx) - 0x6000) >> W2V_SHIFT;
 
-		if (!lara.hit_frame)
+		if (!Lara.hit_frame)
 			SoundEffect(SFX_LARA_INJURY_RND, &l->pos, SFX_DEFAULT);
 
-		lara.hit_frame++;
+		Lara.hit_frame++;
 
-		if (lara.hit_frame > 34)
-			lara.hit_frame = 34;
+		if (Lara.hit_frame > 34)
+			Lara.hit_frame = 34;
 	}
 
 	coll->bad_pos = -NO_HEIGHT;
@@ -1305,10 +1305,10 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		l->pos.z_pos = coll->old.z;
 	}
 
-	if (lara.IsMoving && lara.MoveCount > 15)
+	if (Lara.IsMoving && Lara.MoveCount > 15)
 	{
-		lara.IsMoving = 0;
-		lara.gun_status = LG_NO_ARMS;
+		Lara.IsMoving = 0;
+		Lara.gun_status = LG_NO_ARMS;
 	}
 
 	return 1;
@@ -1371,10 +1371,10 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 		l->pos.z_pos = coll->old.z;
 	}
 
-	if (l == lara_item && lara.IsMoving && lara.MoveCount > 15)
+	if (l == LaraItem && Lara.IsMoving && Lara.MoveCount > 15)
 	{
-		lara.IsMoving = 0;
-		lara.gun_status = LG_NO_ARMS;
+		Lara.IsMoving = 0;
+		Lara.gun_status = LG_NO_ARMS;
 	}
 
 	return 1;
@@ -1409,15 +1409,15 @@ long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad)
 	if (!(bounds[0] | bounds[1] | bounds[2] | bounds[3] | bounds[4] | bounds[5]))
 		return 0;
 
-	lbounds = GetBestFrame(lara_item);
+	lbounds = GetBestFrame(LaraItem);
 
-	if (pos->y_pos + bounds[3] <= lara_item->pos.y_pos + lbounds[2] || pos->y_pos + bounds[2] >= lara_item->pos.y_pos + lbounds[3])
+	if (pos->y_pos + bounds[3] <= LaraItem->pos.y_pos + lbounds[2] || pos->y_pos + bounds[2] >= LaraItem->pos.y_pos + lbounds[3])
 		return 0;
 
 	s = phd_sin(pos->y_rot);
 	c = phd_cos(pos->y_rot);
-	dx = lara_item->pos.x_pos - pos->x_pos;
-	dz = lara_item->pos.z_pos - pos->z_pos;
+	dx = LaraItem->pos.x_pos - pos->x_pos;
+	dz = LaraItem->pos.z_pos - pos->z_pos;
 	x = (dx * c - dz * s) >> W2V_SHIFT;
 	z = (dx * s + dz * c) >> W2V_SHIFT;
 	return x >= bounds[0] - rad && x <= rad + bounds[1] && z >= bounds[4] - rad && z <= rad + bounds[5];

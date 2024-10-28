@@ -193,10 +193,10 @@ void SwapCrowbar(ITEM_INFO* item)
 	
 	tmp = meshes[objects[LARA].mesh_index + 2 * LM_RHAND];
 
-	if (lara.mesh_ptrs[LM_RHAND] == tmp)
-		lara.mesh_ptrs[LM_RHAND] = meshes[objects[CROWBAR_ANIM].mesh_index + (2 * LM_RHAND)];
+	if (Lara.mesh_ptrs[LM_RHAND] == tmp)
+		Lara.mesh_ptrs[LM_RHAND] = meshes[objects[CROWBAR_ANIM].mesh_index + (2 * LM_RHAND)];
 	else
-		lara.mesh_ptrs[LM_RHAND] = tmp;
+		Lara.mesh_ptrs[LM_RHAND] = tmp;
 }
 
 void SoundFlipEffect(ITEM_INFO* item)
@@ -214,17 +214,17 @@ void ExplosionFX(ITEM_INFO* item)
 
 void lara_hands_free(ITEM_INFO* item)
 {
-	lara.gun_status = LG_NO_ARMS;
+	Lara.gun_status = LG_NO_ARMS;
 }
 
 void shoot_right_gun(ITEM_INFO* item)
 {
-	lara.right_arm.flash_gun = 3;
+	Lara.right_arm.flash_gun = 3;
 }
 
 void shoot_left_gun(ITEM_INFO* item)
 {
-	lara.left_arm.flash_gun = 3;
+	Lara.left_arm.flash_gun = 3;
 }
 
 void invisibility_on(ITEM_INFO* item)
@@ -244,10 +244,10 @@ void reset_hair(ITEM_INFO* item)
 
 void LaraLocation(ITEM_INFO* item)
 {
-	lara.location = TriggerTimer;
+	Lara.location = TriggerTimer;
 
-	if (lara.highest_location < TriggerTimer)
-		lara.highest_location = TriggerTimer;
+	if (Lara.highest_location < TriggerTimer)
+		Lara.highest_location = TriggerTimer;
 
 	flipeffect = -1;
 }
@@ -303,8 +303,8 @@ void ResetTest(ITEM_INFO* item)
 void LaraLocationPad(ITEM_INFO* item)
 {
 	flipeffect = -1;
-	lara.location = TriggerTimer;
-	lara.locationPad = TriggerTimer;
+	Lara.location = TriggerTimer;
+	Lara.locationPad = TriggerTimer;
 }
 
 void KillActiveBaddies(ITEM_INFO* item)
@@ -556,13 +556,13 @@ long ItemNearLara(PHD_3DPOS* pos, long rad)
 	short* bounds;
 	long dx, dy, dz;
 
-	dx = pos->x_pos - lara_item->pos.x_pos;
-	dy = pos->y_pos - lara_item->pos.y_pos;
-	dz = pos->z_pos - lara_item->pos.z_pos;
+	dx = pos->x_pos - LaraItem->pos.x_pos;
+	dy = pos->y_pos - LaraItem->pos.y_pos;
+	dz = pos->z_pos - LaraItem->pos.z_pos;
 
 	if (dx >= -rad && dx <= rad && dz >= -rad && dz <= rad && dy >= -3072 && dy <= 3072 && SQUARE(dx) + SQUARE(dz) <= SQUARE(rad))
 	{
-		bounds = GetBoundsAccurate(lara_item);
+		bounds = GetBoundsAccurate(LaraItem);
 
 		if (dy >= bounds[2] && dy <= bounds[3] + 100)
 			return 1;
@@ -573,7 +573,7 @@ long ItemNearLara(PHD_3DPOS* pos, long rad)
 
 void Richochet(GAME_VECTOR* pos)
 {
-	TriggerRicochetSpark(pos, mGetAngle(pos->z, pos->x, lara_item->pos.z_pos, lara_item->pos.x_pos) >> 4, 3, 0);
+	TriggerRicochetSpark(pos, mGetAngle(pos->z, pos->x, LaraItem->pos.z_pos, LaraItem->pos.x_pos) >> 4, 3, 0);
 	SoundEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_DEFAULT);
 }
 

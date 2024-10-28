@@ -42,18 +42,18 @@ void SwampyControl(short item_number)
 	if (have_i_got_object(PUZZLE_ITEM2))
 	{
 		item->ai_bits = 0;
-		swampy->enemy = lara_item;
+		swampy->enemy = LaraItem;
 	}
 
 	if (item->ai_bits)
 		GetAITarget(swampy);
 	else if (swampy->hurt_by_lara)
-		swampy->enemy = lara_item;
+		swampy->enemy = LaraItem;
 
 	CreatureAIInfo(item, &info);
 
-	if (swampy->enemy != lara_item)
-		phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+	if (swampy->enemy != LaraItem)
+		phd_atan(LaraItem->pos.z_pos - item->pos.z_pos, LaraItem->pos.x_pos - item->pos.x_pos);
 
 	GetCreatureMood(item, &info, 1);
 	CreatureMood(item, &info, 1);
@@ -96,8 +96,8 @@ void SwampyControl(short item_number)
 
 		if (!swampy->flags && (item->touch_bits & 0x3C3C0) && item->frame_number > anims[item->anim_number].frame_base + 29)
 		{
-			lara_item->hit_points -= 100;
-			lara_item->hit_status = 1;
+			LaraItem->hit_points -= 100;
+			LaraItem->hit_status = 1;
 			CreatureEffectT(item, &swampy_hitright, 10, item->pos.y_rot, DoBloodSplat);
 			swampy->flags = 1;
 		}

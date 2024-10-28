@@ -102,7 +102,7 @@ void CreateFlare(short object, long thrown)
 	collided = 0;
 	flare = &items[flare_item];
 	flare->object_number = object;
-	flare->room_number = lara_item->room_number;
+	flare->room_number = LaraItem->room_number;
 
 	pos.x = -16;
 	pos.y = 32;
@@ -112,7 +112,7 @@ void CreateFlare(short object, long thrown)
 	flare->pos.x_pos = pos.x;
 	flare->pos.y_pos = pos.y;
 	flare->pos.z_pos = pos.z;
-	room_number = lara_item->room_number;
+	room_number = LaraItem->room_number;
 	floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
 	itemlist = (ITEM_INFO**)&tsv_buffer[0];
 	meshlist = (MESH_INFO**)&tsv_buffer[1024];
@@ -121,19 +121,19 @@ void CreateFlare(short object, long thrown)
 	if (collision || pos.y > GetHeight(floor, pos.x, pos.y, pos.z))
 	{
 		collided = 1;
-		flare->pos.y_rot = lara_item->pos.y_rot - 0x8000;
-		flare->pos.x_pos = lara_item->pos.x_pos + (320 * phd_sin(flare->pos.y_rot) >> W2V_SHIFT);
-		flare->pos.z_pos = lara_item->pos.z_pos + (320 * phd_cos(flare->pos.y_rot) >> W2V_SHIFT);
+		flare->pos.y_rot = LaraItem->pos.y_rot - 0x8000;
+		flare->pos.x_pos = LaraItem->pos.x_pos + (320 * phd_sin(flare->pos.y_rot) >> W2V_SHIFT);
+		flare->pos.z_pos = LaraItem->pos.z_pos + (320 * phd_cos(flare->pos.y_rot) >> W2V_SHIFT);
 		flare->room_number = room_number;
 	}
 	else if (thrown)
 	{
-		flare->pos.y_rot = lara_item->pos.y_rot;
+		flare->pos.y_rot = LaraItem->pos.y_rot;
 		flare->room_number = room_number;
 	}
 	else
 	{
-		flare->pos.y_rot = lara_item->pos.y_rot - 0x2000;
+		flare->pos.y_rot = LaraItem->pos.y_rot - 0x2000;
 		flare->room_number = room_number;
 	}
 
@@ -144,13 +144,13 @@ void CreateFlare(short object, long thrown)
 
 	if (thrown)
 	{
-		flare->speed = lara_item->speed + 50;
-		flare->fallspeed = lara_item->fallspeed - 50;
+		flare->speed = LaraItem->speed + 50;
+		flare->fallspeed = LaraItem->fallspeed - 50;
 	}
 	else
 	{
-		flare->speed = lara_item->speed + 10;
-		flare->fallspeed = lara_item->fallspeed + 50;
+		flare->speed = LaraItem->speed + 10;
+		flare->fallspeed = LaraItem->fallspeed + 50;
 	}
 
 	if (collided)
@@ -158,13 +158,13 @@ void CreateFlare(short object, long thrown)
 
 	if (object == FLARE_ITEM)
 	{
-		if (DoFlareLight((PHD_VECTOR*)&flare->pos, lara.flare_age))
-			flare->data = (void*)(lara.flare_age | 0x8000);
+		if (DoFlareLight((PHD_VECTOR*)&flare->pos, Lara.flare_age))
+			flare->data = (void*)(Lara.flare_age | 0x8000);
 		else
-			flare->data = (void*)(lara.flare_age & 0x7FFF);
+			flare->data = (void*)(Lara.flare_age & 0x7FFF);
 	}
 	else
-		flare->item_flags[3] = lara.LitTorch;
+		flare->item_flags[3] = Lara.LitTorch;
 
 	AddActiveItem(flare_item);
 	flare->status = ITEM_ACTIVE;
@@ -172,26 +172,26 @@ void CreateFlare(short object, long thrown)
 
 void ready_flare()
 {
-	lara.gun_status = LG_NO_ARMS;
-	lara.left_arm.z_rot = 0;
-	lara.left_arm.y_rot = 0;
-	lara.left_arm.x_rot = 0;
-	lara.right_arm.z_rot = 0;
-	lara.right_arm.y_rot = 0;
-	lara.right_arm.x_rot = 0;
-	lara.right_arm.lock = 0;
-	lara.left_arm.lock = 0;
-	lara.target = 0;
+	Lara.gun_status = LG_NO_ARMS;
+	Lara.left_arm.z_rot = 0;
+	Lara.left_arm.y_rot = 0;
+	Lara.left_arm.x_rot = 0;
+	Lara.right_arm.z_rot = 0;
+	Lara.right_arm.y_rot = 0;
+	Lara.right_arm.x_rot = 0;
+	Lara.right_arm.lock = 0;
+	Lara.left_arm.lock = 0;
+	Lara.target = 0;
 }
 
 void undraw_flare_meshes()
 {
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + 2 * LM_LHAND];
+	Lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + 2 * LM_LHAND];
 }
 
 void draw_flare_meshes()
 {
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[FLARE_ANIM].mesh_index + 2 * LM_LHAND];
+	Lara.mesh_ptrs[LM_LHAND] = meshes[objects[FLARE_ANIM].mesh_index + 2 * LM_LHAND];
 }
 
 void set_flare_arm(long frame)
@@ -209,8 +209,8 @@ void set_flare_arm(long frame)
 	else if (frame >= 1)
 		anim_base += 1;
 
-	lara.left_arm.anim_number = (short)anim_base;
-	lara.left_arm.frame_base = anims[anim_base].frame_ptr;
+	Lara.left_arm.anim_number = (short)anim_base;
+	Lara.left_arm.frame_base = anims[anim_base].frame_ptr;
 }
 
 void DoFlareInHand(long flare_age)
@@ -223,16 +223,16 @@ void DoFlareInHand(long flare_age)
 	GetLaraJointPos(&pos, LMX_HAND_L);
 	DoFlareLight(&pos, flare_age);
 
-	if (gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+	if (gfLevelFlags & GF_MIRROR && LaraItem->room_number == gfMirrorRoom)
 	{
 		pos.z = 2 * gfMirrorZPlane - pos.z;
 		DoFlareLight(&pos, flare_age);
 	}
 
-	if (lara.flare_age < 900)
-		lara.flare_age++;
-	else if (lara.gun_status == LG_NO_ARMS)
-		lara.gun_status = LG_UNDRAW_GUNS;
+	if (Lara.flare_age < 900)
+		Lara.flare_age++;
+	else if (Lara.gun_status == LG_NO_ARMS)
+		Lara.gun_status = LG_UNDRAW_GUNS;
 }
 
 long DoFlareLight(PHD_VECTOR* pos, long flare_age)
@@ -306,16 +306,16 @@ void draw_flare()
 {
 	short ani;
 
-	if (lara_item->current_anim_state == AS_FLAREPICKUP || lara_item->current_anim_state == AS_PICKUP)
+	if (LaraItem->current_anim_state == AS_FLAREPICKUP || LaraItem->current_anim_state == AS_PICKUP)
 	{
-		DoFlareInHand(lara.flare_age);
-		lara.flare_control_left = 0;
+		DoFlareInHand(Lara.flare_age);
+		Lara.flare_control_left = 0;
 		ani = 93;
 	}
 	else
 	{
-		ani = lara.left_arm.frame_number + 1;
-		lara.flare_control_left = 1;
+		ani = Lara.left_arm.frame_number + 1;
+		Lara.flare_control_left = 1;
 
 		if (ani < 33 || ani > 94)
 			ani = 33;
@@ -325,25 +325,25 @@ void draw_flare()
 		{
 			if (ani == 72)
 			{
-				if (room[lara_item->room_number].flags & ROOM_UNDERWATER)
-					SoundEffect(SFX_RAVESTICK, &lara_item->pos, SFX_WATER);
+				if (room[LaraItem->room_number].flags & ROOM_UNDERWATER)
+					SoundEffect(SFX_RAVESTICK, &LaraItem->pos, SFX_WATER);
 				else
-					SoundEffect(SFX_RAVESTICK, &lara_item->pos, SFX_DEFAULT);
+					SoundEffect(SFX_RAVESTICK, &LaraItem->pos, SFX_DEFAULT);
 
-				lara.flare_age = 1;
+				Lara.flare_age = 1;
 			}
 
-			DoFlareInHand(lara.flare_age);
+			DoFlareInHand(Lara.flare_age);
 		}
 		else if (ani == 94)
 		{
 			ready_flare();
 			ani = 0;
-			DoFlareInHand(lara.flare_age);
+			DoFlareInHand(Lara.flare_age);
 		}
 	}
 
-	lara.left_arm.frame_number = ani;
+	Lara.left_arm.frame_number = ani;
 	set_flare_arm(ani);
 }
 
@@ -351,48 +351,48 @@ void undraw_flare()
 {
 	short ani, ani2;
 
-	ani = lara.left_arm.frame_number;
-	ani2 = lara.flare_frame;
-	lara.flare_control_left = 1;
+	ani = Lara.left_arm.frame_number;
+	ani2 = Lara.flare_frame;
+	Lara.flare_control_left = 1;
 
-	if (lara_item->goal_anim_state == AS_STOP)
+	if (LaraItem->goal_anim_state == AS_STOP)
 	{
-		if (lara_item->anim_number == ANIM_BREATH)
+		if (LaraItem->anim_number == ANIM_BREATH)
 		{
-			lara_item->anim_number = ANIM_THROWFLARE;
+			LaraItem->anim_number = ANIM_THROWFLARE;
 			ani2 = ani + anims[ANIM_THROWFLARE].frame_base;
-			lara.flare_frame = ani2;
-			lara_item->frame_number = ani2;
+			Lara.flare_frame = ani2;
+			LaraItem->frame_number = ani2;
 		}
 
-		if (lara_item->anim_number == ANIM_THROWFLARE)
+		if (LaraItem->anim_number == ANIM_THROWFLARE)
 		{
-			lara.flare_control_left = 0;
+			Lara.flare_control_left = 0;
 
 			if (ani2 >= anims[ANIM_THROWFLARE].frame_base + 31)
 			{
-				lara.request_gun_type = lara.last_gun_type;
-				lara.gun_type = lara.last_gun_type;
-				lara.gun_status = LG_NO_ARMS;
+				Lara.request_gun_type = Lara.last_gun_type;
+				Lara.gun_type = Lara.last_gun_type;
+				Lara.gun_status = LG_NO_ARMS;
 				InitialiseNewWeapon();
-				lara.target = 0;
-				lara.right_arm.lock = 0;
-				lara.left_arm.lock = 0;
-				lara_item->anim_number = ANIM_STOP;
-				lara_item->frame_number = anims[ANIM_STOP].frame_base;
-				lara.flare_frame = anims[ANIM_STOP].frame_base;
-				lara_item->current_anim_state = AS_STOP;
-				lara_item->goal_anim_state = AS_STOP;
+				Lara.target = 0;
+				Lara.right_arm.lock = 0;
+				Lara.left_arm.lock = 0;
+				LaraItem->anim_number = ANIM_STOP;
+				LaraItem->frame_number = anims[ANIM_STOP].frame_base;
+				Lara.flare_frame = anims[ANIM_STOP].frame_base;
+				LaraItem->current_anim_state = AS_STOP;
+				LaraItem->goal_anim_state = AS_STOP;
 			}
 
 			ani2++;
-			lara.flare_frame = ani2;
+			Lara.flare_frame = ani2;
 		}
 	}
-	else if (lara_item->current_anim_state == AS_STOP)
+	else if (LaraItem->current_anim_state == AS_STOP)
 	{
-		lara_item->anim_number = ANIM_STOP;
-		lara_item->frame_number = anims[ANIM_STOP].frame_base;
+		LaraItem->anim_number = ANIM_STOP;
+		LaraItem->frame_number = anims[ANIM_STOP].frame_base;
 	}
 
 	if (!ani)
@@ -416,15 +416,15 @@ void undraw_flare()
 		else if (ani == 33)
 		{
 			ani = 0;
-			lara.gun_type = lara.last_gun_type;
-			lara.request_gun_type = lara.last_gun_type;
-			lara.gun_status = LG_NO_ARMS;;
+			Lara.gun_type = Lara.last_gun_type;
+			Lara.request_gun_type = Lara.last_gun_type;
+			Lara.gun_status = LG_NO_ARMS;;
 			InitialiseNewWeapon();
-			lara.target = 0;
-			lara.left_arm.lock = 0;
-			lara.right_arm.lock = 0;
-			lara.flare_control_left = 0;
-			lara.flare_frame = 0;
+			Lara.target = 0;
+			Lara.left_arm.lock = 0;
+			Lara.right_arm.lock = 0;
+			Lara.flare_control_left = 0;
+			Lara.flare_frame = 0;
 		}
 	}
 	else if (ani >= 95 && ani < 110)
@@ -436,10 +436,10 @@ void undraw_flare()
 	}
 
 	if (ani >= 1 && ani < 21)
-		DoFlareInHand(lara.flare_age);
+		DoFlareInHand(Lara.flare_age);
 
-	lara.left_arm.frame_number = ani;
-	set_flare_arm(lara.left_arm.frame_number);
+	Lara.left_arm.frame_number = ani;
+	set_flare_arm(Lara.left_arm.frame_number);
 }
 
 void DrawFlareInAir(ITEM_INFO* item)

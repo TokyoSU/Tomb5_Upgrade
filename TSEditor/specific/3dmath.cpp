@@ -449,18 +449,18 @@ static void aGenerateW2V(PHD_3DPOS* viewPos)
 	aMXPtr->m21 = aW2VMx.m21;
 	aMXPtr->m22 = aW2VMx.m22;
 
-	if (lara.dpoisoned != lara.poisoned)
+	if (Lara.dpoisoned != Lara.poisoned)
 	{
-		lara.poisoned += (lara.dpoisoned - lara.poisoned) >> 4;
-		if (abs(lara.dpoisoned - lara.poisoned) < 16)
-			lara.poisoned = lara.dpoisoned;
+		Lara.poisoned += (Lara.dpoisoned - Lara.poisoned) >> 4;
+		if (abs(Lara.dpoisoned - Lara.poisoned) < 16)
+			Lara.poisoned = Lara.dpoisoned;
 	}
 
-	if (lara.poisoned >= 256)
+	if (Lara.poisoned >= 256)
 	{
-		scalar.x = (lara.poisoned - 256) * ((phd_sin(XSoff1) + phd_sin(XSoff2)) >> 2);
-		scalar.y = (lara.poisoned - 256) * ((phd_sin(YSoff1) + phd_sin(YSoff2)) >> 2);
-		scalar.z = (lara.poisoned - 256) * ((phd_sin(ZSoff1) + phd_sin(ZSoff2)) >> 2);
+		scalar.x = (Lara.poisoned - 256) * ((phd_sin(XSoff1) + phd_sin(XSoff2)) >> 2);
+		scalar.y = (Lara.poisoned - 256) * ((phd_sin(YSoff1) + phd_sin(YSoff2)) >> 2);
+		scalar.z = (Lara.poisoned - 256) * ((phd_sin(ZSoff1) + phd_sin(ZSoff2)) >> 2);
 		if (scalar.x || scalar.y || scalar.z)
 		{
 			scalar.x = (scalar.x >> 12) + 0x4000;
@@ -532,18 +532,18 @@ void phd_GenerateW2V(PHD_3DPOS* viewPos)
 	phd_mxptr->m21 = w2v_matrix.m21;
 	phd_mxptr->m22 = w2v_matrix.m22;
 
-	if (lara.dpoisoned != lara.poisoned)
+	if (Lara.dpoisoned != Lara.poisoned)
 	{
-		lara.poisoned += (lara.dpoisoned - lara.poisoned) >> 4;
-		if (abs(lara.dpoisoned - lara.poisoned) < 16)
-			lara.poisoned = lara.dpoisoned;
+		Lara.poisoned += (Lara.dpoisoned - Lara.poisoned) >> 4;
+		if (abs(Lara.dpoisoned - Lara.poisoned) < 16)
+			Lara.poisoned = Lara.dpoisoned;
 	}
 
-	if (lara.poisoned >= 256)
+	if (Lara.poisoned >= 256)
 	{
-		scalar.x = (lara.poisoned - 256) * ((phd_sin(XSoff1) + phd_sin(XSoff2)) >> 2);
-		scalar.y = (lara.poisoned - 256) * ((phd_sin(YSoff1) + phd_sin(YSoff2)) >> 2);
-		scalar.z = (lara.poisoned - 256) * ((phd_sin(ZSoff1) + phd_sin(ZSoff2)) >> 2);
+		scalar.x = (Lara.poisoned - 256) * ((phd_sin(XSoff1) + phd_sin(XSoff2)) >> 2);
+		scalar.y = (Lara.poisoned - 256) * ((phd_sin(YSoff1) + phd_sin(YSoff2)) >> 2);
+		scalar.z = (Lara.poisoned - 256) * ((phd_sin(ZSoff1) + phd_sin(ZSoff2)) >> 2);
 		if (scalar.x || scalar.y || scalar.z)
 		{
 			scalar.x = (scalar.x >> 12) + 0x4000;

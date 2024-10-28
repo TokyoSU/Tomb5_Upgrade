@@ -82,7 +82,7 @@ void HydraControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(hydra);
 		else if (hydra->hurt_by_lara)
-			hydra->enemy = lara_item;
+			hydra->enemy = LaraItem;
 
 		CreatureAIInfo(item, &info);
 		GetCreatureMood(item, &info, 1);
@@ -145,8 +145,8 @@ void HydraControl(short item_number)
 			{
 				if (item->touch_bits & 0x400)
 				{
-					lara_item->hit_points -= 120;
-					lara_item->hit_status = 1;
+					LaraItem->hit_points -= 120;
+					LaraItem->hit_status = 1;
 					CreatureEffectT(item, &hydra_hit, 10, item->pos.y_rot, DoBloodSplat);
 					hydra->flags = 1;
 				}
@@ -155,7 +155,7 @@ void HydraControl(short item_number)
 				{
 					damage = short(5 - phd_sqrt(info.distance) / 1024);
 
-					if (lara.gun_type == WEAPON_SHOTGUN)
+					if (Lara.gun_type == WEAPON_SHOTGUN)
 						damage *= 3;
 
 					if (damage > 0)
@@ -176,7 +176,7 @@ void HydraControl(short item_number)
 			{
 				damage = short(6 - phd_sqrt(info.distance) / 1024);
 
-				if (lara.gun_type == WEAPON_SHOTGUN)
+				if (Lara.gun_type == WEAPON_SHOTGUN)
 					damage *= 3;
 
 				if ((GetRandomControl() & 0xF) < damage && info.distance < 0x6400000 && damage > 0)

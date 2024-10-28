@@ -63,16 +63,16 @@ void HuskieControl(short item_number)
 		if (item->ai_bits)
 			GetAITarget(huskie);
 		else
-			huskie->enemy = lara_item;
+			huskie->enemy = LaraItem;
 
 		CreatureAIInfo(item, &info);
 
-		if (huskie->enemy == lara_item)
+		if (huskie->enemy == LaraItem)
 			lara_info.distance = info.distance;
 		else
 		{
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = LaraItem->pos.x_pos - item->pos.x_pos;
+			dz = LaraItem->pos.z_pos - item->pos.z_pos;
 			lara_info.distance = SQUARE(dx) + SQUARE(dz);
 		}
 
@@ -136,7 +136,7 @@ void HuskieControl(short item_number)
 
 			if (huskie->mood == ESCAPE_MOOD)
 			{
-				if (lara.target != item && info.ahead)
+				if (Lara.target != item && info.ahead)
 					item->goal_anim_state = 9;
 			}
 			else if (huskie->mood == BORED_MOOD)
@@ -173,8 +173,8 @@ void HuskieControl(short item_number)
 			if (info.bite && item->touch_bits & 0x6648 && frame >= 4 && frame <= 14)
 			{
 				CreatureEffectT(item, &huskie_bite, 2, -1, DoBloodSplat);
-				lara_item->hit_points -= 20;
-				lara_item->hit_status = 1;
+				LaraItem->hit_points -= 20;
+				LaraItem->hit_status = 1;
 			}
 
 			item->goal_anim_state = 3;
@@ -210,7 +210,7 @@ void HuskieControl(short item_number)
 				item->goal_anim_state = item->current_anim_state == 1 ? 2 : 1;
 			else if (huskie->mood == ESCAPE_MOOD)
 			{
-				if (lara.target != item && info.ahead && !item->hit_status)
+				if (Lara.target != item && info.ahead && !item->hit_status)
 					item->goal_anim_state = 1;
 				else
 				{
@@ -248,8 +248,8 @@ void HuskieControl(short item_number)
 			if (info.bite && item->touch_bits & 0x48 && (frame >= 9 && frame <= 12 || frame >= 22 && frame <= 25))
 			{
 				CreatureEffectT(item, &huskie_bite, 2, -1, DoBloodSplat);
-				lara_item->hit_points -= 10;
-				lara_item->hit_status = 1;
+				LaraItem->hit_points -= 10;
+				LaraItem->hit_status = 1;
 			}
 
 			break;

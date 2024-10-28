@@ -71,7 +71,7 @@ void ControlLiftTeleporter(short item_number)
 	{
 		if (!item->item_flags[0])
 		{
-			for (num = GetSwitchTrigger(lara_item, triggeredItems, 1); num > 0; num--)
+			for (num = GetSwitchTrigger(LaraItem, triggeredItems, 1); num > 0; num--)
 			{
 				item2 = &items[triggeredItems[num - 1]];
 
@@ -108,13 +108,13 @@ void ControlLiftTeleporter(short item_number)
 		camera.old_type = FIXED_CAMERA;
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		lara_item->pos.x_pos = (item->pos.x_pos & -1024) | (lara_item->pos.x_pos & 1023);
-		lara_item->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
-		lara_item->pos.z_pos = (item->pos.z_pos & -1024) | (lara_item->pos.z_pos & 1023);
-		lara_item->pos.y_rot = item->pos.y_rot + 0x8000;
+		LaraItem->pos.x_pos = (item->pos.x_pos & -1024) | (LaraItem->pos.x_pos & 1023);
+		LaraItem->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		LaraItem->pos.z_pos = (item->pos.z_pos & -1024) | (LaraItem->pos.z_pos & 1023);
+		LaraItem->pos.y_rot = item->pos.y_rot + 0x8000;
 
-		if (lara_item->room_number != room_number)
-			ItemNewRoom(lara.item_number, room_number);
+		if (LaraItem->room_number != room_number)
+			ItemNewRoom(Lara.item_number, room_number);
 
 		InitialiseHair();
 
