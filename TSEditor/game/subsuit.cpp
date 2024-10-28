@@ -38,9 +38,9 @@ void DoSubsuitStuff()
 	if (SubHitCount)
 		SubHitCount--;
 
-	anx = Lara.Anxiety;
+	anx = Lara.anxiety;
 
-	if (Lara.Anxiety > 127)
+	if (Lara.anxiety > 127)
 		anx = 127;
 
 	BreathCount++;
@@ -57,9 +57,9 @@ void DoSubsuitStuff()
 
 		BreathCount = short(-40 - (30 * (128 - anx) >> 7));
 
-		if (Lara.Anxiety)
+		if (Lara.anxiety)
 		{
-			anx = Lara.Anxiety;
+			anx = Lara.anxiety;
 
 			if (anx > 128)
 				anx -= 16;
@@ -69,7 +69,7 @@ void DoSubsuitStuff()
 			if (anx < 0)
 				anx = 0;
 
-			Lara.Anxiety = (uchar)anx;
+			Lara.anxiety = (uchar)anx;
 			BreathDelay = 0;
 		}
 		else if (BreathDelay < 16)
@@ -89,10 +89,10 @@ void DoSubsuitStuff()
 	LaraTorch(&s, &d, LaraItem->pos.y_rot, 255);
 	TriggerEngineEffects();
 
-	if (Lara.ChaffTimer)
-		Lara.ChaffTimer--;
+	if (Lara.chaffTimer)
+		Lara.chaffTimer--;
 
-	if (dbinput & IN_SPRINT && !Lara.ChaffTimer)
+	if (dbinput & IN_SPRINT && !Lara.chaffTimer)
 		FireChaff();
 }
 
@@ -150,7 +150,7 @@ void FireChaff()
 	item->speed = 32;
 	item->fallspeed = -128;
 	AddActiveItem(item_number);
-	Lara.ChaffTimer = 150;
+	Lara.chaffTimer = 150;
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -309,7 +309,7 @@ void TriggerEngineEffects()
 	PHD_VECTOR pos2;
 	short x, lp, n;
 
-	if (Lara.water_status == LW_FLYCHEAT)
+	if (Lara.waterStatus == LW_FLYCHEAT)
 		return;
 
 	x = -80;

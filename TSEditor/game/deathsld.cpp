@@ -33,14 +33,14 @@ void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
 	ITEM_INFO* item;
 
-	if (KeyInput & IN_ACTION && !l->gravity_status && Lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP)
+	if (KeyInput & IN_ACTION && !l->gravity_status && Lara.gunStatus == LG_NO_ARMS && l->current_anim_state == AS_STOP)
 	{
 		item = &items[item_number];
 
 		if (item->status == ITEM_INACTIVE && TestLaraPosition(DeathSlideBounds, item, l))
 		{
 			AlignLaraPosition(&DeathSlidePosition, item, l);
-			Lara.gun_status = LG_HANDS_BUSY;
+			Lara.gunStatus = LG_HANDS_BUSY;
 			l->goal_anim_state = AS_DEATHSLIDE;
 
 			do AnimateLara(l); while (l->current_anim_state != AS_NULL);

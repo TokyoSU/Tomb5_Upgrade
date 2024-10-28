@@ -252,8 +252,8 @@ void MovableBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ItemNewRoom(item_number, room_number);
 
 	if (KeyInput & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status &&
-		Lara.gun_status == LG_NO_ARMS && item->status == ITEM_INACTIVE && item->trigger_flags >= 0 ||
-		(Lara.IsMoving && Lara.GeneralPtr == (void*)item_number))
+		Lara.gunStatus == LG_NO_ARMS && item->status == ITEM_INACTIVE && item->trigger_flags >= 0 ||
+		(Lara.isMoving && Lara.generalPtr == (void*)item_number))
 	{
 		room_number = l->room_number;
 		GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number);
@@ -281,23 +281,23 @@ void MovableBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					l->frame_number = anims[ANIM_PPREADY].frame_base;
 					l->current_anim_state = AS_PPREADY;
 					l->goal_anim_state = AS_PPREADY;
-					Lara.IsMoving = 0;
-					Lara.gun_status = LG_HANDS_BUSY;
-					Lara.CornerX = (long)item;
+					Lara.isMoving = 0;
+					Lara.gunStatus = LG_HANDS_BUSY;
+					Lara.cornerX = (long)item;
 				}
 				else
-					Lara.GeneralPtr = (void*)item_number;
+					Lara.generalPtr = (void*)item_number;
 			}
-			else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
+			else if (Lara.isMoving && Lara.generalPtr == (void*)item_number)
 			{
-				Lara.IsMoving = 0;
-				Lara.gun_status = LG_NO_ARMS;
+				Lara.isMoving = 0;
+				Lara.gunStatus = LG_NO_ARMS;
 			}
 
 			item->pos.y_rot = yrot;
 		}
 	}
-	else if (l->current_anim_state == AS_PPREADY && l->frame_number == anims[ANIM_PPREADY].frame_base + 19 && (ITEM_INFO*)Lara.CornerX == item)
+	else if (l->current_anim_state == AS_PPREADY && l->frame_number == anims[ANIM_PPREADY].frame_base + 19 && (ITEM_INFO*)Lara.cornerX == item)
 	{
 		pos.x = 0;
 		pos.y = 0;
@@ -323,10 +323,10 @@ void MovableBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 		AddActiveItem(item_number);
 		item->status = ITEM_ACTIVE;
-		Lara.head_y_rot = 0;
-		Lara.head_x_rot = 0;
-		Lara.torso_y_rot = 0;
-		Lara.torso_x_rot = 0;
+		Lara.headRotY = 0;
+		Lara.headRotX = 0;
+		Lara.torsoRotY = 0;
+		Lara.torsoRotX = 0;
 		GetLaraJointPos(&pos, LMX_HAND_L);
 		*(long*)&l->item_flags[0] = pos.x;
 		*(long*)&l->item_flags[2] = pos.z;

@@ -585,8 +585,8 @@ void FireTwogunWeapon(ITEM_INFO* item, long lr, long plasma)
 		else
 		{
 			LaraBurn();
-			Lara.BurnBlue = 1;
-			Lara.BurnCount = 48;
+			Lara.burnBlue = 1;
+			Lara.burnCount = 48;
 			LaraItem->hit_points = 0;
 		}
 	}

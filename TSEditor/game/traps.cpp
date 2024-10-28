@@ -65,7 +65,7 @@ void LaraBurn()
 {
 	short fire;
 
-	if (!Lara.burn && !Lara.BurnSmoke)
+	if (!Lara.burn && !Lara.burnSmoke)
 	{
 		fire = CreateEffect(LaraItem->room_number);
 
@@ -81,7 +81,7 @@ void LavaBurn(ITEM_INFO* item)
 {
 	short room_number;
 
-	if (item->hit_points >= 0 && Lara.water_status != LW_FLYCHEAT)
+	if (item->hit_points >= 0 && Lara.waterStatus != LW_FLYCHEAT)
 	{
 		room_number = item->room_number;
 
@@ -693,12 +693,12 @@ void FlameControl(short fx_number)
 
 	fx = &effects[fx_number];
 
-	if (Lara.water_status == LW_FLYCHEAT)
+	if (Lara.waterStatus == LW_FLYCHEAT)
 	{
 		KillEffect(fx_number);
 		Lara.burn = 0;
-		Lara.BurnBlue = 0;
-		Lara.BurnSmoke = 0;
+		Lara.burnBlue = 0;
+		Lara.burnSmoke = 0;
 		return;
 	}
 
@@ -711,28 +711,28 @@ void FlameControl(short fx_number)
 			fx->pos.z_pos = 0;
 			GetLaraJointPos((PHD_VECTOR*) &fx->pos, i);
 
-			if (Lara.BurnCount)
+			if (Lara.burnCount)
 			{
-				Lara.BurnCount--;
+				Lara.burnCount--;
 
-				if (!Lara.BurnCount)
-					Lara.BurnSmoke = 1;
+				if (!Lara.burnCount)
+					Lara.burnSmoke = 1;
 			}
 
-			TriggerFireFlame(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1, 255 - Lara.BurnSmoke);
+			TriggerFireFlame(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1, 255 - Lara.burnSmoke);
 		}
 	}
 
 	r = (GetRandomControl() & 0x3F) + 192;
 	g = (GetRandomControl() & 0x1F) + 96;
 
-	if (!Lara.BurnSmoke)
+	if (!Lara.burnSmoke)
 	{
-		if (!Lara.BurnBlue)
+		if (!Lara.burnBlue)
 			TriggerDynamic(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, 13, r, g, 0);
-		else if (Lara.BurnBlue == 1)
+		else if (Lara.burnBlue == 1)
 			TriggerDynamic(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, 13, 0, g, r);
-		else if (Lara.BurnBlue == 2)
+		else if (Lara.burnBlue == 2)
 			TriggerDynamic(LaraItem->pos.x_pos, LaraItem->pos.y_pos, LaraItem->pos.z_pos, 13, 0, r, g);
 	}
 
@@ -741,7 +741,7 @@ void FlameControl(short fx_number)
 
 	y = GetWaterHeight(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->room_number);
 
-	if (y != NO_HEIGHT && fx->pos.y_pos > y && !Lara.BurnBlue)
+	if (y != NO_HEIGHT && fx->pos.y_pos > y && !Lara.burnBlue)
 	{
 		KillEffect(fx_number);
 		Lara.burn = 0;
@@ -1028,7 +1028,7 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	item = &items[item_number];
 
 	if (KeyInput & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
-		&& Lara.gun_status == LG_NO_ARMS || Lara.IsMoving && Lara.GeneralPtr == (void*)item_number)
+		&& Lara.gunStatus == LG_NO_ARMS || Lara.isMoving && Lara.generalPtr == (void*)item_number)
 	{
 		if (TestLaraPosition(FloorTrapDoorBounds, item, l))
 		{
@@ -1037,12 +1037,12 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				l->anim_number = ANIM_LIFTTRAP;
 				l->frame_number = anims[ANIM_LIFTTRAP].frame_base;
 				l->current_anim_state = AS_LIFTTRAP;
-				Lara.IsMoving = 0;
-				Lara.head_y_rot = 0;
-				Lara.head_x_rot = 0;
-				Lara.torso_y_rot = 0;
-				Lara.torso_x_rot = 0;
-				Lara.gun_status = LG_HANDS_BUSY;
+				Lara.isMoving = 0;
+				Lara.headRotY = 0;
+				Lara.headRotX = 0;
+				Lara.torsoRotY = 0;
+				Lara.torsoRotX = 0;
+				Lara.gunStatus = LG_HANDS_BUSY;
 				AddActiveItem(item_number);
 				item->goal_anim_state = 1;
 				item->status = ITEM_ACTIVE;
@@ -1058,7 +1058,7 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				ForcedFixedCamera.room_number = item->room_number;
 			}
 			else
-				Lara.GeneralPtr = (void*)item_number;
+				Lara.generalPtr = (void*)item_number;
 		}
 	}
 	else if (item->current_anim_state == 1)
@@ -1081,18 +1081,18 @@ void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	l->pos.y_rot += 32768;
 
 	if (KeyInput & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_UPJUMP &&
-		l->gravity_status && Lara.gun_status == LG_NO_ARMS && (pass1 || pass2))
+		l->gravity_status && Lara.gunStatus == LG_NO_ARMS && (pass1 || pass2))
 	{
 		AlignLaraPosition(&CeilingTrapDoorPos, item, l);
 
 		if (pass2)
 			LaraItem->pos.y_rot += 32768;
 
-		Lara.head_y_rot = 0;
-		Lara.head_x_rot = 0;
-		Lara.torso_y_rot = 0;
-		Lara.torso_x_rot = 0;
-		Lara.gun_status = LG_HANDS_BUSY;
+		Lara.headRotY = 0;
+		Lara.headRotX = 0;
+		Lara.torsoRotY = 0;
+		Lara.torsoRotX = 0;
+		Lara.gunStatus = LG_HANDS_BUSY;
 		l->gravity_status = 0;
 		l->fallspeed = 0;
 		l->anim_number = ANIM_PULLTRAP;

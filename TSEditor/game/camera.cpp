@@ -171,26 +171,26 @@ void CalculateCamera()
 
 		if (gotit > -9100 && gotit < 9100 && tilt > -15470 && tilt < 15470)
 		{
-			change = short(gotit - Lara.head_y_rot);
+			change = short(gotit - Lara.headRotY);
 
 			if (change > 728)
-				Lara.head_y_rot += 728;
+				Lara.headRotY += 728;
 			else if (change < -728)
-				Lara.head_y_rot -= 728;
+				Lara.headRotY -= 728;
 			else
-				Lara.head_y_rot = (short)gotit;
+				Lara.headRotY = (short)gotit;
 
-			Lara.torso_y_rot = Lara.head_y_rot;
-			change = tilt - Lara.head_x_rot;
+			Lara.torsoRotY = Lara.headRotY;
+			change = tilt - Lara.headRotX;
 
 			if (change > 728)
-				Lara.head_x_rot += 728;
+				Lara.headRotX += 728;
 			else if (change < -728)
-				Lara.head_x_rot -= 728;
+				Lara.headRotX -= 728;
 			else
-				Lara.head_x_rot = tilt;
+				Lara.headRotX = tilt;
 
-			Lara.torso_x_rot = Lara.head_x_rot;
+			Lara.torsoRotX = Lara.headRotX;
 			camera.type = LOOK_CAMERA;
 			camera.item->looked_at = 1;
 		}
@@ -849,13 +849,13 @@ void CombatCamera(ITEM_INFO* item)
 
 	if (Lara.target)
 	{
-		camera.target_angle = Lara.target_angles[0];
-		camera.target_elevation = Lara.target_angles[1] + item->pos.x_rot;
+		camera.target_angle = Lara.targetAngles[0];
+		camera.target_elevation = Lara.targetAngles[1] + item->pos.x_rot;
 	}
 	else
 	{
-		camera.target_angle = Lara.head_y_rot + Lara.torso_y_rot;
-		camera.target_elevation = Lara.head_x_rot + Lara.torso_x_rot + item->pos.x_rot - 2730;
+		camera.target_angle = Lara.headRotY + Lara.torsoRotY;
+		camera.target_elevation = Lara.headRotX + Lara.torsoRotX + item->pos.x_rot - 2730;
 	}
 
 	wx = camera.target.x;
@@ -1005,8 +1005,8 @@ void MoveCamera(GAME_VECTOR* ideal, long speed)
 	}
 
 	if (old_cam.pos.x_rot == LaraItem->pos.x_rot && old_cam.pos.y_rot == LaraItem->pos.y_rot && old_cam.pos.z_rot == LaraItem->pos.z_rot &&
-		old_cam.pos2.x_rot == Lara.head_x_rot && old_cam.pos2.y_rot == Lara.head_y_rot && old_cam.pos2.x_pos == Lara.torso_x_rot &&
-		old_cam.pos2.y_pos == Lara.torso_y_rot && old_cam.pos.x_pos == LaraItem->pos.x_pos && old_cam.pos.y_pos == LaraItem->pos.y_pos &&
+		old_cam.pos2.x_rot == Lara.headRotX && old_cam.pos2.y_rot == Lara.headRotY && old_cam.pos2.x_pos == Lara.torsoRotX &&
+		old_cam.pos2.y_pos == Lara.torsoRotY && old_cam.pos.x_pos == LaraItem->pos.x_pos && old_cam.pos.y_pos == LaraItem->pos.y_pos &&
 		old_cam.pos.z_pos == LaraItem->pos.z_pos && old_cam.current_anim_state == LaraItem->current_anim_state &&
 		old_cam.goal_anim_state == LaraItem->goal_anim_state && old_cam.target_distance == camera.target_distance &&
 		old_cam.target_elevation == camera.target_elevation && old_cam.actual_elevation == camera.actual_elevation &&
@@ -1023,10 +1023,10 @@ void MoveCamera(GAME_VECTOR* ideal, long speed)
 		old_cam.pos.x_rot = LaraItem->pos.x_rot;
 		old_cam.pos.y_rot = LaraItem->pos.y_rot;
 		old_cam.pos.z_rot = LaraItem->pos.z_rot;
-		old_cam.pos2.x_rot = Lara.head_x_rot;
-		old_cam.pos2.y_rot = Lara.head_y_rot;
-		old_cam.pos2.x_pos = Lara.torso_x_rot;
-		old_cam.pos2.y_pos = Lara.torso_y_rot;
+		old_cam.pos2.x_rot = Lara.headRotX;
+		old_cam.pos2.y_rot = Lara.headRotY;
+		old_cam.pos2.x_pos = Lara.torsoRotX;
+		old_cam.pos2.y_pos = Lara.torsoRotY;
 		old_cam.pos.x_pos = LaraItem->pos.x_pos;
 		old_cam.pos.y_pos = LaraItem->pos.y_pos;
 		old_cam.pos.z_pos = LaraItem->pos.z_pos;
@@ -1168,11 +1168,11 @@ void BinocularCamera(ITEM_INFO* item)
 			BinocularRange = 0;
 			AlterFOV(GAME_FOV);
 			LaraItem->mesh_bits = -1;
-			Lara.Busy = 0;
-			Lara.head_y_rot = 0;
-			Lara.head_x_rot = 0;
-			Lara.torso_y_rot = 0;
-			Lara.torso_x_rot = 0;
+			Lara.busy = 0;
+			Lara.headRotY = 0;
+			Lara.headRotX = 0;
+			Lara.torsoRotY = 0;
+			Lara.torsoRotX = 0;
 			bLaraTorch = 0;
 			camera.type = BinocularOldCamera;
 			return;
@@ -1181,8 +1181,8 @@ void BinocularCamera(ITEM_INFO* item)
 
 	LaraItem->mesh_bits = 0;
 	AlterFOV(short(GAME_FOV - (7 * BinocularRange)));
-	hxrot = Lara.head_x_rot << 1;
-	hyrot = Lara.head_y_rot;
+	hxrot = Lara.headRotX << 1;
+	hyrot = Lara.headRotY;
 
 	if (hxrot > 13650)
 		hxrot = 13650;
@@ -1293,20 +1293,20 @@ void BinocularCamera(ITEM_INFO* item)
 	if (LaserSight)
 	{
 		Fire = 0;
-		ammo = get_current_ammo_pointer(Lara.gun_type);
+		ammo = get_current_ammo_pointer(Lara.gunType);
 
 		if (!(inputBusy & IN_ACTION) || WeaponDelay || !ammo[0])
 		{
 			if (!(inputBusy & IN_ACTION))
 			{
-				if (Lara.gun_type != WEAPON_CROSSBOW)
+				if (Lara.gunType != WEAPON_CROSSBOW)
 					WeaponDelay = 0;
 
 				LSHKShotsFired = 0;
 				camera.bounce = 0;
 			}
 		}
-		else if (Lara.gun_type == WEAPON_REVOLVER)
+		else if (Lara.gunType == WEAPON_REVOLVER)
 		{
 			Fire = 1;
 			WeaponDelay = 16;
@@ -1315,17 +1315,17 @@ void BinocularCamera(ITEM_INFO* item)
 			if (ammo[0] != -1)
 				ammo[0]--;
 		}
-		else if (Lara.gun_type == WEAPON_CROSSBOW)
+		else if (Lara.gunType == WEAPON_CROSSBOW)
 		{
 			Fire = 1;
 			WeaponDelay = 32;
 		}
-		else if (Lara.hk_type_carried & W_AMMO1)//sniper mode!
+		else if (Lara.hkTypeCarried & W_AMMO1)//sniper mode!
 		{
 			WeaponDelay = 12;
 			Fire = 1;
 
-			if (Lara.hk_type_carried & W_SILENCER)
+			if (Lara.hkTypeCarried & W_SILENCER)
 				SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 			else
 			{
@@ -1336,13 +1336,13 @@ void BinocularCamera(ITEM_INFO* item)
 			if (ammo[0] != -1)
 				ammo[0]--;
 		}
-		else if (Lara.hk_type_carried & W_AMMO2)//burst mode!
+		else if (Lara.hkTypeCarried & W_AMMO2)//burst mode!
 		{
 			if (LSHKTimer)
 			{
 				camera.bounce = -16 - (GetRandomControl() & 0x1F);
 
-				if (Lara.hk_type_carried & W_SILENCER)
+				if (Lara.hkTypeCarried & W_SILENCER)
 					SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 				else
 				{
@@ -1363,7 +1363,7 @@ void BinocularCamera(ITEM_INFO* item)
 				LSHKTimer = 4;
 				Fire = 1;
 
-				if (Lara.hk_type_carried & W_SILENCER)
+				if (Lara.hkTypeCarried & W_SILENCER)
 					SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 				else
 				{
@@ -1379,7 +1379,7 @@ void BinocularCamera(ITEM_INFO* item)
 		{
 			if (LSHKTimer)
 			{
-				if (Lara.hk_type_carried & W_SILENCER)
+				if (Lara.hkTypeCarried & W_SILENCER)
 					SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 				else
 				{
@@ -1392,7 +1392,7 @@ void BinocularCamera(ITEM_INFO* item)
 				LSHKTimer = 4;
 				Fire = 1;
 
-				if (Lara.hk_type_carried & W_SILENCER)
+				if (Lara.hkTypeCarried & W_SILENCER)
 					SoundEffect(SFX_HK_SILENCED, 0, SFX_DEFAULT);
 				else
 				{
@@ -1416,7 +1416,7 @@ void BinocularCamera(ITEM_INFO* item)
 		if (!(inputBusy & IN_ACTION) || InfraRed)
 			bLaraTorch = 0;
 		else
-			LaraTorch(&Soffset, &Eoffset, Lara.head_y_rot, 192);
+			LaraTorch(&Soffset, &Eoffset, Lara.headRotY, 192);
 	}
 }
 
@@ -1430,34 +1430,34 @@ void LookCamera(ITEM_INFO* item)
 	long shake, dx, dy, dz, wx, wy, wz, h, c, hxrot, txrot, hyrot, tyrot, rndval, lp;
 	short room_number, room_number2;
 
-	hxrot = Lara.head_x_rot;
-	hyrot = Lara.head_y_rot;
-	txrot = Lara.torso_x_rot;
-	tyrot = Lara.torso_y_rot;
-	Lara.torso_x_rot = 0;
-	Lara.torso_y_rot = 0;
-	Lara.head_x_rot <<= 1;
-	Lara.head_y_rot <<= 1;
+	hxrot = Lara.headRotX;
+	hyrot = Lara.headRotY;
+	txrot = Lara.torsoRotX;
+	tyrot = Lara.torsoRotY;
+	Lara.torsoRotX = 0;
+	Lara.torsoRotY = 0;
+	Lara.headRotX <<= 1;
+	Lara.headRotY <<= 1;
 
-	if (Lara.head_x_rot > 10010)
-		Lara.head_x_rot = 10010;
-	else if (Lara.head_x_rot < -13650)
-		Lara.head_x_rot = -13650;
+	if (Lara.headRotX > 10010)
+		Lara.headRotX = 10010;
+	else if (Lara.headRotX < -13650)
+		Lara.headRotX = -13650;
 
-	if (Lara.head_y_rot < -14560)
-		Lara.head_y_rot = -14560;
-	else if (Lara.head_y_rot > 14560)
-		Lara.head_y_rot = 14560;
+	if (Lara.headRotY < -14560)
+		Lara.headRotY = -14560;
+	else if (Lara.headRotY > 14560)
+		Lara.headRotY = 14560;
 
-	if (abs(Lara.head_x_rot - old_cam.pos.x_rot) >= 16)
-		old_cam.pos.x_rot = (Lara.head_x_rot + old_cam.pos.x_rot) >> 1;
+	if (abs(Lara.headRotX - old_cam.pos.x_rot) >= 16)
+		old_cam.pos.x_rot = (Lara.headRotX + old_cam.pos.x_rot) >> 1;
 	else
-		old_cam.pos.x_rot = Lara.head_x_rot;
+		old_cam.pos.x_rot = Lara.headRotX;
 
-	if (abs(Lara.head_y_rot - old_cam.pos.y_rot) >= 16)
-		old_cam.pos.y_rot = (Lara.head_y_rot + old_cam.pos.y_rot) >> 1;
+	if (abs(Lara.headRotY - old_cam.pos.y_rot) >= 16)
+		old_cam.pos.y_rot = (Lara.headRotY + old_cam.pos.y_rot) >> 1;
 	else
-		old_cam.pos.y_rot = Lara.head_y_rot;
+		old_cam.pos.y_rot = Lara.headRotY;
 
 	pos1.x = 0;
 	pos1.y = 16;
@@ -1530,7 +1530,7 @@ void LookCamera(ITEM_INFO* item)
 	ideal.z = wz;
 	ideal.room_number = room_number;
 
-	if (old_cam.pos.x_rot == Lara.head_x_rot && old_cam.pos.y_rot == Lara.head_y_rot && old_cam.pos.x_pos == LaraItem->pos.x_pos &&
+	if (old_cam.pos.x_rot == Lara.headRotX && old_cam.pos.y_rot == Lara.headRotY && old_cam.pos.x_pos == LaraItem->pos.x_pos &&
 		old_cam.pos.y_pos == LaraItem->pos.y_pos && old_cam.pos.z_pos == LaraItem->pos.z_pos && 
 		old_cam.current_anim_state == LaraItem->current_anim_state && old_cam.goal_anim_state == LaraItem->goal_anim_state
 		&& camera.old_type == LOOK_CAMERA)
@@ -1658,8 +1658,8 @@ void LookCamera(ITEM_INFO* item)
 	phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
 	camera.old_type = camera.type;
 
-	Lara.head_x_rot = (short)hxrot;
-	Lara.head_y_rot = (short)hyrot;
-	Lara.torso_x_rot = (short)txrot;
-	Lara.torso_y_rot = (short)tyrot;
+	Lara.headRotX = (short)hxrot;
+	Lara.headRotY = (short)hyrot;
+	Lara.torsoRotX = (short)txrot;
+	Lara.torsoRotY = (short)tyrot;
 }

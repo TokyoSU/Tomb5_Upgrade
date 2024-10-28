@@ -193,10 +193,10 @@ void SwapCrowbar(ITEM_INFO* item)
 	
 	tmp = meshes[objects[LARA].mesh_index + 2 * LM_RHAND];
 
-	if (Lara.mesh_ptrs[LM_RHAND] == tmp)
-		Lara.mesh_ptrs[LM_RHAND] = meshes[objects[CROWBAR_ANIM].mesh_index + (2 * LM_RHAND)];
+	if (Lara.meshPtrs[LM_RHAND] == tmp)
+		Lara.meshPtrs[LM_RHAND] = meshes[objects[CROWBAR_ANIM].mesh_index + (2 * LM_RHAND)];
 	else
-		Lara.mesh_ptrs[LM_RHAND] = tmp;
+		Lara.meshPtrs[LM_RHAND] = tmp;
 }
 
 void SoundFlipEffect(ITEM_INFO* item)
@@ -214,17 +214,17 @@ void ExplosionFX(ITEM_INFO* item)
 
 void lara_hands_free(ITEM_INFO* item)
 {
-	Lara.gun_status = LG_NO_ARMS;
+	Lara.gunStatus = LG_NO_ARMS;
 }
 
 void shoot_right_gun(ITEM_INFO* item)
 {
-	Lara.right_arm.flash_gun = 3;
+	Lara.rightArm.flash_gun = 3;
 }
 
 void shoot_left_gun(ITEM_INFO* item)
 {
-	Lara.left_arm.flash_gun = 3;
+	Lara.leftArm.flash_gun = 3;
 }
 
 void invisibility_on(ITEM_INFO* item)
@@ -246,8 +246,8 @@ void LaraLocation(ITEM_INFO* item)
 {
 	Lara.location = TriggerTimer;
 
-	if (Lara.highest_location < TriggerTimer)
-		Lara.highest_location = TriggerTimer;
+	if (Lara.highestLocation < TriggerTimer)
+		Lara.highestLocation = TriggerTimer;
 
 	flipeffect = -1;
 }

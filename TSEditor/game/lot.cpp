@@ -182,7 +182,7 @@ void InitialiseSlot(short item_number, long slot)
 
 	ClearLOT(&creature->LOT);
 
-	if (item_number != Lara.item_number)
+	if (item_number != Lara.itemNumber)
 		CreateZone(item);
 
 	slots_used++;

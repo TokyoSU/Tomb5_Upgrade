@@ -524,8 +524,8 @@ void GuardianControl(short item_number)
 									if (lp1 == 999)
 									{
 										LaraBurn();
-										Lara.BurnCount = 48;
-										Lara.BurnBlue = 2;
+										Lara.burnCount = 48;
+										Lara.burnBlue = 2;
 										LaraItem->hit_points = 0;
 									}
 								}

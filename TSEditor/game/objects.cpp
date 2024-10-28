@@ -382,8 +382,8 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 	
 	item = &items[item_num];
 
-	if (KeyInput & IN_ACTION && Lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH ||
-		Lara.IsMoving && Lara.GeneralPtr == (void*)item_num)
+	if (KeyInput & IN_ACTION && Lara.gunStatus == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH ||
+		Lara.isMoving && Lara.generalPtr == (void*)item_num)
 	{
 		roty = item->pos.y_rot;
 		item->pos.y_rot = l->pos.y_rot;
@@ -395,21 +395,21 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 				l->anim_number = ANIM_STAT2POLE;
 				l->frame_number = anims[ANIM_STAT2POLE].frame_base;
 				l->current_anim_state = AS_POLESTAT;
-				Lara.IsMoving = 0;
-				Lara.gun_status = LG_HANDS_BUSY;
+				Lara.isMoving = 0;
+				Lara.gunStatus = LG_HANDS_BUSY;
 			}
 			else
-				Lara.GeneralPtr = (void*)item_num;
+				Lara.generalPtr = (void*)item_num;
 		}
-		else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_num)
+		else if (Lara.isMoving && Lara.generalPtr == (void*)item_num)
 		{
-			Lara.IsMoving = 0;
-			Lara.gun_status = LG_NO_ARMS;
+			Lara.isMoving = 0;
+			Lara.gunStatus = LG_NO_ARMS;
 		}
 
 		item->pos.y_rot = roty;
 	}
-	else if (KeyInput & IN_ACTION && Lara.gun_status == LG_NO_ARMS && l->gravity_status != 0 && l->fallspeed > 0 &&
+	else if (KeyInput & IN_ACTION && Lara.gunStatus == LG_NO_ARMS && l->gravity_status != 0 && l->fallspeed > 0 &&
 		(l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP))
 	{
 		if (TestBoundsCollide(item, l, 100) && TestCollision(item, l))
@@ -435,7 +435,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 			l->gravity_status = 0;
 			l->fallspeed = 0;
 			l->current_anim_state = AS_POLESTAT;
-			Lara.gun_status = LG_HANDS_BUSY;
+			Lara.gunStatus = LG_HANDS_BUSY;
 			item->pos.y_rot = roty;
 		}
 	}
@@ -552,7 +552,7 @@ void TightRopeCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 	item = &items[item_num];
 
 	if (KeyInput & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status &&
-		Lara.gun_status == LG_NO_ARMS || Lara.IsMoving && Lara.GeneralPtr == (void*)item_num)
+		Lara.gunStatus == LG_NO_ARMS || Lara.isMoving && Lara.generalPtr == (void*)item_num)
 	{
 		item->pos.y_rot += 0x8000;
 
@@ -563,26 +563,26 @@ void TightRopeCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 				l->current_anim_state = AS_TROPEGETON;
 				l->anim_number = ANIM_TROPEGETON;
 				l->frame_number = anims[ANIM_TROPEGETON].frame_base;
-				Lara.IsMoving = 0;
-				Lara.head_x_rot = 0;
-				Lara.head_y_rot = 0;
-				Lara.torso_y_rot = 0;
-				Lara.torso_z_rot = 0;
-				Lara.TightRopeOnCount = 60;
-				Lara.TightRopeOff = 0;
-				Lara.TightRopeFall = 0;
+				Lara.isMoving = 0;
+				Lara.headRotX = 0;
+				Lara.headRotY = 0;
+				Lara.torsoRotY = 0;
+				Lara.torsoRotZ = 0;
+				Lara.tightRopeOnCount = 60;
+				Lara.tightRopeOff = 0;
+				Lara.tightRopeFall = 0;
 			}
 			else
-				Lara.GeneralPtr = (void*)item_num;
+				Lara.generalPtr = (void*)item_num;
 		}
-		else if (Lara.IsMoving && Lara.GeneralPtr == (void*)item_num)
-			Lara.IsMoving = 0;
+		else if (Lara.isMoving && Lara.generalPtr == (void*)item_num)
+			Lara.isMoving = 0;
 
 		item->pos.y_rot += 0x8000;
 	}
-	else if (l->current_anim_state == AS_TROPEWALK && l->goal_anim_state != AS_TROPEGETOFF && !Lara.TightRopeOff &&
+	else if (l->current_anim_state == AS_TROPEWALK && l->goal_anim_state != AS_TROPEGETOFF && !Lara.tightRopeOff &&
 		item->pos.y_rot == l->pos.y_rot && ((abs(item->pos.x_pos - l->pos.x_pos) + abs(item->pos.z_pos - l->pos.z_pos)) < 640))
-		Lara.TightRopeOff = 1;
+		Lara.tightRopeOff = 1;
 }
 
 void ParallelBarsCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
@@ -622,10 +622,10 @@ void ParallelBarsCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 	l->frame_number = anims[ANIM_PB_GRAB].frame_base;
 	l->fallspeed = 0;
 	l->gravity_status = 0;
-	Lara.head_x_rot = 0;
-	Lara.head_y_rot = 0;
-	Lara.torso_x_rot = 0;
-	Lara.torso_y_rot = 0;
+	Lara.headRotX = 0;
+	Lara.headRotY = 0;
+	Lara.torsoRotX = 0;
+	Lara.torsoRotY = 0;
 	
 	if (pass)
 		l->pos.y_rot = item->pos.y_rot;
@@ -648,7 +648,7 @@ void ParallelBarsCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 		l->pos.z_pos += item->pos.z_pos - ((pos.z + pos2.z) >> 1);
 
 	l->pos.y_pos += item->pos.y_pos - ((pos.y + pos2.y) >> 1);
-	Lara.GeneralPtr = item;
+	Lara.generalPtr = item;
 }
 
 void ControlXRayMachine(short item_number)
@@ -678,7 +678,7 @@ void ControlXRayMachine(short item_number)
 			}
 		}
 		
-		if (Lara.skelebob && Lara.hk_type_carried & W_PRESENT)
+		if (Lara.skelebob && Lara.hkTypeCarried & W_PRESENT)
 		{
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			item->item_flags[0] = 666;
@@ -702,7 +702,7 @@ void ControlXRayMachine(short item_number)
 			return;
 		}
 
-		if (Lara.Fired)
+		if (Lara.fired)
 			item->item_flags[0] = 15;
 
 		break;

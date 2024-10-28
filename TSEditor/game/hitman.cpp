@@ -173,8 +173,8 @@ void HitmanControl(short item_number)
 				(room[left_foot_room].FlipNumber == room[item->room_number].FlipNumber || room[right_foot_room].FlipNumber == room[item->room_number].FlipNumber))
 			{
 				LaraBurn();
-				Lara.BurnBlue = 1;
-				Lara.BurnCount = 48;
+				Lara.burnBlue = 1;
+				Lara.burnCount = 48;
 				LaraItem->hit_points = 0;
 			}
 		}

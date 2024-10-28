@@ -171,7 +171,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	rope = &RopeList[items[item_number].trigger_flags];
 
-	if (KeyInput & IN_ACTION && Lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) &&
+	if (KeyInput & IN_ACTION && Lara.gunStatus == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) &&
 		l->gravity_status && l->fallspeed > 0 && rope->Active)
 	{
 		bounds = GetBoundsAccurate(l);
@@ -187,8 +187,8 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			{
 				l->anim_number = 379;
 				l->current_anim_state = AS_ROPEFWD;
-				Lara.RopeFrame = (anims[ANIM_SWINGFWD].frame_base + 32) * 256;
-				Lara.RopeDFrame = (anims[ANIM_SWINGFWD].frame_base + 60) * 256;
+				Lara.ropeFrame = (anims[ANIM_SWINGFWD].frame_base + 32) * 256;
+				Lara.ropeDFrame = (anims[ANIM_SWINGFWD].frame_base + 60) * 256;
 			}
 			else
 			{
@@ -199,10 +199,10 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			l->frame_number = anims[l->anim_number].frame_base;
 			l->gravity_status = 0;
 			l->fallspeed = 0;
-			Lara.gun_status = LG_HANDS_BUSY;
-			Lara.RopePtr = items[item_number].trigger_flags;
-			Lara.RopeSegment = (char)i;
-			Lara.RopeY = l->pos.y_rot;
+			Lara.gunStatus = LG_HANDS_BUSY;
+			Lara.ropePtr = items[item_number].trigger_flags;
+			Lara.ropeSegment = (char)i;
+			Lara.ropeY = l->pos.y_rot;
 			AlignLaraToRope(l);
 			CurrentPendulum.Velocity.x = 0;
 			CurrentPendulum.Velocity.y = 0;
@@ -231,13 +231,13 @@ void CalculateRope(ROPE_STRUCT* Rope)
 		}
 	}
 
-	if (Rope == &RopeList[Lara.RopePtr])
+	if (Rope == &RopeList[Lara.ropePtr])
 	{
 		Pendulum = &CurrentPendulum;
 		
-		if (CurrentPendulum.node != Lara.RopeSegment + 1)
+		if (CurrentPendulum.node != Lara.ropeSegment + 1)
 		{
-			SetPendulumPoint(Rope, Lara.RopeSegment + 1);
+			SetPendulumPoint(Rope, Lara.ropeSegment + 1);
 			bSetFlag = 1;
 		}
 	}
@@ -245,7 +245,7 @@ void CalculateRope(ROPE_STRUCT* Rope)
 	{
 		Pendulum = &NullPendulum;
 		
-		if (Lara.RopePtr == -1 && CurrentPendulum.Rope)
+		if (Lara.ropePtr == -1 && CurrentPendulum.Rope)
 		{
 			for (n = 0; n < CurrentPendulum.node; n++)
 			{
@@ -265,7 +265,7 @@ void CalculateRope(ROPE_STRUCT* Rope)
 		}
 	}
 
-	if (Lara.RopePtr != -1)
+	if (Lara.ropePtr != -1)
 	{
 		dir.x = Pendulum->Position.x - Rope->Segment[0].x;
 		dir.y = Pendulum->Position.y - Rope->Segment[0].y;
@@ -352,7 +352,7 @@ void CalculateRope(ROPE_STRUCT* Rope)
 		Normalise(&Rope->NormalisedSegment[n]);
 	}
 
-	if (Rope != &RopeList[Lara.RopePtr])
+	if (Rope != &RopeList[Lara.ropePtr])
 	{
 		Rope->MeshSegment[0].x = Rope->Segment[0].x;
 		Rope->MeshSegment[0].y = Rope->Segment[0].y;
@@ -514,9 +514,9 @@ void AlignLaraToRope(ITEM_INFO* l)
 	up.y = 0;
 	up.z = 0;
 	frame = GetBestFrame(l);
-	ropeangle = Lara.RopeY - 16380;
-	rope = &RopeList[Lara.RopePtr];
-	i = Lara.RopeSegment;
+	ropeangle = Lara.ropeY - 16380;
+	rope = &RopeList[Lara.ropePtr];
+	i = Lara.ropeSegment;
 	GetRopePos(rope, (i - 1) * 128 + frame[7], &x, &y, &z);
 	GetRopePos(rope, (i - 1) * 128 + frame[7] - 192, &x1, &y1, &z1);
 	u.x = (x - x1) << 16;
@@ -567,7 +567,7 @@ void AlignLaraToRope(ITEM_INFO* l)
 	temp.m22 = v.z;
 	phd_GetMatrixAngles(&temp, xyz);
 	l->pos.x_pos = rope->Position.x + (rope->MeshSegment[i].x >> 16);
-	l->pos.y_pos = rope->Position.y + (rope->MeshSegment[i].y >> 16) + Lara.RopeOffset;
+	l->pos.y_pos = rope->Position.y + (rope->MeshSegment[i].y >> 16) + Lara.ropeOffset;
 	l->pos.z_pos = rope->Position.z + (rope->MeshSegment[i].z >> 16);
 	phd_PushUnitMatrix();
 	phd_RotYXZ(xyz[1], xyz[0], xyz[2]);
@@ -591,26 +591,26 @@ void LaraClimbRope(ITEM_INFO* item, COLL_INFO* coll)
 
 	camera.target_angle = 5460;
 
-	if (Lara.RopeCount)
+	if (Lara.ropeCount)
 	{
-		if (!Lara.RopeFlag)
+		if (!Lara.ropeFlag)
 		{
-			Lara.RopeCount--;
-			Lara.RopeOffset += Lara.RopeDownVel;
+			Lara.ropeCount--;
+			Lara.ropeOffset += Lara.ropeDownVel;
 
-			if (!Lara.RopeCount)
-				Lara.RopeFlag = 1;
+			if (!Lara.ropeCount)
+				Lara.ropeFlag = 1;
 
 			return;
 		}
 	}
-	else if (!Lara.RopeFlag)
+	else if (!Lara.ropeFlag)
 	{
-		Lara.RopeOffset = 0;
-		Lara.RopeDownVel = (ulong)(RopeList[Lara.RopePtr].MeshSegment[Lara.RopeSegment + 1].y - RopeList[Lara.RopePtr].MeshSegment[Lara.RopeSegment].y) >> 17;
-		Lara.RopeCount = 0;
-		Lara.RopeOffset += Lara.RopeDownVel;
-		Lara.RopeFlag = 1;
+		Lara.ropeOffset = 0;
+		Lara.ropeDownVel = (ulong)(RopeList[Lara.ropePtr].MeshSegment[Lara.ropeSegment + 1].y - RopeList[Lara.ropePtr].MeshSegment[Lara.ropeSegment].y) >> 17;
+		Lara.ropeCount = 0;
+		Lara.ropeOffset += Lara.ropeDownVel;
+		Lara.ropeFlag = 1;
 		return;
 	}
 
@@ -618,12 +618,12 @@ void LaraClimbRope(ITEM_INFO* item, COLL_INFO* coll)
 	{
 		SoundEffect(SFX_LARA_ROPEDOWN_LOOP, &LaraItem->pos, 0);
 		item->frame_number = anims[item->anim_number].frame_base;
-		Lara.RopeFlag = 0;
-		Lara.RopeSegment++;
-		Lara.RopeOffset = 0;
+		Lara.ropeFlag = 0;
+		Lara.ropeSegment++;
+		Lara.ropeOffset = 0;
 	}
 
-	if (!(KeyInput & IN_BACK) || Lara.RopeSegment >= 21)
+	if (!(KeyInput & IN_BACK) || Lara.ropeSegment >= 21)
 		item->goal_anim_state = AS_ROPE;
 }
 
@@ -675,7 +675,7 @@ void init_all_ropes()
 
 void SaveRope()
 {
-	WriteSG(&RopeList[Lara.RopePtr], sizeof(ROPE_STRUCT));
+	WriteSG(&RopeList[Lara.ropePtr], sizeof(ROPE_STRUCT));
 	CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope - (char*)RopeList);
 	WriteSG(&CurrentPendulum, sizeof(PENDULUM));
 	CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
@@ -683,7 +683,7 @@ void SaveRope()
 
 void LoadRope()
 {
-	ReadSG(&RopeList[Lara.RopePtr], sizeof(ROPE_STRUCT));
+	ReadSG(&RopeList[Lara.ropePtr], sizeof(ROPE_STRUCT));
 	ReadSG(&CurrentPendulum, sizeof(PENDULUM));
 	CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
 }

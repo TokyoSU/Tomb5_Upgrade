@@ -354,7 +354,7 @@ void ControlIris(short item_number)
 				{
 					LaraBurn();
 					LaraItem->hit_points = 0;
-					Lara.BurnCount = 24;
+					Lara.burnCount = 24;
 				}
 				else
 				{
@@ -572,9 +572,9 @@ void ControlGasCloud(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	if (Lara.water_status != LW_FLYCHEAT)
+	if (Lara.waterStatus != LW_FLYCHEAT)
 	{
-		if (!Lara.Gassed)
+		if (!Lara.gassed)
 		{
 			pos.x = 0;
 			pos.y = 0;
@@ -584,7 +584,7 @@ void ControlGasCloud(short item_number)
 			GetFloor(pos.x, pos.y, pos.z, &room_number);
 
 			if (room[room_number].flags & ROOM_NO_LENSFLARE)
-				Lara.Gassed = 1;
+				Lara.gassed = 1;
 		}
 	}
 

@@ -77,14 +77,14 @@ void DrawGameInfo(long timed)
 			PrintString(92, 24, 0, buf, 0);
 		}
 
-		if (tomb5.ammo_counter && Lara.gun_status == LG_READY)
+		if (tomb5.ammo_counter && Lara.gunStatus == LG_READY)
 		{
-			ammo = *get_current_ammo_pointer(Lara.gun_type);
+			ammo = *get_current_ammo_pointer(Lara.gunType);
 
 			if (ammo != -1)
 			{
 
-				if (Lara.gun_type == WEAPON_SHOTGUN)
+				if (Lara.gunType == WEAPON_SHOTGUN)
 					ammo /= 6;
 
 				sprintf(&buf[0], "%i", ammo);
@@ -132,7 +132,7 @@ void DrawHealthBar(long flash_state)
 		else
 			S_DrawHealthBar(0);
 	}
-	else if (health_bar_timer > 0 || Lara.gun_status == LG_READY && Lara.gun_type != WEAPON_TORCH || Lara.poisoned >= 256)
+	else if (health_bar_timer > 0 || Lara.gunStatus == LG_READY && Lara.gunType != WEAPON_TORCH || Lara.poisoned >= 256)
 			S_DrawHealthBar(hitpoints / 10);
 
 	if (PoisonFlag)
@@ -158,12 +158,12 @@ void DrawAirBar(long flash_state)
 	else
 		S_DrawAirBar(0);
 
-	if (Lara.Gassed)
+	if (Lara.gassed)
 	{
 		if (Lara.dpoisoned < 2048)
 			Lara.dpoisoned += 2;
 
-		Lara.Gassed = 0;
+		Lara.gassed = 0;
 	}
 }
 

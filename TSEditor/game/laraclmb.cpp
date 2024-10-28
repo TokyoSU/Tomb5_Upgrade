@@ -23,10 +23,10 @@ static long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll)
 	if (KeyInput & IN_ACTION && item->hit_points > 0)
 		return 0;
 
-	Lara.torso_y_rot = 0;
-	Lara.torso_x_rot = 0;
-	Lara.head_y_rot = 0;
-	Lara.head_x_rot = 0;
+	Lara.torsoRotY = 0;
+	Lara.torsoRotX = 0;
+	Lara.headRotY = 0;
+	Lara.headRotX = 0;
 	item->goal_anim_state = AS_FORWARDJUMP;
 	item->current_anim_state = AS_FORWARDJUMP;
 	item->anim_number = ANIM_FALLDOWN;
@@ -34,13 +34,13 @@ static long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll)
 	item->speed = 2;
 	item->gravity_status = 1;
 	item->fallspeed = 1;
-	Lara.gun_status = LG_NO_ARMS;
+	Lara.gunStatus = LG_NO_ARMS;
 	return 1;
 }
 
 void lara_as_climbstnc(ITEM_INFO* item, COLL_INFO* coll)
 {
-	Lara.IsClimbing = 1;
+	Lara.isClimbing = 1;
 	coll->enable_spaz = 0;
 	coll->enable_baddie_push = 0;
 	camera.target_elevation = -3640;
@@ -51,20 +51,20 @@ void lara_as_climbstnc(ITEM_INFO* item, COLL_INFO* coll)
 	if (KeyInput & IN_LEFT || KeyInput & IN_LSTEP)
 	{
 		item->goal_anim_state = AS_CLIMBLEFT;
-		Lara.move_angle = item->pos.y_rot - 0x4000;
+		Lara.moveAngle = item->pos.y_rot - 0x4000;
 	}
 	else if (KeyInput & IN_RIGHT || KeyInput & IN_RSTEP)
 	{
 		item->goal_anim_state = AS_CLIMBRIGHT;
-		Lara.move_angle = item->pos.y_rot + 0x4000;
+		Lara.moveAngle = item->pos.y_rot + 0x4000;
 	}
 	else if (KeyInput & IN_JUMP)
 	{
 		if (item->anim_number == ANIM_CLIMBSTNC)
 		{
 			item->goal_anim_state = AS_BACKJUMP;
-			Lara.gun_status = LG_NO_ARMS;
-			Lara.move_angle = item->pos.y_rot + 0x8000;
+			Lara.gunStatus = LG_NO_ARMS;
+			Lara.moveAngle = item->pos.y_rot + 0x8000;
 		}
 	}
 }
@@ -253,7 +253,7 @@ void lara_col_climbleft(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (!LaraCheckForLetGo(item, coll))
 	{
-		Lara.move_angle = item->pos.y_rot - 0x4000;
+		Lara.moveAngle = item->pos.y_rot - 0x4000;
 		res = LaraTestClimbPos(item, coll->radius, -(coll->radius + 120), -512, 512, &shift);
 		LaraDoClimbLeftRight(item, coll, res, shift);
 	}
@@ -276,7 +276,7 @@ void lara_col_climbright(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (!LaraCheckForLetGo(item, coll))
 	{
-		Lara.move_angle = item->pos.y_rot + 0x4000;
+		Lara.moveAngle = item->pos.y_rot + 0x4000;
 		res = LaraTestClimbPos(item, coll->radius, coll->radius + 120, -512, 512, &shift);
 		LaraDoClimbLeftRight(item, coll, res, shift);
 	}
@@ -497,7 +497,7 @@ long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_h
 	*shift = 0;
 	hang = 1;
 
-	if (!Lara.climb_status)
+	if (!Lara.climbStatus)
 		return 0;
 
 	room_number = item_room;
@@ -688,10 +688,10 @@ long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	{
 		item->pos.x_pos = x;
 		item->pos.z_pos = z;
-		Lara.CornerX = x;
-		Lara.CornerZ = z;
+		Lara.cornerX = x;
+		Lara.cornerZ = z;
 		item->pos.y_rot -= 0x4000;
-		Lara.move_angle = item->pos.y_rot;
+		Lara.moveAngle = item->pos.y_rot;
 		flag = LaraTestClimbPos(item, coll->radius, -120 - coll->radius, -512, 512, &shift);
 		item->item_flags[3] = (short)flag;
 
@@ -704,7 +704,7 @@ long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 		item->pos.x_pos = oldX;
 		item->pos.y_rot = oldY;
 		item->pos.z_pos = oldZ;
-		Lara.move_angle = oldY;
+		Lara.moveAngle = oldY;
 
 		switch (angle)
 		{
@@ -733,10 +733,10 @@ long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 		{
 			item->pos.x_pos = x;
 			item->pos.z_pos = z;
-			Lara.CornerX = x;
-			Lara.CornerZ = z;
+			Lara.cornerX = x;
+			Lara.cornerZ = z;
 			item->pos.y_rot += 0x4000;
-			Lara.move_angle = item->pos.y_rot;
+			Lara.moveAngle = item->pos.y_rot;
 			flag = LaraTestClimbPos(item, coll->radius, -120 - coll->radius, -512, 512, &shift);
 			item->item_flags[3] = (short)flag;
 
@@ -748,7 +748,7 @@ long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	item->pos.x_pos = oldX;
 	item->pos.y_rot = oldY;
 	item->pos.z_pos = oldZ;
-	Lara.move_angle = oldY;
+	Lara.moveAngle = oldY;
 	return flag;
 }
 
@@ -785,10 +785,10 @@ long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	{
 		item->pos.x_pos = x;
 		item->pos.z_pos = z;
-		Lara.CornerX = x;
-		Lara.CornerZ = z;
+		Lara.cornerX = x;
+		Lara.cornerZ = z;
 		item->pos.y_rot += 0x4000;
-		Lara.move_angle = item->pos.y_rot;
+		Lara.moveAngle = item->pos.y_rot;
 		flag = LaraTestClimbPos(item, coll->radius, coll->radius + 120, -512, 512, &shift);
 
 		if (flag)
@@ -800,7 +800,7 @@ long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 		item->pos.x_pos = oldX;
 		item->pos.y_rot = oldY;
 		item->pos.z_pos = oldZ;
-		Lara.move_angle = oldY;
+		Lara.moveAngle = oldY;
 
 		switch (angle)
 		{
@@ -829,10 +829,10 @@ long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 		{
 			item->pos.x_pos = x;
 			item->pos.z_pos = z;
-			Lara.CornerX = x;
-			Lara.CornerZ = z;
+			Lara.cornerX = x;
+			Lara.cornerZ = z;
 			item->pos.y_rot -= 0x4000;
-			Lara.move_angle = item->pos.y_rot;
+			Lara.moveAngle = item->pos.y_rot;
 			flag = LaraTestClimbPos(item, coll->radius, coll->radius + 120, -512, 512, &shift);
 
 			if (flag)
@@ -843,7 +843,7 @@ long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	item->pos.x_pos = oldX;
 	item->pos.y_rot = oldY;
 	item->pos.z_pos = oldZ;
-	Lara.move_angle = oldY;
+	Lara.moveAngle = oldY;
 	return flag;
 }
 

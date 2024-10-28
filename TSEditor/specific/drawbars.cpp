@@ -282,11 +282,11 @@ static void S_DrawHealthBar2(long pos)
 	y = GetRenderScale(100);
 
 	if (tomb5.bar_mode == 3)
-		S_DrawGouraudBar(x, y, w, h, pos, (Lara.poisoned || Lara.Gassed) ? &poisonBarColourSet : &healthBarColourSet);
+		S_DrawGouraudBar(x, y, w, h, pos, (Lara.poisoned || Lara.gassed) ? &poisonBarColourSet : &healthBarColourSet);
 	else if (tomb5.bar_mode == 2)
-		S_DoTR4Bar(x, y, w, h, pos, 0xFF000000, (Lara.poisoned || Lara.Gassed) ? 0xFFFFFF00 : 0xFFFF0000);
+		S_DoTR4Bar(x, y, w, h, pos, 0xFF000000, (Lara.poisoned || Lara.gassed) ? 0xFFFFFF00 : 0xFFFF0000);
 	else
-		DoBar(x, y, w, h, pos, 0xA00000, (Lara.poisoned || Lara.Gassed) ? 0xA0A000 : 0x00A000);
+		DoBar(x, y, w, h, pos, 0xA00000, (Lara.poisoned || Lara.gassed) ? 0xA0A000 : 0x00A000);
 }
 
 void S_DrawHealthBar(long pos)
@@ -318,11 +318,11 @@ void S_DrawHealthBar(long pos)
 	}
 
 	if (tomb5.bar_mode == 2)
-		S_DoTR4Bar(x, y, w, h, pos, 0xFF000000, (Lara.poisoned || Lara.Gassed) ? 0xFFFFFF00 : 0xFFFF0000);
+		S_DoTR4Bar(x, y, w, h, pos, 0xFF000000, (Lara.poisoned || Lara.gassed) ? 0xFFFFFF00 : 0xFFFF0000);
 	else if (tomb5.bar_mode == 3)
-		S_DrawGouraudBar(x, y, w, h, pos, (Lara.poisoned || Lara.Gassed) ? &poisonBarColourSet : &healthBarColourSet);
+		S_DrawGouraudBar(x, y, w, h, pos, (Lara.poisoned || Lara.gassed) ? &poisonBarColourSet : &healthBarColourSet);
 	else
-		DoBar(x, y, w, h, pos, 0xA00000, (Lara.poisoned || Lara.Gassed) ? 0xA0A000 : 0x00A000);
+		DoBar(x, y, w, h, pos, 0xA00000, (Lara.poisoned || Lara.gassed) ? 0xA0A000 : 0x00A000);
 }
 
 void S_DrawAirBar(long pos)

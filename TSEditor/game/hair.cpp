@@ -95,24 +95,24 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 
 	if (!cutscenething)
 	{
-		if (Lara.hit_direction < 0)
+		if (Lara.hitDirection < 0)
 		{
 			frame = GetBestFrame(LaraItem);
 			frac = GetFrames(LaraItem, frm, &rate); // Interpolate the frames if necessary
 		}
 		else
 		{
-			if (!Lara.hit_direction)
-				spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKF : ANIM_SPAZ_FORWARD;
-			else if (Lara.hit_direction == 1)
-				spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKR : ANIM_SPAZ_RIGHT;
-			else if (Lara.hit_direction == 2)
-				spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKB : ANIM_SPAZ_BACK;
+			if (!Lara.hitDirection)
+				spaz = Lara.isDucked ? ANIM_SPAZ_DUCKF : ANIM_SPAZ_FORWARD;
+			else if (Lara.hitDirection == 1)
+				spaz = Lara.isDucked ? ANIM_SPAZ_DUCKR : ANIM_SPAZ_RIGHT;
+			else if (Lara.hitDirection == 2)
+				spaz = Lara.isDucked ? ANIM_SPAZ_DUCKB : ANIM_SPAZ_BACK;
 			else
-				spaz = Lara.IsDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
+				spaz = Lara.isDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
 
 			frame = anims[spaz].frame_ptr;
-			frame += Lara.hit_frame * (anims[spaz].interpolation >> 8);
+			frame += Lara.hitFrame * (anims[spaz].interpolation >> 8);
 			frm[0] = frame;
 			frac = 0;
 		}
@@ -138,7 +138,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		gar_RotYXZsuperpack_I(&rot[0], &rot[1], 0);
 
 		phd_PushMatrix_I();
-		objptr = Lara.mesh_ptrs[LM_HIPS];
+		objptr = Lara.meshPtrs[LM_HIPS];
 		phd_TranslateRel_I(*objptr, objptr[1], objptr[2]);
 		InterpolateMatrix();
 		sphere[0].x = (long)aMXPtr->m03;
@@ -149,22 +149,22 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 
 		phd_TranslateRel_I(bone[25], bone[26], bone[27]);
 
-		if (Lara.weapon_item != NO_ITEM && Lara.gun_type == WEAPON_HK &&
-			(items[Lara.weapon_item].current_anim_state == 0 || items[Lara.weapon_item].current_anim_state == 1 ||
-				items[Lara.weapon_item].current_anim_state == 2 || items[Lara.weapon_item].current_anim_state == 3 ||
-				items[Lara.weapon_item].current_anim_state == 4))
+		if (Lara.weaponItem != NO_ITEM && Lara.gunType == WEAPON_HK &&
+			(items[Lara.weaponItem].current_anim_state == 0 || items[Lara.weaponItem].current_anim_state == 1 ||
+				items[Lara.weaponItem].current_anim_state == 2 || items[Lara.weaponItem].current_anim_state == 3 ||
+				items[Lara.weaponItem].current_anim_state == 4))
 		{
-			rot[0] = &Lara.right_arm.frame_base[Lara.right_arm.frame_number * (anims[Lara.right_arm.anim_number].interpolation >> 8) + 9];
+			rot[0] = &Lara.rightArm.frame_base[Lara.rightArm.frame_number * (anims[Lara.rightArm.anim_number].interpolation >> 8) + 9];
 			rot[1] = rot[0];
 			gar_RotYXZsuperpack_I(&rot[0], &rot[1], 7);
 		}
 		else
 			gar_RotYXZsuperpack_I(&rot[0], &rot[1], 6);
 
-		phd_RotYXZ_I(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
+		phd_RotYXZ_I(Lara.torsoRotY, Lara.torsoRotX, Lara.torsoRotZ);
 
 		phd_PushMatrix_I();
-		objptr = Lara.mesh_ptrs[LM_TORSO];
+		objptr = Lara.meshPtrs[LM_TORSO];
 
 		if (gfCurrentLevel >= LVL5_BASE && gfCurrentLevel <= LVL5_SINKING_SUBMARINE)
 			phd_TranslateRel_I(*objptr - 11, objptr[1] - 16, objptr[2] + 25);
@@ -189,7 +189,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[29], bone[30], bone[31]);
 		gar_RotYXZsuperpack_I(&rot[0], &rot[1], 0);
-		objptr = Lara.mesh_ptrs[LM_RINARM];
+		objptr = Lara.meshPtrs[LM_RINARM];
 		phd_TranslateRel_I(*objptr, objptr[1], objptr[2]);
 		InterpolateMatrix();
 		sphere[3].x = (long)aMXPtr->m03;
@@ -201,7 +201,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[41], bone[42], bone[43]);
 		gar_RotYXZsuperpack_I(&rot[0], &rot[1], 2);
-		objptr = Lara.mesh_ptrs[LM_LINARM];
+		objptr = Lara.meshPtrs[LM_LINARM];
 		phd_TranslateRel_I(*objptr, objptr[1], objptr[2]);
 		InterpolateMatrix();
 		sphere[4].x = (long)aMXPtr->m03;
@@ -211,10 +211,10 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		phd_PopMatrix_I();
 		phd_TranslateRel_I(bone[53], bone[54], bone[55]);
 		gar_RotYXZsuperpack_I(&rot[0], &rot[1], 2);
-		phd_RotYXZ_I(Lara.head_y_rot, Lara.head_x_rot, Lara.head_z_rot);
+		phd_RotYXZ_I(Lara.headRotY, Lara.headRotX, Lara.headRotZ);
 
 		phd_PushMatrix_I();
-		objptr = Lara.mesh_ptrs[LM_HEAD];
+		objptr = Lara.meshPtrs[LM_HEAD];
 		phd_TranslateRel_I(*objptr - 2, objptr[1], objptr[2]);	//repositioned to avoid floating hair
 		InterpolateMatrix();
 		sphere[2].x = (long)aMXPtr->m03;
@@ -255,7 +255,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		gar_RotYXZsuperpack(&rot[0], 0);
 
 		phd_PushMatrix();
-		objptr = Lara.mesh_ptrs[LM_HIPS];
+		objptr = Lara.meshPtrs[LM_HIPS];
 		phd_TranslateRel(*objptr, objptr[1], objptr[2]);
 		sphere[0].x = (long)aMXPtr->m03;
 		sphere[0].y = (long)aMXPtr->m13;
@@ -265,21 +265,21 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 
 		phd_TranslateRel(bone[25], bone[26], bone[27]);
 
-		if (Lara.weapon_item != NO_ITEM && Lara.gun_type == WEAPON_HK &&
-			(items[Lara.weapon_item].current_anim_state == 0 || items[Lara.weapon_item].current_anim_state == 1 ||
-				items[Lara.weapon_item].current_anim_state == 2 || items[Lara.weapon_item].current_anim_state == 3 ||
-				items[Lara.weapon_item].current_anim_state == 4))
+		if (Lara.weaponItem != NO_ITEM && Lara.gunType == WEAPON_HK &&
+			(items[Lara.weaponItem].current_anim_state == 0 || items[Lara.weaponItem].current_anim_state == 1 ||
+				items[Lara.weaponItem].current_anim_state == 2 || items[Lara.weaponItem].current_anim_state == 3 ||
+				items[Lara.weaponItem].current_anim_state == 4))
 		{
-			rot[0] = Lara.right_arm.frame_base + Lara.right_arm.frame_number * (anims[Lara.right_arm.anim_number].interpolation >> 8) + 9;
+			rot[0] = Lara.rightArm.frame_base + Lara.rightArm.frame_number * (anims[Lara.rightArm.anim_number].interpolation >> 8) + 9;
 			gar_RotYXZsuperpack(&rot[0], 7);
 		}
 		else
 			gar_RotYXZsuperpack(&rot[0], 6);
 
-		phd_RotYXZ(Lara.torso_y_rot, Lara.torso_x_rot, Lara.torso_z_rot);
+		phd_RotYXZ(Lara.torsoRotY, Lara.torsoRotX, Lara.torsoRotZ);
 
 		phd_PushMatrix();
-		objptr = Lara.mesh_ptrs[LM_TORSO];
+		objptr = Lara.meshPtrs[LM_TORSO];
 
 		if (gfCurrentLevel >= LVL5_BASE && gfCurrentLevel <= LVL5_SINKING_SUBMARINE)
 			phd_TranslateRel(*objptr - 11, objptr[1] - 16, objptr[2] + 25);
@@ -303,7 +303,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		phd_PushMatrix();
 		phd_TranslateRel(bone[29], bone[30], bone[31]);
 		gar_RotYXZsuperpack(&rot[0], 0);
-		objptr = Lara.mesh_ptrs[LM_RINARM];
+		objptr = Lara.meshPtrs[LM_RINARM];
 		phd_TranslateRel(*objptr, objptr[1], objptr[2]);
 		sphere[3].x = (long)aMXPtr->m03;
 		sphere[3].y = (long)aMXPtr->m13;
@@ -314,7 +314,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		phd_PushMatrix();
 		phd_TranslateRel(bone[41], bone[42], bone[43]);
 		gar_RotYXZsuperpack(&rot[0], 2);
-		objptr = Lara.mesh_ptrs[LM_LINARM];
+		objptr = Lara.meshPtrs[LM_LINARM];
 		phd_TranslateRel(*objptr, objptr[1], objptr[2]);
 		sphere[4].x = (long)aMXPtr->m03;
 		sphere[4].y = (long)aMXPtr->m13;
@@ -323,10 +323,10 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		phd_PopMatrix();
 		phd_TranslateRel(bone[53], bone[54], bone[55]);
 		gar_RotYXZsuperpack(&rot[0], 2);
-		phd_RotYXZ(Lara.head_y_rot, Lara.head_x_rot, Lara.head_z_rot);
+		phd_RotYXZ(Lara.headRotY, Lara.headRotX, Lara.headRotZ);
 
 		phd_PushMatrix();
-		objptr = Lara.mesh_ptrs[LM_HEAD];
+		objptr = Lara.meshPtrs[LM_HEAD];
 		phd_TranslateRel(*objptr - 2, objptr[1], objptr[2]);
 		sphere[2].x = (long)aMXPtr->m03;
 		sphere[2].y = (long)aMXPtr->m13;
@@ -443,7 +443,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 		hair->pos.y_pos += 3 * hair->vel.y / 4;
 		hair->pos.z_pos += 3 * hair->vel.z / 4;
 
-		if (Lara.water_status == LW_ABOVE_WATER && room[room_num].flags & ROOM_NOT_INSIDE)
+		if (Lara.waterStatus == LW_ABOVE_WATER && room[room_num].flags & ROOM_NOT_INSIDE)
 		{
 			hair->pos.x_pos += SmokeWindX;
 			hair->pos.z_pos += SmokeWindZ;

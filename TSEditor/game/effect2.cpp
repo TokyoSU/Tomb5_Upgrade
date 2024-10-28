@@ -1499,13 +1499,13 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		sptr->sG = (GetRandomControl() & 0x1F) + 48;
 		sptr->sB = 48;
 
-		if (Lara.BurnBlue == 1)
+		if (Lara.burnBlue == 1)
 		{
 			swp = sptr->sR;
 			sptr->sR = sptr->sB;
 			sptr->sB = swp;
 		}
-		else if (Lara.BurnBlue == 2)
+		else if (Lara.burnBlue == 2)
 		{
 			sptr->sB = sptr->sG >> 1;
 			sptr->sG = 255;
@@ -1519,13 +1519,13 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		sptr->dG = (GetRandomControl() & 0x3F) + 128;
 		sptr->dB = 32;
 
-		if (Lara.BurnBlue == 1)
+		if (Lara.burnBlue == 1)
 		{
 			swp = sptr->dR;
 			sptr->dR = sptr->dB;
 			sptr->dB = swp;
 		}
-		else if (Lara.BurnBlue == 2)
+		else if (Lara.burnBlue == 2)
 		{
 			sptr->dB = sptr->dG >> 1;
 			sptr->dG = 255;

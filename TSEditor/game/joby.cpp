@@ -132,8 +132,8 @@ void ControlElectricalCables(short item_number)
 
 				item->item_flags[0] = 28;
 				LaraBurn();
-				Lara.BurnCount = 48;
-				Lara.BurnBlue = 1;
+				Lara.burnCount = 48;
+				Lara.burnBlue = 1;
 				LaraItem->hit_points = 0;
 				return;
 			}
@@ -202,8 +202,8 @@ void ControlElectricalCables(short item_number)
 
 			item->item_flags[0] = 28;
 			LaraBurn();
-			Lara.BurnCount = 48;
-			Lara.BurnBlue = 1;
+			Lara.burnCount = 48;
+			Lara.burnBlue = 1;
 			LaraItem->hit_points = 0;
 		}
 	}

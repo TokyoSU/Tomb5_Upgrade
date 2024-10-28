@@ -112,7 +112,7 @@ void GladiatorControl(short item_number)
 				item->goal_anim_state = Lara.target != item && info.ahead && !item->hit_status ? 1 : 2;
 			else if (gladiator->mood != BORED_MOOD && (!(item->ai_bits & FOLLOW) || !gladiator->reached_goal && distance <= 0x400000))
 			{
-				if (Lara.target == item && front && distance < 0x240000 && GetRandomControl() & 1 && (Lara.gun_type == WEAPON_SHOTGUN || !(GetRandomControl() & 0xF)) && item->mesh_bits == -1)
+				if (Lara.target == item && front && distance < 0x240000 && GetRandomControl() & 1 && (Lara.gunType == WEAPON_SHOTGUN || !(GetRandomControl() & 0xF)) && item->mesh_bits == -1)
 					item->goal_anim_state = 4;
 				else if (info.bite && info.distance < 0xA3C29)
 					item->goal_anim_state = GetRandomControl() & 1 ? 8 : 9;

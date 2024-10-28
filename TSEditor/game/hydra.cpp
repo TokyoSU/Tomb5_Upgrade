@@ -155,7 +155,7 @@ void HydraControl(short item_number)
 				{
 					damage = short(5 - phd_sqrt(info.distance) / 1024);
 
-					if (Lara.gun_type == WEAPON_SHOTGUN)
+					if (Lara.gunType == WEAPON_SHOTGUN)
 						damage *= 3;
 
 					if (damage > 0)
@@ -176,7 +176,7 @@ void HydraControl(short item_number)
 			{
 				damage = short(6 - phd_sqrt(info.distance) / 1024);
 
-				if (Lara.gun_type == WEAPON_SHOTGUN)
+				if (Lara.gunType == WEAPON_SHOTGUN)
 					damage *= 3;
 
 				if ((GetRandomControl() & 0xF) < damage && info.distance < 0x6400000 && damage > 0)
