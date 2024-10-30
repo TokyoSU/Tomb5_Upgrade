@@ -2185,13 +2185,13 @@ struct SPOTCAM
 
 struct SAVEFILE_INFO
 {
-	char name[75];
-	char valid;
-	short hours;
-	short minutes;
-	short seconds;
-	short days;
+	char name[80];
 	long num;
+	long hours;
+	long minutes;
+	long seconds;
+	long days;
+	bool valid;
 };
 
 struct PHDSPRITESTRUCT

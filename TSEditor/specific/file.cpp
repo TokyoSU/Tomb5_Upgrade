@@ -1258,6 +1258,7 @@ static INT LoadLevel(LPVOID name)
 
 	aMakeCutsceneResident(gfResidentCut[0], gfResidentCut[1], gfResidentCut[2], gfResidentCut[3]);
 	LevelLoadingThread.active = false;
+	LevelLoadingThread.ended = true;
 	return 1;
 }
 
@@ -1328,6 +1329,5 @@ long S_LoadLevelFile(long num)
 	if (App.dx.Flags & DXF_HWR && !S_DrawLoadBar())
 		while (!S_DrawLoadBar());
 
-	LevelLoadingThread.ended = true;
 	return 1;
 }

@@ -5,6 +5,7 @@
 #include "dxshell.h"
 #include "winmain.h"
 #include "3dmath.h"
+#include "window.h"
 
 void (*AddQuadSorted)(D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided);
 void (*AddTriSorted)(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided);
@@ -105,7 +106,9 @@ HRESULT HWBeginScene()
 
 	App.dx.InScene = 1;
 	App.dx.DoneBlit = 0;
-	while (App.dx.WaitAtBeginScene) {};
+	while (App.dx.WaitAtBeginScene) {
+		g_Window.Update();
+	};
 	return App.dx.lpD3DDevice->BeginScene();
 }
 
