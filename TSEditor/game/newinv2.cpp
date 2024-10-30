@@ -421,7 +421,7 @@ long S_CallInventory2()
 	}
 
 	friggrimmer = 0;
-	oldLaraBusy = Lara.Busy != 0;
+	oldLaraBusy = Lara.busy != 0;
 
 	if (KeyInput & IN_SELECT)
 		friggrimmer = 1;
@@ -564,7 +564,7 @@ long S_CallInventory2()
 
 	FreeMonoScreen();
 
-	Lara.Busy = oldLaraBusy & 1;
+	Lara.busy = oldLaraBusy & 1;
 	InventoryActive = 0;
 
 	if (GLOBAL_invkeypadmode)
@@ -592,7 +592,7 @@ void init_new_inventry()
 	examine_mode = 0;
 	stats_mode = 0;
 	AlterFOV(GAME_FOV);
-	Lara.Busy = 0;
+	Lara.busy = 0;
 	GLOBAL_inventoryitemchosen = NO_ITEM;
 	left_debounce = 0;
 	right_debounce = 0;
@@ -611,22 +611,22 @@ void init_new_inventry()
 	loading_or_saving = 0;
 	use_the_bitch = 0;
 
-	if (Lara.num_shotgun_ammo1 == -1)
+	if (Lara.numShotgunAmmo1 == -1)
 		AmountShotGunAmmo1 = -1;
 	else
-		AmountShotGunAmmo1 = Lara.num_shotgun_ammo1 / 6;
+		AmountShotGunAmmo1 = Lara.numShotgunAmmo1 / 6;
 
-	if (Lara.num_shotgun_ammo2 == -1)
+	if (Lara.numShotgunAmmo2 == -1)
 		AmountShotGunAmmo2 = -1;
 	else
-		AmountShotGunAmmo2 = Lara.num_shotgun_ammo2 / 6;
+		AmountShotGunAmmo2 = Lara.numShotgunAmmo2 / 6;
 
-	AmountHKAmmo1 = Lara.num_hk_ammo1;
-	AmountCrossBowAmmo1 = Lara.num_crossbow_ammo1;
-	AmountCrossBowAmmo2 = Lara.num_crossbow_ammo2;
-	AmountUziAmmo = Lara.num_uzi_ammo;
-	AmountRevolverAmmo = Lara.num_revolver_ammo;
-	AmountPistolsAmmo = Lara.num_pistols_ammo;
+	AmountHKAmmo1 = Lara.numHKAmmo1;
+	AmountCrossBowAmmo1 = Lara.numCrossbowAmmo1;
+	AmountCrossBowAmmo2 = Lara.numCrossbowAmmo2;
+	AmountUziAmmo = Lara.numUziAmmo;
+	AmountRevolverAmmo = Lara.numRevolverAmmo;
+	AmountPistolsAmmo = Lara.numPistolsAmmo;
 	construct_object_list();
 
 	if (GLOBAL_enterinventory == NO_ITEM)
@@ -900,17 +900,17 @@ void construct_combine_object_list()
 
 	if (!(gfLevelFlags & GF_YOUNGLARA))
 	{
-		if (Lara.sixshooter_type_carried & W_PRESENT)
+		if (Lara.sixshooterTypeCarried & W_PRESENT)
 		{
-			if (Lara.sixshooter_type_carried & W_LASERSIGHT)
+			if (Lara.sixshooterTypeCarried & W_LASERSIGHT)
 				insert_object_into_list_v2(INV_REVOLVER_ITEM2);
 			else
 				insert_object_into_list_v2(INV_REVOLVER_ITEM1);
 		}
 
-		if (Lara.crossbow_type_carried & W_PRESENT && (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR || gfCurrentLevel > LVL5_RED_ALERT))
+		if (Lara.crossbowTypeCarried & W_PRESENT && (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR || gfCurrentLevel > LVL5_RED_ALERT))
 		{
-			if (Lara.crossbow_type_carried & W_LASERSIGHT)
+			if (Lara.crossbowTypeCarried & W_LASERSIGHT)
 				insert_object_into_list_v2(INV_CROSSBOW_AMMO2_ITEM2);
 			else
 				insert_object_into_list_v2(INV_CROSSBOW_AMMO2_ITEM1);
@@ -981,17 +981,17 @@ void construct_object_list()
 
 	if (!(gfLevelFlags & GF_YOUNGLARA))
 	{
-		if (Lara.pistols_type_carried & W_PRESENT)
+		if (Lara.pistolsTypeCarried & W_PRESENT)
 			insert_object_into_list(INV_PISTOLS_ITEM);
 
-		if (Lara.uzis_type_carried & W_PRESENT)
+		if (Lara.uzisTypeCarried & W_PRESENT)
 			insert_object_into_list(INV_UZI_ITEM);
 		else if (AmountUziAmmo)
 			insert_object_into_list(INV_UZI_AMMO_ITEM);
 
-		if (Lara.sixshooter_type_carried & W_PRESENT)
+		if (Lara.sixshooterTypeCarried & W_PRESENT)
 		{
-			if (Lara.sixshooter_type_carried & W_LASERSIGHT)
+			if (Lara.sixshooterTypeCarried & W_LASERSIGHT)
 				insert_object_into_list(INV_REVOLVER_ITEM2);
 			else
 				insert_object_into_list(INV_REVOLVER_ITEM1);
@@ -999,11 +999,11 @@ void construct_object_list()
 		else if (AmountRevolverAmmo)
 			insert_object_into_list(INV_REVOLVER_AMMO_ITEM);
 
-		if (Lara.shotgun_type_carried & W_PRESENT)
+		if (Lara.shotgunTypeCarried & W_PRESENT)
 		{
 			insert_object_into_list(INV_SHOTGUN_ITEM);
 
-			if (Lara.shotgun_type_carried & W_AMMO2)
+			if (Lara.shotgunTypeCarried & W_AMMO2)
 				CurrentShotGunAmmoType = 1;
 		}
 		else
@@ -1015,31 +1015,31 @@ void construct_object_list()
 				insert_object_into_list(INV_SHOTGUN_AMMO2_ITEM);
 		}
 
-		if (Lara.hk_type_carried & W_PRESENT)
+		if (Lara.hkTypeCarried & W_PRESENT)
 		{
-			if (Lara.hk_type_carried & W_SILENCER)
+			if (Lara.hkTypeCarried & W_SILENCER)
 				insert_object_into_list(INV_HK_ITEM2);
 			else
 				insert_object_into_list(INV_HK_ITEM1);
 
-			if (Lara.hk_type_carried & W_AMMO2)
+			if (Lara.hkTypeCarried & W_AMMO2)
 				CurrentGrenadeGunAmmoType = 1;
-			else if (Lara.hk_type_carried & W_AMMO3)
+			else if (Lara.hkTypeCarried & W_AMMO3)
 				CurrentGrenadeGunAmmoType = 2;
 		}
 		else if (AmountHKAmmo1)
 			insert_object_into_list(INV_HK_AMMO_ITEM4);
 
-		if (Lara.crossbow_type_carried & W_PRESENT)
+		if (Lara.crossbowTypeCarried & W_PRESENT)
 		{
 			if (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR || gfCurrentLevel > LVL5_RED_ALERT)
 			{
-				if (Lara.crossbow_type_carried & W_LASERSIGHT)
+				if (Lara.crossbowTypeCarried & W_LASERSIGHT)
 					insert_object_into_list(INV_CROSSBOW_AMMO2_ITEM2);
 				else
 					insert_object_into_list(INV_CROSSBOW_AMMO2_ITEM1);
 
-				if (Lara.crossbow_type_carried & W_AMMO2)
+				if (Lara.crossbowTypeCarried & W_AMMO2)
 					CurrentCrossBowAmmoType = 1;
 			}
 			else
@@ -1068,16 +1068,16 @@ void construct_object_list()
 		if (Lara.binoculars)
 			insert_object_into_list(INV_BINOCULARS_ITEM);
 
-		if (Lara.num_flares)
+		if (Lara.numFlares)
 			insert_object_into_list(INV_FLARE_INV_ITEM);
 	}
 
 	insert_object_into_list(INV_COMPASS_ITEM);
 
-	if (Lara.num_small_medipack)
+	if (Lara.numSmallMedipack)
 		insert_object_into_list(INV_SMALLMEDI_ITEM);
 
-	if (Lara.num_large_medipack)
+	if (Lara.numLargeMedipack)
 		insert_object_into_list(INV_BIGMEDI_ITEM);
 
 	if (Lara.crowbar)
@@ -1316,11 +1316,11 @@ void draw_current_object_list(long ringnum)
 			objmeup = inventry_objects_list[rings[ringnum]->current_object_list[n].invitem].object_number;
 
 			if (objmeup == BIGMEDI_ITEM)
-				nummeup = Lara.num_large_medipack;
+				nummeup = Lara.numLargeMedipack;
 			else if (objmeup == SMALLMEDI_ITEM)
-				nummeup = Lara.num_small_medipack;
+				nummeup = Lara.numSmallMedipack;
 			else if (objmeup == FLARE_INV_ITEM)
-				nummeup = Lara.num_flares;
+				nummeup = Lara.numFlares;
 			else if (objmeup >= PUZZLE_ITEM1 && objmeup <= PUZZLE_ITEM8)
 			{
 				nummeup = Lara.puzzleitems[objmeup - PUZZLE_ITEM1];
@@ -1329,19 +1329,19 @@ void draw_current_object_list(long ringnum)
 					nummeup = 0;
 			}
 			else if (objmeup == SHOTGUN_AMMO1_ITEM)
-				nummeup = Lara.num_shotgun_ammo1 == -1 ? Lara.num_shotgun_ammo1 : Lara.num_shotgun_ammo1 / 6;
+				nummeup = Lara.numShotgunAmmo1 == -1 ? Lara.numShotgunAmmo1 : Lara.numShotgunAmmo1 / 6;
 			else if (objmeup == SHOTGUN_AMMO2_ITEM)
-				nummeup = Lara.num_crossbow_ammo2 == -1 ? Lara.num_shotgun_ammo2 : Lara.num_shotgun_ammo2 / 6;
+				nummeup = Lara.numCrossbowAmmo2 == -1 ? Lara.numShotgunAmmo2 : Lara.numShotgunAmmo2 / 6;
 			else if (objmeup == HK_AMMO_ITEM)
-				nummeup = Lara.num_hk_ammo1;
+				nummeup = Lara.numHKAmmo1;
 			else if (objmeup == CROSSBOW_AMMO1_ITEM)
-				nummeup = Lara.num_crossbow_ammo1;
+				nummeup = Lara.numCrossbowAmmo1;
 			else if (objmeup == CROSSBOW_AMMO2_ITEM)
-				nummeup = Lara.num_crossbow_ammo2;
+				nummeup = Lara.numCrossbowAmmo2;
 			else if (objmeup == REVOLVER_AMMO_ITEM)
-				nummeup = Lara.num_revolver_ammo;
+				nummeup = Lara.numRevolverAmmo;
 			else if (objmeup == UZI_AMMO_ITEM)
-				nummeup = Lara.num_uzi_ammo;
+				nummeup = Lara.numUziAmmo;
 			else if (objmeup == BOTTLE)
 				nummeup = Lara.bottle;
 			else if (objmeup == PICKUP_ITEM4)
@@ -1943,36 +1943,36 @@ void spinback(ushort* cock)
 
 void update_laras_weapons_status()
 {
-	if (Lara.shotgun_type_carried & W_PRESENT)
+	if (Lara.shotgunTypeCarried & W_PRESENT)
 	{
-		Lara.shotgun_type_carried &= ~(W_AMMO1 | W_AMMO2 | W_AMMO3);
+		Lara.shotgunTypeCarried &= ~(W_AMMO1 | W_AMMO2 | W_AMMO3);
 
 		if (CurrentShotGunAmmoType)
-			Lara.shotgun_type_carried |= W_AMMO2;
+			Lara.shotgunTypeCarried |= W_AMMO2;
 		else
-			Lara.shotgun_type_carried |= W_AMMO1;
+			Lara.shotgunTypeCarried |= W_AMMO1;
 	}
 
-	if (Lara.hk_type_carried & W_PRESENT)
+	if (Lara.hkTypeCarried & W_PRESENT)
 	{
-		Lara.hk_type_carried &= ~(W_AMMO1 | W_AMMO2 | W_AMMO3);
+		Lara.hkTypeCarried &= ~(W_AMMO1 | W_AMMO2 | W_AMMO3);
 
 		if (CurrentGrenadeGunAmmoType == 0)
-			Lara.hk_type_carried |= W_AMMO1;
+			Lara.hkTypeCarried |= W_AMMO1;
 		else if (CurrentGrenadeGunAmmoType == 1)
-			Lara.hk_type_carried |= W_AMMO2;
+			Lara.hkTypeCarried |= W_AMMO2;
 		else if (CurrentGrenadeGunAmmoType == 2)
-			Lara.hk_type_carried |= W_AMMO3;
+			Lara.hkTypeCarried |= W_AMMO3;
 	}
 
-	if (Lara.crossbow_type_carried & W_PRESENT)
+	if (Lara.crossbowTypeCarried & W_PRESENT)
 	{
-		Lara.crossbow_type_carried &= ~(W_AMMO1 | W_AMMO2 | W_AMMO3);
+		Lara.crossbowTypeCarried &= ~(W_AMMO1 | W_AMMO2 | W_AMMO3);
 
 		if (CurrentCrossBowAmmoType)
-			Lara.crossbow_type_carried |= W_AMMO2;
+			Lara.crossbowTypeCarried |= W_AMMO2;
 		else
-			Lara.crossbow_type_carried |= W_AMMO1;
+			Lara.crossbowTypeCarried |= W_AMMO1;
 	}
 }
 
@@ -2054,13 +2054,13 @@ void combine_HK_SILENCER(long flag)
 	if (flag)
 	{
 		Lara.silencer = 1;
-		Lara.hk_type_carried &= ~W_SILENCER;
+		Lara.hkTypeCarried &= ~W_SILENCER;
 		
 	}
 	else
 	{
 		Lara.silencer = 0;
-		Lara.hk_type_carried |= W_SILENCER;
+		Lara.hkTypeCarried |= W_SILENCER;
 	}
 }
 
@@ -2069,15 +2069,15 @@ void combine_revolver_lasersight(long flag)
 	if (flag)
 	{
 		Lara.lasersight = 1;
-		Lara.sixshooter_type_carried &= ~W_LASERSIGHT;
+		Lara.sixshooterTypeCarried &= ~W_LASERSIGHT;
 	}
 	else
 	{
 		Lara.lasersight = 0;
-		Lara.sixshooter_type_carried |= W_LASERSIGHT;
+		Lara.sixshooterTypeCarried |= W_LASERSIGHT;
 	}
 
-	if (Lara.gun_status && Lara.gun_type == WEAPON_REVOLVER)
+	if (Lara.gunStatus && Lara.gunType == WEAPON_REVOLVER)
 	{
 		undraw_pistol_mesh_right(WEAPON_REVOLVER);
 		draw_pistol_meshes(WEAPON_REVOLVER);
@@ -2089,15 +2089,15 @@ void combine_crossbow_lasersight(long flag)
 	if (flag)
 	{
 		Lara.lasersight = 1;
-		Lara.crossbow_type_carried &= ~W_LASERSIGHT;
+		Lara.crossbowTypeCarried &= ~W_LASERSIGHT;
 	}
 	else
 	{
 		Lara.lasersight = 0;
-		Lara.crossbow_type_carried |= W_LASERSIGHT;
+		Lara.crossbowTypeCarried |= W_LASERSIGHT;
 	}
 
-	if (Lara.gun_status && Lara.gun_type == WEAPON_CROSSBOW)
+	if (Lara.gunStatus && Lara.gunType == WEAPON_CROSSBOW)
 	{
 		undraw_shotgun_meshes(WEAPON_CROSSBOW);
 		draw_shotgun_meshes(WEAPON_CROSSBOW);
@@ -2266,24 +2266,24 @@ void use_current_item()
 		return;
 	}
 
-	if (Lara.water_status == LW_ABOVE_WATER || Lara.water_status == LW_WADE)
+	if (Lara.waterStatus == LW_ABOVE_WATER || Lara.waterStatus == LW_WADE)
 	{
 		if (gmeobject == PISTOLS_ITEM)
 		{
-			Lara.request_gun_type = WEAPON_PISTOLS;
+			Lara.requestGunType = WEAPON_PISTOLS;
 
-			if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_PISTOLS)
-				Lara.gun_status = LG_DRAW_GUNS;
+			if (Lara.gunStatus == LG_NO_ARMS && Lara.gunType == WEAPON_PISTOLS)
+				Lara.gunStatus = LG_DRAW_GUNS;
 
 			return;
 		}
 
 		if (gmeobject == UZI_ITEM)
 		{
-			Lara.request_gun_type = WEAPON_UZI;
+			Lara.requestGunType = WEAPON_UZI;
 
-			if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_UZI)
-				Lara.gun_status = LG_DRAW_GUNS;
+			if (Lara.gunStatus == LG_NO_ARMS && Lara.gunType == WEAPON_UZI)
+				Lara.gunStatus = LG_DRAW_GUNS;
 
 			return;
 		}
@@ -2292,7 +2292,7 @@ void use_current_item()
 		{
 			state = LaraItem->current_anim_state;
 
-			if (Lara.gun_status == LG_HANDS_BUSY || state == AS_ALL4S || state == AS_CRAWL || state == AS_ALL4TURNL || state == AS_ALL4TURNR ||
+			if (Lara.gunStatus == LG_HANDS_BUSY || state == AS_ALL4S || state == AS_CRAWL || state == AS_ALL4TURNL || state == AS_ALL4TURNR ||
 				state == AS_CRAWLBACK || state == AS_CRAWL2HANG || state == AS_DUCK || state == AS_DUCKROTL || state == AS_DUCKROTR)
 			{
 				SayNo();
@@ -2301,31 +2301,31 @@ void use_current_item()
 
 			if (gmeobject == SHOTGUN_ITEM)
 			{
-				Lara.request_gun_type = WEAPON_SHOTGUN;
+				Lara.requestGunType = WEAPON_SHOTGUN;
 
-				if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == SHOTGUN_ITEM)
-					Lara.gun_status = LG_DRAW_GUNS;
+				if (Lara.gunStatus == LG_NO_ARMS && Lara.gunType == SHOTGUN_ITEM)
+					Lara.gunStatus = LG_DRAW_GUNS;
 			}
 			else if (gmeobject == REVOLVER_ITEM)
 			{
-				Lara.request_gun_type = WEAPON_REVOLVER;
+				Lara.requestGunType = WEAPON_REVOLVER;
 
-				if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_REVOLVER)
-					Lara.gun_status = LG_DRAW_GUNS;
+				if (Lara.gunStatus == LG_NO_ARMS && Lara.gunType == WEAPON_REVOLVER)
+					Lara.gunStatus = LG_DRAW_GUNS;
 			}
 			else if (gmeobject == HK_ITEM)
 			{
-				Lara.request_gun_type = WEAPON_HK;
+				Lara.requestGunType = WEAPON_HK;
 
-				if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == HK_ITEM)
-					Lara.gun_status = LG_DRAW_GUNS;
+				if (Lara.gunStatus == LG_NO_ARMS && Lara.gunType == HK_ITEM)
+					Lara.gunStatus = LG_DRAW_GUNS;
 			}
 			else
 			{
-				Lara.request_gun_type = WEAPON_CROSSBOW;
+				Lara.requestGunType = WEAPON_CROSSBOW;
 
-				if (Lara.gun_status == LG_NO_ARMS && Lara.gun_type == WEAPON_CROSSBOW)
-					Lara.gun_status = LG_DRAW_GUNS;
+				if (Lara.gunStatus == LG_NO_ARMS && Lara.gunType == WEAPON_CROSSBOW)
+					Lara.gunStatus = LG_DRAW_GUNS;
 			}
 
 			return;
@@ -2336,9 +2336,9 @@ void use_current_item()
 	{
 		state = LaraItem->current_anim_state;
 
-		if (Lara.gun_status != LG_NO_ARMS || state == AS_ALL4S || state == AS_CRAWL || state == AS_ALL4TURNL || state == AS_ALL4TURNR || state == AS_CRAWLBACK || state == AS_CRAWL2HANG)
+		if (Lara.gunStatus != LG_NO_ARMS || state == AS_ALL4S || state == AS_CRAWL || state == AS_ALL4TURNL || state == AS_ALL4TURNR || state == AS_CRAWLBACK || state == AS_CRAWL2HANG)
 			SayNo();
-		else if (Lara.gun_type != WEAPON_FLARE)
+		else if (Lara.gunType != WEAPON_FLARE)
 		{
 			KeyInput = IN_FLARE;
 			LaraGun();
@@ -2351,13 +2351,13 @@ void use_current_item()
 	if (invobject == INV_BINOCULARS_ITEM)
 	{
 		if ((LaraItem->current_anim_state == AS_STOP && LaraItem->anim_number == ANIM_BREATH ||
-			Lara.IsDucked && !(KeyInput & IN_DUCK)) && !SniperCamActive && !bUseSpotCam && !bTrackCamInit)
+			Lara.isDucked && !(KeyInput & IN_DUCK)) && !SniperCamActive && !bUseSpotCam && !bTrackCamInit)
 		{
 			oldLaraBusy = 1;
 			BinocularRange = 128;
 
-			if (Lara.gun_status != LG_NO_ARMS)
-				Lara.gun_status = LG_UNDRAW_GUNS;
+			if (Lara.gunStatus != LG_NO_ARMS)
+				Lara.gunStatus = LG_UNDRAW_GUNS;
 		}
 
 		if (OldBinocular)
@@ -2376,8 +2376,8 @@ void use_current_item()
 			return;
 		}
 
-		if (Lara.num_small_medipack != -1)
-			Lara.num_small_medipack--;
+		if (Lara.numSmallMedipack != -1)
+			Lara.numSmallMedipack--;
 
 		Lara.dpoisoned = 0;
 		LaraItem->hit_points += 500;
@@ -2398,8 +2398,8 @@ void use_current_item()
 			return;
 		}
 
-		if (Lara.num_large_medipack != -1)
-			Lara.num_large_medipack--;
+		if (Lara.numLargeMedipack != -1)
+			Lara.numLargeMedipack--;
 
 		Lara.dpoisoned = 0;
 		LaraItem->hit_points += 1000;
@@ -2421,39 +2421,39 @@ void DEL_picked_up_object(short objnum)
 	{
 	case UZI_ITEM:
 
-		if (!(Lara.uzis_type_carried & W_PRESENT))
-			Lara.uzis_type_carried = W_PRESENT | W_AMMO1;
+		if (!(Lara.uzisTypeCarried & W_PRESENT))
+			Lara.uzisTypeCarried = W_PRESENT | W_AMMO1;
 
-		if (Lara.num_uzi_ammo != -1)
-			Lara.num_uzi_ammo += 30;
+		if (Lara.numUziAmmo != -1)
+			Lara.numUziAmmo += 30;
 
 		return;
 
 	case PISTOLS_ITEM:
 
-		if (!(Lara.uzis_type_carried & W_PRESENT))
-			Lara.pistols_type_carried = W_PRESENT | W_AMMO1;
+		if (!(Lara.uzisTypeCarried & W_PRESENT))
+			Lara.pistolsTypeCarried = W_PRESENT | W_AMMO1;
 
-		Lara.num_pistols_ammo = -1;
+		Lara.numPistolsAmmo = -1;
 		return;
 
 	case SHOTGUN_ITEM:
 
-		if (!(Lara.shotgun_type_carried & W_PRESENT))
-			Lara.shotgun_type_carried = W_PRESENT | W_AMMO1;
+		if (!(Lara.shotgunTypeCarried & W_PRESENT))
+			Lara.shotgunTypeCarried = W_PRESENT | W_AMMO1;
 
-		if (Lara.num_shotgun_ammo1 != -1)
-			Lara.num_shotgun_ammo1 += 36;
+		if (Lara.numShotgunAmmo1 != -1)
+			Lara.numShotgunAmmo1 += 36;
 
 		return;
 
 	case REVOLVER_ITEM:
 
-		if (!(Lara.sixshooter_type_carried & W_PRESENT))
-			Lara.sixshooter_type_carried = W_PRESENT | W_AMMO1;
+		if (!(Lara.sixshooterTypeCarried & W_PRESENT))
+			Lara.sixshooterTypeCarried = W_PRESENT | W_AMMO1;
 
-		if (Lara.num_revolver_ammo != -1)
-			Lara.num_revolver_ammo += 6;
+		if (Lara.numRevolverAmmo != -1)
+			Lara.numRevolverAmmo += 6;
 
 		return;
 
@@ -2461,16 +2461,16 @@ void DEL_picked_up_object(short objnum)
 
 		if (gfCurrentLevel < LVL5_THIRTEENTH_FLOOR || gfCurrentLevel > LVL5_RED_ALERT)
 		{
-			if (!(Lara.crossbow_type_carried & W_PRESENT))
-				Lara.crossbow_type_carried = W_PRESENT | W_AMMO1;
+			if (!(Lara.crossbowTypeCarried & W_PRESENT))
+				Lara.crossbowTypeCarried = W_PRESENT | W_AMMO1;
 
-			if (Lara.num_crossbow_ammo1 != -1)
-				Lara.num_crossbow_ammo1 += 10;
+			if (Lara.numCrossbowAmmo1 != -1)
+				Lara.numCrossbowAmmo1 += 10;
 		}
 		else
 		{
-			Lara.crossbow_type_carried = W_PRESENT | W_LASERSIGHT | W_AMMO1;
-			Lara.num_crossbow_ammo2 = 0;
+			Lara.crossbowTypeCarried = W_PRESENT | W_LASERSIGHT | W_AMMO1;
+			Lara.numCrossbowAmmo2 = 0;
 		}
 
 		return;
@@ -2478,98 +2478,98 @@ void DEL_picked_up_object(short objnum)
 	case HK_ITEM:
 		SetCutNotPlayed(23);
 
-		if (!(Lara.hk_type_carried & W_PRESENT))
-			Lara.hk_type_carried = W_PRESENT | W_AMMO1;
+		if (!(Lara.hkTypeCarried & W_PRESENT))
+			Lara.hkTypeCarried = W_PRESENT | W_AMMO1;
 
 		if (gfCurrentLevel != LVL5_ESCAPE_WITH_THE_IRIS)
-			if (Lara.num_hk_ammo1 != -1)
-				Lara.num_hk_ammo1 += 30;
+			if (Lara.numHKAmmo1 != -1)
+				Lara.numHKAmmo1 += 30;
 
 		return;
 
 	case SHOTGUN_AMMO1_ITEM:
 
-		if (Lara.num_shotgun_ammo1 != -1)
-			Lara.num_shotgun_ammo1 += 36;
+		if (Lara.numShotgunAmmo1 != -1)
+			Lara.numShotgunAmmo1 += 36;
 
 		return;
 
 	case SHOTGUN_AMMO2_ITEM:
 
-		if (Lara.num_shotgun_ammo2 != -1)
-			Lara.num_shotgun_ammo2 += 36;
+		if (Lara.numShotgunAmmo2 != -1)
+			Lara.numShotgunAmmo2 += 36;
 
 		return;
 
 	case HK_AMMO_ITEM:
 
-		if (Lara.num_hk_ammo1 != -1)
-			Lara.num_hk_ammo1 += 30;
+		if (Lara.numHKAmmo1 != -1)
+			Lara.numHKAmmo1 += 30;
 
 		return;
 
 	case CROSSBOW_AMMO1_ITEM:
 
-		if (Lara.num_crossbow_ammo1 != -1)
-			Lara.num_crossbow_ammo1++;
+		if (Lara.numCrossbowAmmo1 != -1)
+			Lara.numCrossbowAmmo1++;
 
 		return;
 
 	case CROSSBOW_AMMO2_ITEM:
 
-		if (Lara.num_crossbow_ammo2 != -1)
-			Lara.num_crossbow_ammo2 += 10;
+		if (Lara.numCrossbowAmmo2 != -1)
+			Lara.numCrossbowAmmo2 += 10;
 
 		return;
 
 	case REVOLVER_AMMO_ITEM:
 
-		if (Lara.num_revolver_ammo != -1)
-			Lara.num_revolver_ammo += 6;
+		if (Lara.numRevolverAmmo != -1)
+			Lara.numRevolverAmmo += 6;
 
 		return;
 
 	case UZI_AMMO_ITEM:
 
-		if (Lara.num_uzi_ammo != -1)
-			Lara.num_uzi_ammo += 30;
+		if (Lara.numUziAmmo != -1)
+			Lara.numUziAmmo += 30;
 
 		return;
 		
 	case FLARE_INV_ITEM:
 
-		if (Lara.num_flares != -1)
-			Lara.num_flares += 12;
+		if (Lara.numFlares != -1)
+			Lara.numFlares += 12;
 
 		return;
 
 	case SILENCER_ITEM:
 
-		if (!((Lara.uzis_type_carried | Lara.pistols_type_carried | Lara.shotgun_type_carried | Lara.sixshooter_type_carried |
-			Lara.crossbow_type_carried | Lara.hk_type_carried) & W_SILENCER))
+		if (!((Lara.uzisTypeCarried | Lara.pistolsTypeCarried | Lara.shotgunTypeCarried | Lara.sixshooterTypeCarried |
+			Lara.crossbowTypeCarried | Lara.hkTypeCarried) & W_SILENCER))
 			Lara.silencer = 1;
 
 		return;
 
 	case LASERSIGHT_ITEM:
 
-		if (!((Lara.uzis_type_carried | Lara.pistols_type_carried | Lara.shotgun_type_carried | Lara.sixshooter_type_carried |
-			Lara.crossbow_type_carried | Lara.hk_type_carried) & W_LASERSIGHT))
+		if (!((Lara.uzisTypeCarried | Lara.pistolsTypeCarried | Lara.shotgunTypeCarried | Lara.sixshooterTypeCarried |
+			Lara.crossbowTypeCarried | Lara.hkTypeCarried) & W_LASERSIGHT))
 			Lara.lasersight = 1;
 
 		return;
 
 	case BIGMEDI_ITEM:
 
-		if (Lara.num_large_medipack != -1)
-			Lara.num_large_medipack++;
+		if (Lara.numLargeMedipack != -1)
+			Lara.numLargeMedipack++;
 
 		return;
 
 	case SMALLMEDI_ITEM:
 
-		if (Lara.num_small_medipack != -1)
-			Lara.num_small_medipack++;
+		if (Lara.numSmallMedipack != -1)
+			Lara.numSmallMedipack++;
 
 		return;
 
@@ -2645,42 +2645,42 @@ void NailInvItem(short objnum)
 	switch (objnum)
 	{
 	case UZI_ITEM:
-		Lara.uzis_type_carried = W_NONE;
-		Lara.num_uzi_ammo = 0;
+		Lara.uzisTypeCarried = W_NONE;
+		Lara.numUziAmmo = 0;
 		break;
 
 	case PISTOLS_ITEM:
 		LHolster = LARA_HOLSTERS;
 		Lara.holster = LARA_HOLSTERS;
-		Lara.pistols_type_carried = W_NONE;
-		Lara.gun_status = LG_NO_ARMS;
-		Lara.last_gun_type = WEAPON_NONE;
-		Lara.gun_type = WEAPON_NONE;
-		Lara.request_gun_type = WEAPON_NONE;
+		Lara.pistolsTypeCarried = W_NONE;
+		Lara.gunStatus = LG_NO_ARMS;
+		Lara.lastGunType = WEAPON_NONE;
+		Lara.gunType = WEAPON_NONE;
+		Lara.requestGunType = WEAPON_NONE;
 		break;
 
 	case SHOTGUN_ITEM:
-		Lara.shotgun_type_carried = W_NONE;
-		Lara.num_shotgun_ammo1 = 0;
+		Lara.shotgunTypeCarried = W_NONE;
+		Lara.numShotgunAmmo1 = 0;
 		break;
 
 	case REVOLVER_ITEM:
-		Lara.sixshooter_type_carried = W_NONE;
-		Lara.num_revolver_ammo = 0;
+		Lara.sixshooterTypeCarried = W_NONE;
+		Lara.numRevolverAmmo = 0;
 		break;
 
 	case CROSSBOW_ITEM:
-		Lara.crossbow_type_carried = W_NONE;
-		Lara.num_crossbow_ammo1 = 0;
+		Lara.crossbowTypeCarried = W_NONE;
+		Lara.numCrossbowAmmo1 = 0;
 		break;
 
 	case HK_ITEM:
-		Lara.hk_type_carried = W_NONE;
-		Lara.num_hk_ammo1 = 0;
+		Lara.hkTypeCarried = W_NONE;
+		Lara.numHKAmmo1 = 0;
 		break;
 
 	case FLARE_INV_ITEM:
-		Lara.num_flares = 0;
+		Lara.numFlares = 0;
 		break;
 
 	case SILENCER_ITEM:
@@ -2692,11 +2692,11 @@ void NailInvItem(short objnum)
 		break;
 
 	case BIGMEDI_ITEM:
-		Lara.num_large_medipack = 0;
+		Lara.numLargeMedipack = 0;
 		break;
 
 	case SMALLMEDI_ITEM:
-		Lara.num_small_medipack = 0;
+		Lara.numSmallMedipack = 0;
 		break;
 
 	case BINOCULARS_ITEM:
@@ -3048,49 +3048,49 @@ void dels_give_lara_items_cheat()
 void dels_give_lara_guns_cheat()
 {
 	if (objects[FLARE_INV_ITEM].loaded)
-		Lara.num_flares = -1;
+		Lara.numFlares = -1;
 
-	Lara.num_small_medipack = -1;
-	Lara.num_large_medipack = -1;
+	Lara.numSmallMedipack = -1;
+	Lara.numLargeMedipack = -1;
 
 	if (!(gfLevelFlags & GF_YOUNGLARA))
 	{
 		if (objects[SHOTGUN_ITEM].loaded)
 		{
-			Lara.num_shotgun_ammo1 = -1;
-			Lara.num_shotgun_ammo2 = -1;
-			Lara.shotgun_type_carried |= W_PRESENT;
+			Lara.numShotgunAmmo1 = -1;
+			Lara.numShotgunAmmo2 = -1;
+			Lara.shotgunTypeCarried |= W_PRESENT;
 		}
 
 		if (objects[REVOLVER_ITEM].loaded)
 		{
-			Lara.num_revolver_ammo = -1;
-			Lara.sixshooter_type_carried |= W_PRESENT;
+			Lara.numRevolverAmmo = -1;
+			Lara.sixshooterTypeCarried |= W_PRESENT;
 		}
 
 		if (objects[CROSSBOW_ITEM].loaded)
 		{
-			Lara.num_crossbow_ammo1 = -1;
-			Lara.num_crossbow_ammo2 = -1;
-			Lara.crossbow_type_carried |= W_PRESENT;
+			Lara.numCrossbowAmmo1 = -1;
+			Lara.numCrossbowAmmo2 = -1;
+			Lara.crossbowTypeCarried |= W_PRESENT;
 
 			if (gfCurrentLevel < LVL5_GIBBY_LEVEL)
 			{
-				Lara.crossbow_type_carried = W_PRESENT | W_LASERSIGHT | W_AMMO1;
-				Lara.num_crossbow_ammo2 = 0;
+				Lara.crossbowTypeCarried = W_PRESENT | W_LASERSIGHT | W_AMMO1;
+				Lara.numCrossbowAmmo2 = 0;
 			}
 		}
 
 		if (objects[HK_ITEM].loaded)
 		{
-			Lara.num_hk_ammo1 = -1;
-			Lara.hk_type_carried |= W_PRESENT;
+			Lara.numHKAmmo1 = -1;
+			Lara.hkTypeCarried |= W_PRESENT;
 		}
 
 		if (objects[UZI_ITEM].loaded)
 		{
-			Lara.num_uzi_ammo = -1;
-			Lara.uzis_type_carried |= W_PRESENT;
+			Lara.numUziAmmo = -1;
+			Lara.uzisTypeCarried |= W_PRESENT;
 		}
 
 		if (objects[LASERSIGHT_ITEM].loaded)

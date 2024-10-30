@@ -61,7 +61,7 @@ void ControlLasers(short item_number)
 			if (!Lara.burn && item->trigger_flags & 2)
 			{
 				LaraBurn();
-				Lara.BurnCount = 24;
+				Lara.burnCount = 24;
 
 				if (LaraItem->hit_points > 0)
 					LaraItem->hit_points = 0;
@@ -106,7 +106,7 @@ void ControlSteamLasers(short item_number)
 			if (CheckLaserBox(bbox) && !Lara.burn)
 			{
 				LaraBurn();
-				Lara.BurnCount = 24;
+				Lara.burnCount = 24;
 
 				if (LaraItem->hit_points > 0)
 					LaraItem->hit_points = 0;
@@ -204,7 +204,7 @@ void ControlFloorLasers(short item_number)
 			if (CheckLaserBox(bbox) && !Lara.burn)
 			{
 				LaraBurn();
-				Lara.BurnCount = 24;
+				Lara.burnCount = 24;
 
 				if (LaraItem->hit_points > 0)
 					LaraItem->hit_points = 0;

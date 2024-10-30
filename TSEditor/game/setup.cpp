@@ -71,10 +71,10 @@ void InitialiseLara(long restore)
 	LARA_INFO backup;
 	short item_num, gun;
 
-	if (Lara.item_number == NO_ITEM)
+	if (Lara.itemNumber == NO_ITEM)
 		return;
 
-	item_num = Lara.item_number;
+	item_num = Lara.itemNumber;
 	LaraItem->data = &Lara;
 	LaraItem->collidable = 0;
 
@@ -84,23 +84,23 @@ void InitialiseLara(long restore)
 	{
 		memcpy(&backup, &Lara, sizeof(LARA_INFO));
 		memset(&Lara, 0, sizeof(LARA_INFO));
-		memcpy(&Lara.pistols_type_carried, &backup.pistols_type_carried, 59);	//restores inventory items
+		memcpy(&Lara.pistolsTypeCarried, &backup.pistolsTypeCarried, 59);	//restores inventory items
 	}
 
 	Lara.look = 1;
-	Lara.item_number = item_num;
-	Lara.hit_direction = -1;
+	Lara.itemNumber = item_num;
+	Lara.hitDirection = -1;
 	Lara.air = 1800;
-	Lara.weapon_item = NO_ITEM;
+	Lara.weaponItem = NO_ITEM;
 	PoisonFlag = 0;
 	Lara.dpoisoned = 0;
 	Lara.poisoned = 0;
-	Lara.water_surface_dist = 100;
+	Lara.waterSurfaceDistance = 100;
 	LHolster = LARA_HOLSTERS_PISTOLS;
 	Lara.holster = LARA_HOLSTERS_PISTOLS;
 	Lara.location = -1;
-	Lara.highest_location = -1;
-	Lara.RopePtr = NO_ITEM;
+	Lara.highestLocation = -1;
+	Lara.ropePtr = NO_ITEM;
 	LaraItem->hit_points = 1000;
 
 	for (int i = 0; i < gfNumPickups; i++)
@@ -113,31 +113,31 @@ void InitialiseLara(long restore)
 	else
 		gun = WEAPON_NONE;
 
-	if (gfLevelFlags & GF_OFFICE && objects[HK_ITEM].loaded && Lara.hk_type_carried & W_PRESENT)
+	if (gfLevelFlags & GF_OFFICE && objects[HK_ITEM].loaded && Lara.hkTypeCarried & W_PRESENT)
 		gun = WEAPON_HK;
 
-	Lara.gun_status = LG_NO_ARMS;
-	Lara.last_gun_type = gun;
-	Lara.gun_type = gun;
-	Lara.request_gun_type = gun;
+	Lara.gunStatus = LG_NO_ARMS;
+	Lara.lastGunType = gun;
+	Lara.gunType = gun;
+	Lara.requestGunType = gun;
 	LaraInitialiseMeshes();
 	Lara.skelebob = 0;
 
 	if (objects[PISTOLS_ITEM].loaded)
-		Lara.pistols_type_carried = W_PRESENT | W_AMMO1;
+		Lara.pistolsTypeCarried = W_PRESENT | W_AMMO1;
 
 	Lara.binoculars = 1;
 
 	if (!restore)
 	{
 		if (objects[FLARE_INV_ITEM].loaded)
-			Lara.num_flares = 3;
+			Lara.numFlares = 3;
 
-		Lara.num_small_medipack = 3;
-		Lara.num_large_medipack = 1;
+		Lara.numSmallMedipack = 3;
+		Lara.numLargeMedipack = 1;
 	}
 
-	Lara.num_pistols_ammo = -1;
+	Lara.numPistolsAmmo = -1;
 	InitialiseLaraAnims(LaraItem);
 	DashTimer = 120;
 

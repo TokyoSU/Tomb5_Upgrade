@@ -156,7 +156,7 @@ static long S_Death()
 		SetDebounce = 1;
 		S_UpdateInput();
 		UpdatePulseColour();
-		Lara.death_count++;
+		Lara.deathCount++;
 		S_DisplayMonoScreen();
 
 		if (Gameflow->LoadSaveEnabled)
@@ -177,7 +177,7 @@ static long S_Death()
 
 					if (dbinput & IN_SELECT)
 					{
-						Lara.death_count = 0;
+						Lara.deathCount = 0;
 						ret = 1;
 						SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 					}
@@ -199,7 +199,7 @@ static long S_Death()
 			}
 			else if (menu == 1)	//reload
 			{
-				Lara.death_count = 0;
+				Lara.deathCount = 0;
 				ret = go_and_load_game();
 
 				if (ret)
@@ -218,7 +218,7 @@ static long S_Death()
 		{
 			PrintString(phd_centerx, phd_centery, 3, SCRIPT_TEXT(TXT_GAME_OVER), FF_CENTER);
 
-			if (Lara.death_count > 300 || (Lara.death_count > 150 && KeyInput != IN_NONE))
+			if (Lara.deathCount > 300 || (Lara.deathCount > 150 && KeyInput != IN_NONE))
 				return 1;
 		}
 
@@ -293,13 +293,13 @@ long ControlPhase(long nframes, long demo_mode)
 				return 1;
 			}
 
-			if (Lara.death_count > 300 || Lara.death_count > 90 && KeyInput)
+			if (Lara.deathCount > 300 || Lara.deathCount > 90 && KeyInput)
 			{
 				reset_flag = 0;
 				return S_Death();
 			}
 		}
-		else if (reset_flag || Lara.death_count > 300 || (Lara.death_count > 60 && KeyInput))
+		else if (reset_flag || Lara.deathCount > 300 || (Lara.deathCount > 60 && KeyInput))
 		{
 			if (Gameflow->DemoDisc && reset_flag)
 			{
@@ -338,44 +338,44 @@ long ControlPhase(long nframes, long demo_mode)
 
 		if (KeyInput & IN_LOOK && !SniperCamActive && !bUseSpotCam && !bTrackCamInit &&
 			((LaraItem->current_anim_state == AS_STOP && LaraItem->anim_number == ANIM_BREATH) ||
-			 (Lara.IsDucked && !(KeyInput & IN_DUCK) && LaraItem->anim_number == ANIM_DUCKBREATHE && LaraItem->goal_anim_state == AS_DUCK)))
+			 (Lara.isDucked && !(KeyInput & IN_DUCK) && LaraItem->anim_number == ANIM_DUCKBREATHE && LaraItem->goal_anim_state == AS_DUCK)))
 		{
 			if (!BinocularRange)
 			{
-				switch (Lara.gun_type)
+				switch (Lara.gunType)
 				{
 				case WEAPON_REVOLVER:
 
-					if (Lara.sixshooter_type_carried & W_LASERSIGHT && Lara.gun_status == LG_READY)
+					if (Lara.sixshooterTypeCarried & W_LASERSIGHT && Lara.gunStatus == LG_READY)
 					{
 						BinocularRange = 128;
 						BinocularOldCamera = camera.old_type;
 						LaserSight = 1;
-						Lara.Busy = 1;
+						Lara.busy = 1;
 					}
 
 					break;
 
 				case WEAPON_CROSSBOW:
 
-					if (Lara.crossbow_type_carried & W_LASERSIGHT && Lara.gun_status == LG_READY)
+					if (Lara.crossbowTypeCarried & W_LASERSIGHT && Lara.gunStatus == LG_READY)
 					{
 						BinocularRange = 128;
 						BinocularOldCamera = camera.old_type;
 						LaserSight = 1;
-						Lara.Busy = 1;
+						Lara.busy = 1;
 					}
 
 					break;
 
 				case WEAPON_HK:
 
-					if (Lara.gun_status == LG_READY)
+					if (Lara.gunStatus == LG_READY)
 					{
 						BinocularRange = 128;
 						BinocularOldCamera = camera.old_type;
 						LaserSight = 1;
-						Lara.Busy = 1;
+						Lara.busy = 1;
 					}
 
 					break;
@@ -390,12 +390,12 @@ long ControlPhase(long nframes, long demo_mode)
 				LaserSight = 0;
 				AlterFOV(GAME_FOV);
 				LaraItem->mesh_bits = -1;
-				Lara.Busy = 0;
+				Lara.busy = 0;
 				camera.type = BinocularOldCamera;
-				Lara.torso_x_rot = 0;
-				Lara.torso_y_rot = 0;
-				Lara.head_x_rot = 0;
-				Lara.head_y_rot = 0;
+				Lara.torsoRotX = 0;
+				Lara.torsoRotY = 0;
+				Lara.headRotX = 0;
+				Lara.headRotY = 0;
 				camera.bounce = 0;
 				BinocularOn = -8;
 				KeyInput &= ~IN_LOOK;
@@ -469,10 +469,10 @@ long ControlPhase(long nframes, long demo_mode)
 		if (WeaponDelay)
 			WeaponDelay--;
 
-		if (Lara.has_fired && !(wibble & 0x7F))
+		if (Lara.hasFired && !(wibble & 0x7F))
 		{
 			AlertNearbyGuards(LaraItem);
-			Lara.has_fired = 0;
+			Lara.hasFired = 0;
 		}
 
 		XSoff1 += 150;
@@ -489,7 +489,7 @@ long ControlPhase(long nframes, long demo_mode)
 			else if (Lara.dpoisoned)
 				Lara.dpoisoned++;
 
-			if (gfLevelFlags & GF_OFFICE && !Lara.Gassed && Lara.dpoisoned)
+			if (gfLevelFlags & GF_OFFICE && !Lara.gassed && Lara.dpoisoned)
 			{
 				Lara.dpoisoned -= 8;
 
@@ -499,7 +499,7 @@ long ControlPhase(long nframes, long demo_mode)
 
 			if (Lara.poisoned >= 256 && !(wibble & 0xFF))
 			{
-				LaraItem->hit_points -= Lara.poisoned >> (8 - Lara.Gassed);
+				LaraItem->hit_points -= Lara.poisoned >> (8 - Lara.gassed);
 				PoisonFlag = 16;
 			}
 		}
@@ -509,7 +509,7 @@ long ControlPhase(long nframes, long demo_mode)
 
 		if (!GLOBAL_playing_cutseq && !gfGameMode)
 		{
-			Lara.Fired = 0;
+			Lara.fired = 0;
 			LaraControl(0);
 
 			if (LaraDrawType == LARA_DIVESUIT)
@@ -765,7 +765,7 @@ void NeatAndTidyTriggerCutscene(long value, long timer)
 	{
 		inv_item_stealth_frigggggs = value == 2 ? CROWBAR_ITEM : WET_CLOTH;
 
-		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gun_status == LG_NO_ARMS &&
+		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gunStatus == LG_NO_ARMS &&
 			LaraItem->current_anim_state == AS_STOP && LaraItem->anim_number == ANIM_BREATH &&
 			GLOBAL_inventoryitemchosen == NO_ITEM && have_i_got_object((short)inv_item_stealth_frigggggs))
 		{
@@ -798,7 +798,7 @@ void NeatAndTidyTriggerCutscene(long value, long timer)
 
 	case 39:
 
-		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gun_status == LG_NO_ARMS &&
+		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gunStatus == LG_NO_ARMS &&
 			LaraItem->current_anim_state == AS_TREAD && LaraItem->anim_number == ANIM_TREAD &&
 			GLOBAL_inventoryitemchosen == NO_ITEM && have_i_got_object(PUZZLE_ITEM2))
 			GLOBAL_enterinventory = PUZZLE_ITEM2;
@@ -812,7 +812,7 @@ void NeatAndTidyTriggerCutscene(long value, long timer)
 
 	case 38:
 
-		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gun_status == LG_NO_ARMS &&
+		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gunStatus == LG_NO_ARMS &&
 			LaraItem->current_anim_state == AS_STOP && LaraItem->anim_number == ANIM_BREATH &&
 			GLOBAL_inventoryitemchosen == NO_ITEM && have_i_got_object(PUZZLE_ITEM1))
 			GLOBAL_enterinventory = PUZZLE_ITEM1;
@@ -853,7 +853,7 @@ void NeatAndTidyTriggerCutscene(long value, long timer)
 
 	case 20:
 
-		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gun_status == LG_NO_ARMS &&
+		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gunStatus == LG_NO_ARMS &&
 			LaraItem->current_anim_state == AS_STOP && LaraItem->anim_number == ANIM_BREATH &&
 			GLOBAL_inventoryitemchosen == NO_ITEM && have_i_got_object(KEY_ITEM7))
 			GLOBAL_enterinventory = KEY_ITEM7;
@@ -867,7 +867,7 @@ void NeatAndTidyTriggerCutscene(long value, long timer)
 
 	case 14:
 
-		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gun_status == LG_NO_ARMS &&
+		if (KeyInput & IN_ACTION && !BinocularRange && Lara.gunStatus == LG_NO_ARMS &&
 			LaraItem->current_anim_state == AS_STOP && LaraItem->anim_number == ANIM_BREATH &&
 			GLOBAL_inventoryitemchosen == NO_ITEM && have_i_got_object(PUZZLE_ITEM2))
 			GLOBAL_enterinventory = PUZZLE_ITEM2;
@@ -882,7 +882,7 @@ void NeatAndTidyTriggerCutscene(long value, long timer)
 
 	case 23:
 
-		if (Lara.hk_type_carried && !check_xray_machine_trigger() && !richcutfrigflag)
+		if (Lara.hkTypeCarried && !check_xray_machine_trigger() && !richcutfrigflag)
 			cutseq_num = 23;
 
 		return;
@@ -1839,10 +1839,10 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 	if (firing && LaserSight)
 	{
-		Lara.has_fired = 1;
-		Lara.Fired = 1;
+		Lara.hasFired = 1;
+		Lara.fired = 1;
 
-		if (Lara.gun_type == WEAPON_REVOLVER)
+		if (Lara.gunType == WEAPON_REVOLVER)
 			SoundEffect(SFX_REVOLVER, 0, SFX_DEFAULT);
 	}
 
@@ -1861,7 +1861,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 		if (firing)
 		{
-			if (Lara.gun_type == WEAPON_CROSSBOW)
+			if (Lara.gunType == WEAPON_CROSSBOW)
 			{
 				if (LaserSight && item_no >= 0)
 				{
@@ -1916,7 +1916,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 							if (abs(phd_atan(LaraItem->pos.z_pos - shotitem->pos.z_pos, LaraItem->pos.x_pos - shotitem->pos.x_pos) - shotitem->pos.y_rot) < 16384)
 							{
 								shotitem->hit_points = 0;
-								HitTarget(shotitem, &target, weapons[Lara.gun_type].damage, 0);
+								HitTarget(shotitem, &target, weapons[Lara.gunType].damage, 0);
 							}
 						}
 						else
@@ -1926,13 +1926,13 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 							if (shotitem->hit_points < 0)
 								shotitem->hit_points = 0;
 
-							HitTarget(shotitem, &target, weapons[Lara.gun_type].damage, 0);
+							HitTarget(shotitem, &target, weapons[Lara.gunType].damage, 0);
 						}
 					}
-					else if (DrawTarget && (Lara.gun_type == WEAPON_REVOLVER || Lara.gun_type == WEAPON_HK))
+					else if (DrawTarget && (Lara.gunType == WEAPON_REVOLVER || Lara.gunType == WEAPON_HK))
 					{
 						if (objects[shotitem->object_number].intelligent)
-							HitTarget(shotitem, &target, weapons[Lara.gun_type].damage, 0);
+							HitTarget(shotitem, &target, weapons[Lara.gunType].damage, 0);
 						else if (objects[shotitem->object_number].HitEffect == 3)
 							TriggerRicochetSpark(&target, LaraItem->pos.y_rot, 3, 0);
 					}
@@ -1950,7 +1950,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						shotitem->hit_status = 1;
 
 						if (!objects[shotitem->object_number].undead)
-							shotitem->hit_points -= weapons[Lara.gun_type].damage;
+							shotitem->hit_points -= weapons[Lara.gunType].damage;
 					}
 				}
 				else
@@ -1999,13 +1999,13 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 		{
 			shotitem = &items[item_no];
 
-			if (shotitem->object_number == GRAPPLING_TARGET && Lara.gun_type == WEAPON_CROSSBOW && shotitem->mesh_bits & 1)
+			if (shotitem->object_number == GRAPPLING_TARGET && Lara.gunType == WEAPON_CROSSBOW && shotitem->mesh_bits & 1)
 				LaserSightCol = gfLevelFlags & GF_OFFICE;
 		}
 
 		hit = 1;
 	}
-	else if (Lara.gun_type == WEAPON_CROSSBOW)
+	else if (Lara.gunType == WEAPON_CROSSBOW)
 	{
 		if (firing && LaserSight && LaserSightCol == (gfLevelFlags & GF_OFFICE))
 			FireCrossBowFromLaserSight(src, &target);
@@ -2123,8 +2123,8 @@ void _TestTriggers(short* data, long heavy, long HeavyFlags)
 
 	if (!heavy)
 	{
-		Lara.CanMonkeySwing = 0;
-		Lara.climb_status = 0;
+		Lara.canMonkeySwing = 0;
+		Lara.climbStatus = 0;
 	}
 
 	if (!data)
@@ -2132,7 +2132,7 @@ void _TestTriggers(short* data, long heavy, long HeavyFlags)
 
 	if ((*data & 0x1F) == LAVA_TYPE)
 	{
-		if (!heavy && (LaraItem->pos.y_pos == LaraItem->floor || Lara.water_status != LW_ABOVE_WATER))
+		if (!heavy && (LaraItem->pos.y_pos == LaraItem->floor || Lara.waterStatus != LW_ABOVE_WATER))
 			LavaBurn(LaraItem);
 
 		if (*data & 0x8000)
@@ -2148,7 +2148,7 @@ void _TestTriggers(short* data, long heavy, long HeavyFlags)
 			quad = ushort(LaraItem->pos.y_rot + 0x2000) / 0x4000;
 
 			if ((1 << (quad + 8)) & *data)
-				Lara.climb_status = 1;
+				Lara.climbStatus = 1;
 		}
 
 		if (*data & 0x8000)
@@ -2160,7 +2160,7 @@ void _TestTriggers(short* data, long heavy, long HeavyFlags)
 	if ((*data & 0x1F) == MONKEY_TYPE)
 	{
 		if (!heavy)
-			Lara.CanMonkeySwing = 1;
+			Lara.canMonkeySwing = 1;
 
 		if (*data & 0x8000)
 			return;
@@ -2277,7 +2277,7 @@ void _TestTriggers(short* data, long heavy, long HeavyFlags)
 
 		case COMBAT:
 
-			if (Lara.gun_status == LG_READY)
+			if (Lara.gunStatus == LG_READY)
 				break;
 
 			return;
@@ -2464,7 +2464,7 @@ void _TestTriggers(short* data, long heavy, long HeavyFlags)
 			break;
 
 		case TO_SINK:
-			Lara.current_active = value + 1;
+			Lara.currentActive = value + 1;
 			break;
 
 		case TO_FLIPMAP:

@@ -565,7 +565,7 @@ void CreatureCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)
 	{
 		if (TestCollision(item, laraitem))
 		{
-			if (coll->enable_baddie_push || Lara.water_status == LW_UNDERWATER || Lara.water_status == LW_SURFACE)
+			if (coll->enable_baddie_push || Lara.waterStatus == LW_UNDERWATER || Lara.waterStatus == LW_SURFACE)
 				ItemPushLara(item, laraitem, coll, coll->enable_spaz, 0);
 			else
 			{
@@ -581,11 +581,11 @@ void CreatureCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)
 
 					if (bounds[3] - bounds[2] > 256)
 					{
-						Lara.hit_direction = ushort((laraitem->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
-						Lara.hit_frame++;
+						Lara.hitDirection = ushort((laraitem->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
+						Lara.hitFrame++;
 
-						if (Lara.hit_frame > 30)
-							Lara.hit_frame = 30;
+						if (Lara.hitFrame > 30)
+							Lara.hitFrame = 30;
 					}
 				}
 			}
@@ -880,10 +880,10 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* laraitem)
 
 		if (abs(height - laraitem->pos.y_pos) > 512)
 		{
-			if (Lara.IsMoving)
+			if (Lara.isMoving)
 			{
-				Lara.IsMoving = 0;
-				Lara.gun_status = LG_NO_ARMS;
+				Lara.isMoving = 0;
+				Lara.gunStatus = LG_NO_ARMS;
 			}
 
 			return 0;
@@ -922,9 +922,9 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 		pos->z_pos += shift * dz >> 16;
 	}
 
-	if (!Lara.IsMoving)
+	if (!Lara.isMoving)
 	{
-		if (Lara.water_status != LW_UNDERWATER)
+		if (Lara.waterStatus != LW_UNDERWATER)
 		{
 			ang = ulong(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 0x2000) / 0x4000;
 			quad = ushort(dest->y_rot + 0x2000) / 0x4000;
@@ -962,11 +962,11 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 				break;
 			}
 
-			Lara.gun_status = LG_HANDS_BUSY;
+			Lara.gunStatus = LG_HANDS_BUSY;
 		}
 
-		Lara.IsMoving = 1;
-		Lara.MoveCount = 0;
+		Lara.isMoving = 1;
+		Lara.moveCount = 0;
 	}
 
 	adiff = dest->x_rot - pos->x_rot;
@@ -1111,7 +1111,7 @@ void UpdateLaraRoom(ITEM_INFO* item, long height)
 	item->floor = GetHeight(floor, x, y, z);
 
 	if (item->room_number != room_number)
-		ItemNewRoom(Lara.item_number, room_number);
+		ItemNewRoom(Lara.itemNumber, room_number);
 }
 
 void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
@@ -1127,7 +1127,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 	short nearby_rooms[22];
 
 	l->hit_status = 0;
-	Lara.hit_direction = -1;
+	Lara.hitDirection = -1;
 
 	if (l->hit_points <= 0)
 		return;
@@ -1211,8 +1211,8 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 		}
 	}
 
-	if (Lara.hit_direction == -1)
-		Lara.hit_frame = 0;
+	if (Lara.hitDirection == -1)
+		Lara.hitFrame = 0;
 }
 
 long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, long BigPush)
@@ -1273,15 +1273,15 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		z = (bounds[4] + bounds[5]) / 2;
 		dx -= (c * x + s * z) >> W2V_SHIFT;
 		dz -= (c * z - s * x) >> W2V_SHIFT;
-		Lara.hit_direction = ushort(l->pos.y_rot - phd_atan(dz, dx) - 0x6000) >> W2V_SHIFT;
+		Lara.hitDirection = ushort(l->pos.y_rot - phd_atan(dz, dx) - 0x6000) >> W2V_SHIFT;
 
-		if (!Lara.hit_frame)
+		if (!Lara.hitFrame)
 			SoundEffect(SFX_LARA_INJURY_RND, &l->pos, SFX_DEFAULT);
 
-		Lara.hit_frame++;
+		Lara.hitFrame++;
 
-		if (Lara.hit_frame > 34)
-			Lara.hit_frame = 34;
+		if (Lara.hitFrame > 34)
+			Lara.hitFrame = 34;
 	}
 
 	coll->bad_pos = -NO_HEIGHT;
@@ -1305,10 +1305,10 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		l->pos.z_pos = coll->old.z;
 	}
 
-	if (Lara.IsMoving && Lara.MoveCount > 15)
+	if (Lara.isMoving && Lara.moveCount > 15)
 	{
-		Lara.IsMoving = 0;
-		Lara.gun_status = LG_NO_ARMS;
+		Lara.isMoving = 0;
+		Lara.gunStatus = LG_NO_ARMS;
 	}
 
 	return 1;
@@ -1371,10 +1371,10 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 		l->pos.z_pos = coll->old.z;
 	}
 
-	if (l == LaraItem && Lara.IsMoving && Lara.MoveCount > 15)
+	if (l == LaraItem && Lara.isMoving && Lara.moveCount > 15)
 	{
-		Lara.IsMoving = 0;
-		Lara.gun_status = LG_NO_ARMS;
+		Lara.isMoving = 0;
+		Lara.gunStatus = LG_NO_ARMS;
 	}
 
 	return 1;

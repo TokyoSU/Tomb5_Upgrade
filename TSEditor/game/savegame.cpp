@@ -77,23 +77,23 @@ void SaveLaraData()
 	ITEM_INFO* item;
 
 	for (int i = 0; i < 15; i++)
-		Lara.mesh_ptrs[i] = (short*)((long)Lara.mesh_ptrs[i] - (long)mesh_base);
+		Lara.meshPtrs[i] = (short*)((long)Lara.meshPtrs[i] - (long)mesh_base);
 
-	Lara.left_arm.frame_base = (short*)((long)Lara.left_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
-	Lara.right_arm.frame_base = (short*)((long)Lara.right_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
-	Lara.GeneralPtr = (void*)((long)Lara.GeneralPtr - (long)malloc_buffer);
+	Lara.leftArm.frame_base = (short*)((long)Lara.leftArm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.rightArm.frame_base = (short*)((long)Lara.rightArm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.generalPtr = (void*)((long)Lara.generalPtr - (long)malloc_buffer);
 	memcpy(&savegame.Lara, &Lara, sizeof(savegame.Lara));
 
 	for (int i = 0; i < 15; i++)
-		Lara.mesh_ptrs[i] = (short*)((long)Lara.mesh_ptrs[i] + (long)mesh_base);
+		Lara.meshPtrs[i] = (short*)((long)Lara.meshPtrs[i] + (long)mesh_base);
 
-	Lara.left_arm.frame_base = (short*)((long)Lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	Lara.right_arm.frame_base = (short*)((long)Lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	Lara.GeneralPtr = (void*)((long)Lara.GeneralPtr + (long)malloc_buffer);
+	Lara.leftArm.frame_base = (short*)((long)Lara.leftArm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.rightArm.frame_base = (short*)((long)Lara.rightArm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.generalPtr = (void*)((long)Lara.generalPtr + (long)malloc_buffer);
 
-	if (Lara.weapon_item != NO_ITEM)
+	if (Lara.weaponItem != NO_ITEM)
 	{
-		item = &items[Lara.weapon_item];
+		item = &items[Lara.weaponItem];
 		savegame.WeaponObject = item->object_number;
 		savegame.WeaponAnim = item->anim_number;
 		savegame.WeaponFrame = item->frame_number;
@@ -113,43 +113,43 @@ void RestoreLaraData(long FullSave)
 
 	if (!FullSave)
 	{
-		savegame.Lara.item_number = Lara.item_number;
+		savegame.Lara.itemNumber = Lara.itemNumber;
 
-		if (savegame.Lara.IsMoving)
+		if (savegame.Lara.isMoving)
 		{
-			savegame.Lara.IsMoving = 0;
-			savegame.Lara.gun_status = LG_NO_ARMS;
+			savegame.Lara.isMoving = 0;
+			savegame.Lara.gunStatus = LG_NO_ARMS;
 		}
 	}
 
 	memcpy(&Lara, &savegame.Lara, sizeof(Lara));
 	Lara.target = 0;
-	Lara.spaz_effect = 0;
-	Lara.left_arm.frame_base = (short*)((long)Lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	Lara.right_arm.frame_base = (short*)((long)Lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	Lara.GeneralPtr = (void*)((long)Lara.GeneralPtr + (long)malloc_buffer);
+	Lara.spazEffect = 0;
+	Lara.leftArm.frame_base = (short*)((long)Lara.leftArm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.rightArm.frame_base = (short*)((long)Lara.rightArm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	Lara.generalPtr = (void*)((long)Lara.generalPtr + (long)malloc_buffer);
 
 	if (Lara.burn)
 	{
 		flag = 0;
 		Lara.burn = 0;
 
-		if (Lara.BurnSmoke)
+		if (Lara.burnSmoke)
 		{
-			Lara.BurnSmoke = 0;
+			Lara.burnSmoke = 0;
 			flag = 1;
 		}
 
 		LaraBurn();
 
 		if (flag)
-			Lara.BurnSmoke = 1;
+			Lara.burnSmoke = 1;
 	}
 
-	if (Lara.weapon_item != -1)
+	if (Lara.weaponItem != -1)
 	{
-		Lara.weapon_item = CreateItem();
-		item = &items[Lara.weapon_item];
+		Lara.weaponItem = CreateItem();
+		item = &items[Lara.weaponItem];
 		item->object_number = savegame.WeaponObject;
 		item->anim_number = savegame.WeaponAnim;
 		item->frame_number = savegame.WeaponFrame;
@@ -160,7 +160,7 @@ void RestoreLaraData(long FullSave)
 	}
 
 	for (int i = 0; i < 15; i++)
-		Lara.mesh_ptrs[i] = (short*)((long)Lara.mesh_ptrs[i] + (long)mesh_base);
+		Lara.meshPtrs[i] = (short*)((long)Lara.meshPtrs[i] + (long)mesh_base);
 
 	_CutSceneTriggered1 = savegame.CutSceneTriggered1;
 	_CutSceneTriggered2 = savegame.CutSceneTriggered2;
@@ -612,7 +612,7 @@ void SaveLevelData(long FullSave)
 			}
 		}
 
-		if (Lara.RopePtr != -1)
+		if (Lara.ropePtr != -1)
 			SaveRope();
 	}
 }
@@ -1040,7 +1040,7 @@ void RestoreLevelData(long FullSave)
 			}
 		}
 
-		if (Lara.RopePtr != -1)
+		if (Lara.ropePtr != -1)
 			LoadRope();
 	}
 

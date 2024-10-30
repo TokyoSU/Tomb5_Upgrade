@@ -265,17 +265,17 @@ void TorpedoControl(short item_number)
 		LaraItem->hit_points -= 200;
 		LaraItem->hit_status = 1;
 
-		if (Lara.Anxiety < 127)
-			Lara.Anxiety += 128;
+		if (Lara.anxiety < 127)
+			Lara.anxiety += 128;
 		else
-			Lara.Anxiety--;
+			Lara.anxiety--;
 
 		KillItem(item_number);
 		return;
 	}
 
-	if (ItemNearLara(&item->pos, 400) && Lara.Anxiety < 224)
-		Lara.Anxiety += 32;
+	if (ItemNearLara(&item->pos, 400) && Lara.anxiety < 224)
+		Lara.anxiety += 32;
 
 	if (room_number != item->room_number)
 		ItemNewRoom(item_number, room_number);

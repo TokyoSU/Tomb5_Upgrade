@@ -43,7 +43,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll)
 		item->gravity_status = 0;
 		item->speed = 0;
 		item->fallspeed = 0;
-		Lara.water_status = LW_WADE;
+		Lara.waterStatus = LW_WADE;
 		item->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	}
 }
@@ -63,12 +63,12 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (oxr < -0x4000 || oxr > 0x4000)
 	{
-		Lara.move_angle = item->pos.y_rot - 0x8000;
+		Lara.moveAngle = item->pos.y_rot - 0x8000;
 		coll->facing = item->pos.y_rot - 0x8000;
 	}
 	else
 	{
-		Lara.move_angle = item->pos.y_rot;
+		Lara.moveAngle = item->pos.y_rot;
 		coll->facing = item->pos.y_rot;
 	}
 
@@ -185,11 +185,11 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
 
 		SubHitCount = 30;
 
-		if (Lara.Anxiety < 96)
-			Lara.Anxiety += 16;
+		if (Lara.anxiety < 96)
+			Lara.anxiety += 16;
 	}
 
-	if (hit != 2 && Lara.water_status != LW_FLYCHEAT)
+	if (hit != 2 && Lara.waterStatus != LW_FLYCHEAT)
 		LaraTestWaterDepth(item, coll);
 }
 
@@ -202,19 +202,19 @@ void SwimTurn(ITEM_INFO* item)
 
 	if (KeyInput & IN_LEFT)
 	{
-		Lara.turn_rate -= 409;
+		Lara.turnRate -= 409;
 
-		if (Lara.turn_rate < -1092)
-			Lara.turn_rate = -1092;
+		if (Lara.turnRate < -1092)
+			Lara.turnRate = -1092;
 
 		item->pos.z_rot -= 546;
 	}
 	else if (KeyInput & IN_RIGHT)
 	{
-		Lara.turn_rate += 409;
+		Lara.turnRate += 409;
 
-		if (Lara.turn_rate > 1092)
-			Lara.turn_rate = 1092;
+		if (Lara.turnRate > 1092)
+			Lara.turnRate = 1092;
 
 		item->pos.z_rot += 546;
 	}
@@ -234,19 +234,19 @@ void SwimTurnSubsuit(ITEM_INFO* item)
 
 	if (KeyInput & IN_LEFT)
 	{
-		Lara.turn_rate -= 136;
+		Lara.turnRate -= 136;
 
-		if (Lara.turn_rate < -1092)
-			Lara.turn_rate = -1092;
+		if (Lara.turnRate < -1092)
+			Lara.turnRate = -1092;
 
 		item->pos.z_rot -= 546;
 	}
 	else if (KeyInput & IN_RIGHT)
 	{
-		Lara.turn_rate += 136;
+		Lara.turnRate += 136;
 
-		if (Lara.turn_rate > 1092)
-			Lara.turn_rate = 1092;
+		if (Lara.turnRate > 1092)
+			Lara.turnRate = 1092;
 
 		item->pos.z_rot += 546;
 	}
@@ -299,10 +299,10 @@ void UpdateSubsuitAngles()
 	subsuit.Vel[0] += vel;
 	subsuit.Vel[1] += vel;
 
-	if (Lara.turn_rate > 0)
-		subsuit.Vel[0] += 2 * abs(Lara.turn_rate);
-	else if (Lara.turn_rate < 0)
-		subsuit.Vel[1] += 2 * abs(Lara.turn_rate);
+	if (Lara.turnRate > 0)
+		subsuit.Vel[0] += 2 * abs(Lara.turnRate);
+	else if (Lara.turnRate < 0)
+		subsuit.Vel[1] += 2 * abs(Lara.turnRate);
 
 	if (subsuit.Vel[0] > 1536)
 		subsuit.Vel[0] = 1536;
@@ -330,24 +330,24 @@ void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (KeyInput & IN_LEFT)
 	{
-		Lara.turn_rate -= 613;
+		Lara.turnRate -= 613;
 
-		if (Lara.turn_rate < -1092)
-			Lara.turn_rate = -1092;
+		if (Lara.turnRate < -1092)
+			Lara.turnRate = -1092;
 	}
 	else if (KeyInput & IN_RIGHT)
 	{
-		Lara.turn_rate += 613;
+		Lara.turnRate += 613;
 
-		if (Lara.turn_rate > 1092)
-			Lara.turn_rate = 1092;
+		if (Lara.turnRate > 1092)
+			Lara.turnRate = 1092;
 	}
 
 	if (KeyInput & IN_ACTION)
 		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 31, 255, 255, 255);
 
 	if (KeyInput & IN_ROLL)
-		Lara.turn_rate = -2184;
+		Lara.turnRate = -2184;
 
 	if (KeyInput & IN_JUMP)
 	{
@@ -461,8 +461,8 @@ void lara_as_tread(ITEM_INFO* item, COLL_INFO* coll)
 	if (item->fallspeed < 0)
 		item->fallspeed = 0;
 
-	if (Lara.gun_status == LG_HANDS_BUSY)
-		Lara.gun_status = LG_NO_ARMS;
+	if (Lara.gunStatus == LG_HANDS_BUSY)
+		Lara.gunStatus = LG_NO_ARMS;
 }
 
 void lara_as_dive(ITEM_INFO* item, COLL_INFO* coll)
@@ -518,7 +518,7 @@ void lara_col_uwdeath(ITEM_INFO* item, COLL_INFO* coll)
 
 	item->hit_points = -1;
 	Lara.air = -1;
-	Lara.gun_status = LG_HANDS_BUSY;
+	Lara.gunStatus = LG_HANDS_BUSY;
 	wh = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 
 	if (wh != NO_HEIGHT)
@@ -561,24 +561,24 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (LaraDrawType == LARA_DIVESUIT)
 	{
-		if (Lara.turn_rate < -91)
-			Lara.turn_rate += 91;
-		else if (Lara.turn_rate > 91)
-			Lara.turn_rate -= 91;
+		if (Lara.turnRate < -91)
+			Lara.turnRate += 91;
+		else if (Lara.turnRate > 91)
+			Lara.turnRate -= 91;
 		else
-			Lara.turn_rate = 0;
+			Lara.turnRate = 0;
 	}
 	else
 	{
-		if (Lara.turn_rate < -364)
-			Lara.turn_rate += 364;
-		else if (Lara.turn_rate > 364)
-			Lara.turn_rate -= 364;
+		if (Lara.turnRate < -364)
+			Lara.turnRate += 364;
+		else if (Lara.turnRate > 364)
+			Lara.turnRate -= 364;
 		else
-			Lara.turn_rate = 0;
+			Lara.turnRate = 0;
 	}
 
-	item->pos.y_rot += Lara.turn_rate;
+	item->pos.y_rot += Lara.turnRate;
 
 	if (LaraDrawType == LARA_DIVESUIT)
 		UpdateSubsuitAngles();
@@ -607,7 +607,7 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll)
 	else if (item->pos.z_rot > 4004)
 		item->pos.z_rot = 4004;
 
-	if (Lara.current_active && Lara.water_status != LW_FLYCHEAT)
+	if (Lara.currentActive && Lara.waterStatus != LW_FLYCHEAT)
 		LaraWaterCurrent(coll);
 
 	AnimateLara(item);
@@ -711,18 +711,18 @@ void LaraWaterCurrent(COLL_INFO* coll)
 {
 	long angle, speed, sinkval, shifter, absvel;
 
-	if (Lara.current_active)
+	if (Lara.currentActive)
 	{
-		sinkval = Lara.current_active - 1;
+		sinkval = Lara.currentActive - 1;
 		speed = camera.fixed[sinkval].data;
 		angle = ((mGetAngle(camera.fixed[sinkval].x, camera.fixed[sinkval].z, LaraItem->pos.x_pos, LaraItem->pos.z_pos) - 0x4000) >> 4) & 0xFFF;
-		Lara.current_xvel += short((((speed * rcossin_tbl[2 * angle]) >> 2) - Lara.current_xvel) >> 4);
-		Lara.current_zvel += short((((speed * rcossin_tbl[2 * angle + 1]) >> 2) - Lara.current_zvel) >> 4);
+		Lara.currentXVel += short((((speed * rcossin_tbl[2 * angle]) >> 2) - Lara.currentXVel) >> 4);
+		Lara.currentZVel += short((((speed * rcossin_tbl[2 * angle + 1]) >> 2) - Lara.currentZVel) >> 4);
 		LaraItem->pos.y_pos += (camera.fixed[sinkval].y - LaraItem->pos.y_pos) >> 4;
 	}
 	else
 	{
-		absvel = abs(Lara.current_xvel);
+		absvel = abs(Lara.currentXVel);
 
 		if (absvel > 16)
 			shifter = 4;
@@ -731,12 +731,12 @@ void LaraWaterCurrent(COLL_INFO* coll)
 		else
 			shifter = 2;
 
-		Lara.current_xvel -= Lara.current_xvel >> shifter;
+		Lara.currentXVel -= Lara.currentXVel >> shifter;
 
-		if (abs(Lara.current_xvel) < 4)
-			Lara.current_xvel = 0;
+		if (abs(Lara.currentXVel) < 4)
+			Lara.currentXVel = 0;
 
-		absvel = abs(Lara.current_zvel);
+		absvel = abs(Lara.currentZVel);
 
 		if (absvel > 16)
 			shifter = 4;
@@ -745,18 +745,18 @@ void LaraWaterCurrent(COLL_INFO* coll)
 		else
 			shifter = 2;
 
-		Lara.current_zvel -= Lara.current_zvel >> shifter;
+		Lara.currentZVel -= Lara.currentZVel >> shifter;
 
-		if (abs(Lara.current_zvel) < 4)
-			Lara.current_zvel = 0;
+		if (abs(Lara.currentZVel) < 4)
+			Lara.currentZVel = 0;
 
-		if (!Lara.current_xvel && !Lara.current_zvel)
+		if (!Lara.currentXVel && !Lara.currentZVel)
 			return;
 	}
 
-	LaraItem->pos.x_pos += Lara.current_xvel >> 8;
-	LaraItem->pos.z_pos += Lara.current_zvel >> 8;
-	Lara.current_active = 0;
+	LaraItem->pos.x_pos += Lara.currentXVel >> 8;
+	LaraItem->pos.z_pos += Lara.currentZVel >> 8;
+	Lara.currentActive = 0;
 	coll->facing = (short)phd_atan(LaraItem->pos.z_pos - coll->old.z, LaraItem->pos.x_pos - coll->old.x);
 	GetCollisionInfo(coll, LaraItem->pos.x_pos, LaraItem->pos.y_pos + 200, LaraItem->pos.z_pos, LaraItem->room_number, 400);
 

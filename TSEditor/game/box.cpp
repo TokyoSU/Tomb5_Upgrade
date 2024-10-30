@@ -95,7 +95,7 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 	pivot = obj->pivot_length;
 
 	if (enemy == LaraItem)
-		ang = Lara.move_angle;
+		ang = Lara.moveAngle;
 	else
 		ang = enemy->pos.y_rot;
 
@@ -592,7 +592,7 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 		creature->LOT.target.z = enemy->pos.z_pos;
 		creature->LOT.required_box = enemy->box_number;
 
-		if (creature->LOT.fly && Lara.water_status == LW_ABOVE_WATER)
+		if (creature->LOT.fly && Lara.waterStatus == LW_ABOVE_WATER)
 			creature->LOT.target.y += GetBestFrame(enemy)[2];
 
 		break;
@@ -1508,12 +1508,12 @@ void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara
 	LaraItem->speed = 0;
 
 	if (LaraItem->room_number != item->room_number)
-		ItemNewRoom(Lara.item_number, item->room_number);
+		ItemNewRoom(Lara.itemNumber, item->room_number);
 
 	AnimateItem(LaraItem);
-	Lara.gun_status = LG_HANDS_BUSY;
-	Lara.gun_type = WEAPON_NONE;
-	Lara.hit_direction = -1;
+	Lara.gunStatus = LG_HANDS_BUSY;
+	Lara.gunType = WEAPON_NONE;
+	Lara.hitDirection = -1;
 	Lara.air = -1;
 	camera.pos.room_number = LaraItem->room_number;
 	ForcedFixedCamera.x = item->pos.x_pos + ((2048 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);

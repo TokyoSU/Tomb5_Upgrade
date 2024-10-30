@@ -560,7 +560,7 @@ void ControlTeleporter(short item_number)
 			LaraItem->pos.y_pos = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if (LaraItem->room_number != room_number)
-				ItemNewRoom(Lara.item_number, room_number);
+				ItemNewRoom(Lara.itemNumber, room_number);
 
 			if (item->flags & IFL_INVISIBLE)
 				KillItem(item_number);
@@ -1724,17 +1724,17 @@ void TriggerGunShell(short leftright, short objnum, long weapon)
 	{
 		if (weapon == WEAPON_SHOTGUN)
 		{
-			shell->DirXrot = Lara.torso_y_rot + LaraItem->pos.y_rot - (GetRandomControl() & 0xFFF) + Lara.left_arm.y_rot + 0x2800;
-			shell->pos.y_rot += Lara.left_arm.y_rot + Lara.torso_y_rot + LaraItem->pos.y_rot;
+			shell->DirXrot = Lara.torsoRotY + LaraItem->pos.y_rot - (GetRandomControl() & 0xFFF) + Lara.leftArm.y_rot + 0x2800;
+			shell->pos.y_rot += Lara.leftArm.y_rot + Lara.torsoRotY + LaraItem->pos.y_rot;
 
 			if (shell->speed < 24)
 				shell->speed += 24;
 		}
 		else
-			shell->DirXrot = LaraItem->pos.y_rot - (GetRandomControl() & 0xFFF) + Lara.left_arm.y_rot + 0x4800;
+			shell->DirXrot = LaraItem->pos.y_rot - (GetRandomControl() & 0xFFF) + Lara.leftArm.y_rot + 0x4800;
 	}
 	else
-		shell->DirXrot = LaraItem->pos.y_rot + (GetRandomControl() & 0xFFF) + Lara.left_arm.y_rot - 0x4800;
+		shell->DirXrot = LaraItem->pos.y_rot + (GetRandomControl() & 0xFFF) + Lara.leftArm.y_rot - 0x4800;
 
 	if (LaraItem->mesh_bits)
 	{

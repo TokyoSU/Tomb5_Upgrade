@@ -60,7 +60,7 @@ void InitialiseLaraAnims(ITEM_INFO* item)
 		item->goal_anim_state = AS_TREAD;
 
 		item->fallspeed = 0;
-		Lara.water_status = LW_UNDERWATER;
+		Lara.waterStatus = LW_UNDERWATER;
 	}
 	else
 	{
@@ -69,36 +69,36 @@ void InitialiseLaraAnims(ITEM_INFO* item)
 		item->current_anim_state = AS_STOP;
 		item->goal_anim_state = AS_STOP;
 
-		Lara.water_status = LW_ABOVE_WATER;
+		Lara.waterStatus = LW_ABOVE_WATER;
 	}
 }
 
 void InitialiseLaraLoad(short item_num)
 {
-	Lara.item_number = item_num;
+	Lara.itemNumber = item_num;
 	LaraItem = &items[item_num];
 }
 
 void LaraCheat(ITEM_INFO* item, COLL_INFO* coll)
 {
-	Lara.death_count = 0;
+	Lara.deathCount = 0;
 	LaraItem->hit_points = 1000;
 	LaraUnderWater(item, coll);
 
 	if (KeyInput & IN_WALK && !(KeyInput & IN_LOOK))
 	{
-		Lara.water_status = LW_ABOVE_WATER;
+		Lara.waterStatus = LW_ABOVE_WATER;
 		item->frame_number = anims[ANIM_STOP].frame_base;
 		item->anim_number = ANIM_STOP;
 		item->pos.z_rot = 0;
 		item->pos.x_rot = 0;
-		Lara.torso_y_rot = 0;
-		Lara.torso_x_rot = 0;
-		Lara.head_y_rot = 0;
-		Lara.head_x_rot = 0;
-		Lara.gun_status = 0;
+		Lara.torsoRotY = 0;
+		Lara.torsoRotX = 0;
+		Lara.headRotY = 0;
+		Lara.headRotX = 0;
+		Lara.gunStatus = 0;
 		LaraInitialiseMeshes();
-		Lara.mesh_effects = 0;
+		Lara.meshEffects = 0;
 		LaraItem->hit_points = 1000;
 	}
 }
@@ -108,37 +108,37 @@ void LaraInitialiseMeshes()
 	for (int i = 0; i < 15; i++)
 	{
 		meshes[objects[LARA].mesh_index + 2 * i] = meshes[objects[LARA_SKIN].mesh_index + 2 * i];
-		Lara.mesh_ptrs[i] = meshes[objects[LARA].mesh_index + 2 * i];
+		Lara.meshPtrs[i] = meshes[objects[LARA].mesh_index + 2 * i];
 	}
 
 	if (gfCurrentLevel >= LVL5_GALLOWS_TREE && gfCurrentLevel <= LVL5_OLD_MILL)
-		Lara.mesh_ptrs[LM_TORSO] = meshes[objects[ANIMATING6_MIP].mesh_index + 2 * LM_TORSO];
+		Lara.meshPtrs[LM_TORSO] = meshes[objects[ANIMATING6_MIP].mesh_index + 2 * LM_TORSO];
 
-	if (Lara.gun_type == WEAPON_HK)
-		Lara.back_gun = HK_ANIM;
-	else if (Lara.shotgun_type_carried != W_NONE)
-		Lara.back_gun = SHOTGUN_ANIM;
-	else if (Lara.hk_type_carried != W_NONE)
-		Lara.back_gun = HK_ANIM;
+	if (Lara.gunType == WEAPON_HK)
+		Lara.weaponBackItem = HK_ANIM;
+	else if (Lara.shotgunTypeCarried != W_NONE)
+		Lara.weaponBackItem = SHOTGUN_ANIM;
+	else if (Lara.hkTypeCarried != W_NONE)
+		Lara.weaponBackItem = HK_ANIM;
 
-	Lara.gun_status = LG_NO_ARMS;
+	Lara.gunStatus = LG_NO_ARMS;
 	Lara.target = 0;
-	Lara.left_arm.frame_number = 0;
-	Lara.left_arm.lock = 0;
-	Lara.right_arm.frame_number = 0;
-	Lara.right_arm.lock = 0;
+	Lara.leftArm.frame_number = 0;
+	Lara.leftArm.lock = 0;
+	Lara.rightArm.frame_number = 0;
+	Lara.rightArm.lock = 0;
 }
 
 void LaraCheatGetStuff()
 {
 	if (objects[FLARE_INV_ITEM].loaded)
-		Lara.num_flares = -1;
+		Lara.numFlares = -1;
 
 	if (objects[SMALLMEDI_ITEM].loaded)
-		Lara.num_small_medipack = -1;
+		Lara.numSmallMedipack = -1;
 
 	if (objects[BIGMEDI_ITEM].loaded)
-		Lara.num_large_medipack = -1;
+		Lara.numLargeMedipack = -1;
 
 	if (objects[LASERSIGHT_ITEM].loaded)
 		Lara.lasersight = 1;
@@ -151,34 +151,34 @@ void LaraCheatGetStuff()
 
 	if (objects[UZI_ITEM].loaded)
 	{
-		Lara.uzis_type_carried = W_PRESENT | W_AMMO1;
-		Lara.num_uzi_ammo = -1;
+		Lara.uzisTypeCarried = W_PRESENT | W_AMMO1;
+		Lara.numUziAmmo = -1;
 	}
 
 	if (objects[SHOTGUN_ITEM].loaded)
 	{
-		Lara.shotgun_type_carried = W_PRESENT | W_AMMO1;
-		Lara.num_shotgun_ammo1 = -1;
-		Lara.num_shotgun_ammo2 = -1;
+		Lara.shotgunTypeCarried = W_PRESENT | W_AMMO1;
+		Lara.numShotgunAmmo1 = -1;
+		Lara.numShotgunAmmo2 = -1;
 	}
 
 	if (objects[REVOLVER_ITEM].loaded)
 	{
-		Lara.sixshooter_type_carried = W_PRESENT | W_AMMO1;
-		Lara.num_revolver_ammo = -1;
+		Lara.sixshooterTypeCarried = W_PRESENT | W_AMMO1;
+		Lara.numRevolverAmmo = -1;
 	}
 	
 	if (objects[HK_ITEM].loaded)
 	{
-		Lara.hk_type_carried = W_PRESENT | W_AMMO3;
-		Lara.num_hk_ammo1 = -1;
+		Lara.hkTypeCarried = W_PRESENT | W_AMMO3;
+		Lara.numHKAmmo1 = -1;
 	}
 
 	if (objects[CROSSBOW_ITEM].loaded)
 	{
-		Lara.crossbow_type_carried = W_PRESENT | W_AMMO1 | W_LASERSIGHT;
-		Lara.num_crossbow_ammo1 = -1;
-		Lara.num_crossbow_ammo2 = 0;
+		Lara.crossbowTypeCarried = W_PRESENT | W_AMMO1 | W_LASERSIGHT;
+		Lara.numCrossbowAmmo1 = -1;
+		Lara.numCrossbowAmmo2 = 0;
 	}
 
 	dels_give_lara_items_cheat();
@@ -220,22 +220,22 @@ void LaraCheatyBits()
 	{
 		LaraItem->pos.y_pos -= 128;
 
-		if (Lara.water_status != LW_FLYCHEAT)
+		if (Lara.waterStatus != LW_FLYCHEAT)
 		{
 			LaraItem->anim_number = ANIM_SWIMCHEAT;
 			LaraItem->frame_number = anims[ANIM_SWIMCHEAT].frame_base;
 			LaraItem->current_anim_state = AS_SWIMCHEAT;
 			LaraItem->goal_anim_state = AS_SWIMCHEAT;
-			Lara.water_status = LW_FLYCHEAT;
+			Lara.waterStatus = LW_FLYCHEAT;
 			LaraItem->gravity_status = 0;
 			LaraItem->pos.x_rot = 5460;
 			LaraItem->fallspeed = 30;
 			Lara.air = 1800;
-			Lara.death_count = 0;
-			Lara.torso_x_rot = 0;
-			Lara.torso_y_rot = 0;
-			Lara.head_x_rot = 0;
-			Lara.head_y_rot = 0;
+			Lara.deathCount = 0;
+			Lara.torsoRotX = 0;
+			Lara.torsoRotY = 0;
+			Lara.headRotX = 0;
+			Lara.headRotY = 0;
 		}
 	}
 
@@ -284,18 +284,18 @@ void AnimateLara(ITEM_INFO* item)
 					item->speed = *cmd++;
 					item->gravity_status = 1;
 
-					if (Lara.calc_fallspeed)
+					if (Lara.calcFallspeed)
 					{
-						item->fallspeed = Lara.calc_fallspeed;
-						Lara.calc_fallspeed = 0;
+						item->fallspeed = Lara.calcFallspeed;
+						Lara.calcFallspeed = 0;
 					}
 
 					break;
 
 				case 3:
 
-					if (Lara.gun_status != LG_FLARE)
-						Lara.gun_status = LG_NO_ARMS;
+					if (Lara.gunStatus != LG_FLARE)
+						Lara.gunStatus = LG_NO_ARMS;
 
 					break;
 
@@ -334,8 +334,8 @@ void AnimateLara(ITEM_INFO* item)
 				if (item->frame_number == *cmd)
 				{
 					if ((cmd[1] & 0xC000) == SFX_LANDANDWATER ||
-						((cmd[1] & 0xC000) == SFX_LANDONLY && (Lara.water_surface_dist >= 0 || Lara.water_surface_dist == NO_HEIGHT)) ||
-						((cmd[1] & 0xC000) == SFX_WATERONLY && Lara.water_surface_dist < 0 && Lara.water_surface_dist != NO_HEIGHT))
+						((cmd[1] & 0xC000) == SFX_LANDONLY && (Lara.waterSurfaceDistance >= 0 || Lara.waterSurfaceDistance == NO_HEIGHT)) ||
+						((cmd[1] & 0xC000) == SFX_WATERONLY && Lara.waterSurfaceDistance < 0 && Lara.waterSurfaceDistance != NO_HEIGHT))
 						SoundEffect(cmd[1] & 0x3FFF, &item->pos, SFX_ALWAYS);
 				}
 
@@ -382,15 +382,15 @@ void AnimateLara(ITEM_INFO* item)
 		item->speed = speed >> 16;
 	}
 
-	if (Lara.RopePtr != -1)
+	if (Lara.ropePtr != -1)
 		AlignLaraToRope(item);
 
-	if (!Lara.IsMoving)
+	if (!Lara.isMoving)
 	{
-		item->pos.x_pos += item->speed * phd_sin(Lara.move_angle) >> W2V_SHIFT;
-		item->pos.z_pos += item->speed * phd_cos(Lara.move_angle) >> W2V_SHIFT;
-		item->pos.x_pos += speed2 * phd_sin(Lara.move_angle + 0x4000) >> W2V_SHIFT;
-		item->pos.z_pos += speed2 * phd_cos(Lara.move_angle + 0x4000) >> W2V_SHIFT;
+		item->pos.x_pos += item->speed * phd_sin(Lara.moveAngle) >> W2V_SHIFT;
+		item->pos.z_pos += item->speed * phd_cos(Lara.moveAngle) >> W2V_SHIFT;
+		item->pos.x_pos += speed2 * phd_sin(Lara.moveAngle + 0x4000) >> W2V_SHIFT;
+		item->pos.z_pos += speed2 * phd_cos(Lara.moveAngle + 0x4000) >> W2V_SHIFT;
 	}
 }
 
@@ -404,10 +404,10 @@ void LaraControl(short item_number)
 
 	item = LaraItem;
 
-	if (Lara.IsMoving && Lara.MoveCount++ > 90)
+	if (Lara.isMoving && Lara.moveCount++ > 90)
 	{
-		Lara.IsMoving = 0;
-		Lara.gun_status = LG_NO_ARMS;
+		Lara.isMoving = 0;
+		Lara.gunStatus = LG_NO_ARMS;
 	}
 
 	if (tomb5.enable_cheats)
@@ -420,14 +420,14 @@ void LaraControl(short item_number)
 	oldy = LaraItem->pos.y_pos;
 	oldz = LaraItem->pos.z_pos;
 
-	if (Lara.gun_status == LG_HANDS_BUSY && item->current_anim_state == AS_STOP && item->goal_anim_state == AS_STOP
+	if (Lara.gunStatus == LG_HANDS_BUSY && item->current_anim_state == AS_STOP && item->goal_anim_state == AS_STOP
 		&& item->anim_number == ANIM_BREATH && !item->gravity_status)
-		Lara.gun_status = LG_NO_ARMS;
+		Lara.gunStatus = LG_NO_ARMS;
 
 	if (item->current_anim_state != AS_DASH && DashTimer < 120)
 		DashTimer++;
 
-	Lara.IsDucked = 0;
+	Lara.isDucked = 0;
 	water = room[item->room_number].flags & ROOM_UNDERWATER;
 	wd = GetWaterDepth(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 	wh = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
@@ -437,10 +437,10 @@ void LaraControl(short item_number)
 	else
 		hfw = NO_HEIGHT;
 
-	Lara.water_surface_dist = -hfw;
+	Lara.waterSurfaceDistance = -hfw;
 	WadeSplash(item, wh, wd);
 
-	switch (Lara.water_status)
+	switch (Lara.waterStatus)
 	{
 	case LW_ABOVE_WATER:
 
@@ -450,7 +450,7 @@ void LaraControl(short item_number)
 			{
 				if (hfw > 256)
 				{
-					Lara.water_status = LW_WADE;
+					Lara.waterStatus = LW_WADE;
 
 					if (!item->gravity_status)
 						item->goal_anim_state = AS_STOP;
@@ -459,7 +459,7 @@ void LaraControl(short item_number)
 			else if (water)
 			{
 				Lara.air = 1800;
-				Lara.water_status = LW_UNDERWATER;
+				Lara.waterStatus = LW_UNDERWATER;
 				item->gravity_status = 0;
 				item->pos.y_pos += 100;
 				UpdateLaraRoom(item, 0);
@@ -489,10 +489,10 @@ void LaraControl(short item_number)
 					item->fallspeed = 3 * item->fallspeed / 2;
 				}
 
-				Lara.torso_x_rot = 0;
-				Lara.torso_y_rot = 0;
-				Lara.head_x_rot = 0;
-				Lara.head_y_rot = 0;
+				Lara.torsoRotX = 0;
+				Lara.torsoRotY = 0;
+				Lara.headRotX = 0;
+				Lara.headRotY = 0;
 				Splash(LaraItem);
 			}
 		}
@@ -504,14 +504,14 @@ void LaraControl(short item_number)
 
 		if (hfw <= 256)
 		{
-			Lara.water_status = LW_ABOVE_WATER;
+			Lara.waterStatus = LW_ABOVE_WATER;
 
 			if (item->current_anim_state == AS_WADE)
 				item->goal_anim_state = 1;
 		}
 		else if (hfw > 730)
 		{
-			Lara.water_status = LW_SURFACE;
+			Lara.waterStatus = LW_SURFACE;
 			item->pos.y_pos += 1 - hfw;
 
 			switch (item->current_anim_state)
@@ -547,13 +547,13 @@ void LaraControl(short item_number)
 
 			item->gravity_status = 0;
 			item->fallspeed = 0;
-			Lara.dive_count = 0;
+			Lara.diveCount = 0;
 			item->pos.x_rot = 0;
 			item->pos.z_rot = 0;
-			Lara.torso_x_rot = 0;
-			Lara.torso_y_rot = 0;
-			Lara.head_x_rot = 0;
-			Lara.head_y_rot = 0;
+			Lara.torsoRotX = 0;
+			Lara.torsoRotY = 0;
+			Lara.headRotX = 0;
+			Lara.headRotY = 0;
 			UpdateLaraRoom(item, 0);
 		}
 
@@ -565,7 +565,7 @@ void LaraControl(short item_number)
 
 		if (wd != NO_HEIGHT && abs(hfw) < 256 && !(room[room_number].flags & ROOM_UNDERWATER) && item->anim_number != 114 && item->anim_number != 119)
 		{
-			Lara.water_status = LW_SURFACE;
+			Lara.waterStatus = LW_SURFACE;
 			item->pos.y_pos = wh + 1;
 			item->anim_number = 114;
 			item->frame_number = anims[114].frame_base;
@@ -574,11 +574,11 @@ void LaraControl(short item_number)
 			item->pos.x_rot = 0;
 			item->pos.z_rot = 0;
 			item->fallspeed = 0;
-			Lara.dive_count = 11;
-			Lara.torso_x_rot = 0;
-			Lara.torso_y_rot = 0;
-			Lara.head_x_rot = 0;
-			Lara.head_y_rot = 0;
+			Lara.diveCount = 11;
+			Lara.torsoRotX = 0;
+			Lara.torsoRotY = 0;
+			Lara.headRotX = 0;
+			Lara.headRotY = 0;
 			UpdateLaraRoom(item, 0);
 			SoundEffect(SFX_LARA_BREATH, &LaraItem->pos, SFX_ALWAYS);
 		}
@@ -586,7 +586,7 @@ void LaraControl(short item_number)
 		{
 			if (wd != NO_HEIGHT && abs(hfw) < 256)
 			{
-				Lara.water_status = LW_SURFACE;
+				Lara.waterStatus = LW_SURFACE;
 				item->pos.y_pos = wh;
 				item->anim_number = 114;
 				item->frame_number = anims[114].frame_base;
@@ -595,17 +595,17 @@ void LaraControl(short item_number)
 				item->pos.x_rot = 0;
 				item->pos.z_rot = 0;
 				item->fallspeed = 0;
-				Lara.dive_count = 11;
-				Lara.torso_x_rot = 0;
-				Lara.torso_y_rot = 0;
-				Lara.head_x_rot = 0;
-				Lara.head_y_rot = 0;
+				Lara.diveCount = 11;
+				Lara.torsoRotX = 0;
+				Lara.torsoRotY = 0;
+				Lara.headRotX = 0;
+				Lara.headRotY = 0;
 				UpdateLaraRoom(item, -381);
 				SoundEffect(SFX_LARA_BREATH, &item->pos, SFX_ALWAYS);
 			}
 			else
 			{
-				Lara.water_status = LW_ABOVE_WATER;
+				Lara.waterStatus = LW_ABOVE_WATER;
 				item->anim_number = ANIM_FALLDOWN;
 				item->frame_number = anims[ANIM_FALLDOWN].frame_base;
 				item->current_anim_state = AS_FORWARDJUMP;
@@ -615,10 +615,10 @@ void LaraControl(short item_number)
 				item->speed = item->fallspeed / 4;
 				item->gravity_status = 1;
 				item->fallspeed = 0;
-				Lara.torso_x_rot = 0;
-				Lara.torso_y_rot = 0;
-				Lara.head_x_rot = 0;
-				Lara.head_y_rot = 0;
+				Lara.torsoRotX = 0;
+				Lara.torsoRotY = 0;
+				Lara.headRotX = 0;
+				Lara.headRotY = 0;
 			}
 		}
 
@@ -630,7 +630,7 @@ void LaraControl(short item_number)
 		{
 			if (hfw <= 256)
 			{
-				Lara.water_status = LW_ABOVE_WATER;
+				Lara.waterStatus = LW_ABOVE_WATER;
 				item->anim_number = ANIM_FALLDOWN;
 				item->frame_number = anims[ANIM_FALLDOWN].frame_base;
 				item->goal_anim_state = AS_FORWARDJUMP;
@@ -640,7 +640,7 @@ void LaraControl(short item_number)
 			}
 			else
 			{
-				Lara.water_status = LW_WADE;
+				Lara.waterStatus = LW_WADE;
 				item->anim_number = ANIM_BREATH;
 				item->frame_number = anims[ANIM_BREATH].frame_base;
 				item->current_anim_state = AS_STOP;
@@ -651,10 +651,10 @@ void LaraControl(short item_number)
 			item->fallspeed = 0;
 			item->pos.x_rot = 0;
 			item->pos.z_rot = 0;
-			Lara.torso_x_rot = 0;
-			Lara.torso_y_rot = 0;
-			Lara.head_x_rot = 0;
-			Lara.head_y_rot = 0;
+			Lara.torsoRotX = 0;
+			Lara.torsoRotY = 0;
+			Lara.headRotX = 0;
+			Lara.headRotY = 0;
 		}
 
 		break;
@@ -666,24 +666,24 @@ void LaraControl(short item_number)
 	{
 		item->hit_points = -1;
 
-		if (!Lara.death_count)
+		if (!Lara.deathCount)
 			S_CDStop();
 
-		Lara.death_count++;
+		Lara.deathCount++;
 
 		if (LaraItem->flags & IFL_INVISIBLE)
 		{
-			Lara.death_count++;
+			Lara.deathCount++;
 			return;
 		}
 	}
 
-	switch (Lara.water_status)
+	switch (Lara.waterStatus)
 	{
 	case LW_ABOVE_WATER:
 	case LW_WADE:
 
-		if (Lara.Gassed)
+		if (Lara.gassed)
 		{
 			if (item->hit_points >= 0)
 			{
@@ -715,7 +715,7 @@ void LaraControl(short item_number)
 			{
 				if (CheckCutPlayed(40))
 				{
-					SubsuitAir += Lara.Anxiety + 8;
+					SubsuitAir += Lara.anxiety + 8;
 
 					while (SubsuitAir > 80)
 					{
@@ -729,8 +729,8 @@ void LaraControl(short item_number)
 
 			if (Lara.air < 0)
 			{
-				if (LaraDrawType == LARA_DIVESUIT && Lara.Anxiety < 251)
-					Lara.Anxiety += 4;
+				if (LaraDrawType == LARA_DIVESUIT && Lara.anxiety < 251)
+					Lara.anxiety += 4;
 
 				Lara.air = -1;
 				item->hit_points -= 5;

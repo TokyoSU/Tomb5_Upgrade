@@ -114,7 +114,7 @@ void ControlLiftTeleporter(short item_number)
 		LaraItem->pos.y_rot = item->pos.y_rot + 0x8000;
 
 		if (LaraItem->room_number != room_number)
-			ItemNewRoom(Lara.item_number, room_number);
+			ItemNewRoom(Lara.itemNumber, room_number);
 
 		InitialiseHair();
 

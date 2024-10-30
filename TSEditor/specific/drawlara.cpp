@@ -139,7 +139,7 @@ static void DrawLara__1(ITEM_INFO* item, long mirror)
 
 		if (LaraItem->mesh_bits >> 0x10 & 1 << (15 - i))
 		{
-			phd_PutPolygons(Lara.mesh_ptrs[lara_mesh_sweetness_table[i]], -1);
+			phd_PutPolygons(Lara.meshPtrs[lara_mesh_sweetness_table[i]], -1);
 
 			for (int j = 0; j < 4; j++)
 			{
@@ -260,7 +260,7 @@ static void DrawLara__1(ITEM_INFO* item, long mirror)
 		aMXPtr->m23 = lara_matrices[LMX_THIGH_R * indices_count + M23];
 		phd_PutPolygons(*meshpp, -1);
 
-		if (Lara.back_gun)//back gun
+		if (Lara.weaponBackItem)//back gun
 		{
 			phd_PushMatrix();
 			aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
@@ -275,11 +275,11 @@ static void DrawLara__1(ITEM_INFO* item, long mirror)
 			aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
 			aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
 			aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
-			bone = objects[Lara.back_gun].bone_index;
+			bone = objects[Lara.weaponBackItem].bone_index;
 			phd_TranslateRel(bones[bone + 53], bones[bone + 54], bones[bone + 55]);
-			rot = objects[Lara.back_gun].frame_base + 9;
+			rot = objects[Lara.weaponBackItem].frame_base + 9;
 			gar_RotYXZsuperpack(&rot, 14);
-			phd_PutPolygons(meshes[objects[Lara.back_gun].mesh_index + 28], -1);
+			phd_PutPolygons(meshes[objects[Lara.weaponBackItem].mesh_index + 28], -1);
 			phd_PopMatrix();
 		}
 	}
@@ -338,7 +338,7 @@ static void DrawLara__4(ITEM_INFO* item, long mirror)
 			bLaraUnderWater = -1;
 
 		aSetViewMatrix();
-		phd_PutPolygonsSpcEnvmap(Lara.mesh_ptrs[lara_mesh_sweetness_table[i]], -1);
+		phd_PutPolygonsSpcEnvmap(Lara.meshPtrs[lara_mesh_sweetness_table[i]], -1);
 
 		for (int j = 0; j < 4; j++)
 		{
@@ -426,7 +426,7 @@ static void DrawLara__4(ITEM_INFO* item, long mirror)
 
 	bLaraUnderWater = (LaraNodeUnderwater[0] != 0) - 1;
 
-	if (!(gfLevelFlags & GF_YOUNGLARA) && Lara.back_gun)
+	if (!(gfLevelFlags & GF_YOUNGLARA) && Lara.weaponBackItem)
 	{
 		phd_PushMatrix();
 		aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
@@ -441,12 +441,12 @@ static void DrawLara__4(ITEM_INFO* item, long mirror)
 		aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
 		aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
 		aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
-		bone = objects[Lara.back_gun].bone_index;
+		bone = objects[Lara.weaponBackItem].bone_index;
 		phd_TranslateRel(bones[bone + 53], bones[bone + 54], bones[bone + 55]);
-		rot = objects[Lara.back_gun].frame_base + 9;
+		rot = objects[Lara.weaponBackItem].frame_base + 9;
 		gar_RotYXZsuperpack(&rot, 14);
 		aSetViewMatrix();
-		phd_PutPolygons(meshes[objects[Lara.back_gun].mesh_index + 28], -1);
+		phd_PutPolygons(meshes[objects[Lara.weaponBackItem].mesh_index + 28], -1);
 		phd_PopMatrix();
 	}
 
@@ -499,7 +499,7 @@ static void DrawLara__5(ITEM_INFO* item, long mirror)
 		else
 			bLaraUnderWater = -1;
 
-		phd_PutPolygons(Lara.mesh_ptrs[lara_mesh_sweetness_table[i]], -1);
+		phd_PutPolygons(Lara.meshPtrs[lara_mesh_sweetness_table[i]], -1);
 	}
 
 	phd_PopMatrix();
@@ -597,7 +597,7 @@ static void DrawLara__6(ITEM_INFO* item, long mirror)
 		else
 			bLaraUnderWater = -1;
 
-		phd_PutPolygonsSpcXLU(Lara.mesh_ptrs[lara_mesh_sweetness_table[i]], -1);
+		phd_PutPolygonsSpcXLU(Lara.meshPtrs[lara_mesh_sweetness_table[i]], -1);
 
 		for (int j = 0; j < 4; j++)
 		{
@@ -677,7 +677,7 @@ static void DrawLara__6(ITEM_INFO* item, long mirror)
 		meshpp += 2;
 	}
 
-	if (Lara.back_gun)
+	if (Lara.weaponBackItem)
 	{
 		phd_PushMatrix();
 		aMXPtr->m00 = lara_matrices[LMX_TORSO * indices_count + M00];
@@ -692,11 +692,11 @@ static void DrawLara__6(ITEM_INFO* item, long mirror)
 		aMXPtr->m21 = lara_matrices[LMX_TORSO * indices_count + M21];
 		aMXPtr->m22 = lara_matrices[LMX_TORSO * indices_count + M22];
 		aMXPtr->m23 = lara_matrices[LMX_TORSO * indices_count + M23];
-		bone = objects[Lara.back_gun].bone_index;
+		bone = objects[Lara.weaponBackItem].bone_index;
 		phd_TranslateRel(bones[bone + 53], bones[bone + 54], bones[bone + 55]);
-		rot = objects[Lara.back_gun].frame_base + 9;
+		rot = objects[Lara.weaponBackItem].frame_base + 9;
 		gar_RotYXZsuperpack(&rot, 14);
-		phd_PutPolygonsSpcXLU(meshes[objects[Lara.back_gun].mesh_index + 28], -1);
+		phd_PutPolygonsSpcXLU(meshes[objects[Lara.weaponBackItem].mesh_index + 28], -1);
 		phd_PopMatrix();
 	}
 

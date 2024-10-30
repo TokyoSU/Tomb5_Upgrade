@@ -482,7 +482,7 @@ void SasControl(short item_number)
 		case 17:
 			head = 0;
 
-			if (!item->hit_status && LaraItem->speed < 40 && !Lara.has_fired)
+			if (!item->hit_status && LaraItem->speed < 40 && !Lara.hasFired)
 				sas->alerted = 0;
 
 			if (sas->alerted)

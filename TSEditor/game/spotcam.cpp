@@ -120,13 +120,13 @@ void InitialiseSpotCam(short Sequence)
 	LaserSight = 0;
 	AlterFOV(GAME_FOV);
 	LaraItem->mesh_bits = -1;
-	Lara.Busy = 0;
+	Lara.busy = 0;
 	CameraFade = -1;
 	LastFov = CurrentFov;
-	Lara.head_x_rot = 0;
-	Lara.head_y_rot = 0;
-	Lara.torso_x_rot = 0;
-	Lara.torso_y_rot = 0;
+	Lara.headRotX = 0;
+	Lara.headRotY = 0;
+	Lara.torsoRotX = 0;
+	Lara.torsoRotY = 0;
 	camera.bounce = 0;
 	LastSequence = Sequence;
 	bTrackCamInit = 0;

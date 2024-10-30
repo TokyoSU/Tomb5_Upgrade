@@ -48,7 +48,7 @@ void Draw_Mirror_Lara()
 	LaraItem->pos.z_rot += 0x8000;
 	phd_PushMatrix();
 
-	if (Lara.right_arm.flash_gun)
+	if (Lara.rightArm.flash_gun)
 	{
 		aMXPtr->m00 = lara_matrices[LMX_HAND_R * indices_count + M00];
 		aMXPtr->m01 = lara_matrices[LMX_HAND_R * indices_count + M01];
@@ -62,10 +62,10 @@ void Draw_Mirror_Lara()
 		aMXPtr->m21 = lara_matrices[LMX_HAND_R * indices_count + M21];
 		aMXPtr->m22 = lara_matrices[LMX_HAND_R * indices_count + M22];
 		aMXPtr->m23 = lara_matrices[LMX_HAND_R * indices_count + M23];
-		SetGunFlash(Lara.gun_type);
+		SetGunFlash(Lara.gunType);
 	}
 
-	if (Lara.left_arm.flash_gun)
+	if (Lara.leftArm.flash_gun)
 	{
 		aMXPtr->m00 = lara_matrices[LMX_HAND_L * indices_count + M00];
 		aMXPtr->m01 = lara_matrices[LMX_HAND_L * indices_count + M01];
@@ -79,7 +79,7 @@ void Draw_Mirror_Lara()
 		aMXPtr->m21 = lara_matrices[LMX_HAND_L * indices_count + M21];
 		aMXPtr->m22 = lara_matrices[LMX_HAND_L * indices_count + M22];
 		aMXPtr->m23 = lara_matrices[LMX_HAND_L * indices_count + M23];
-		SetGunFlash(Lara.gun_type);
+		SetGunFlash(Lara.gunType);
 	}
 
 	phd_PopMatrix();

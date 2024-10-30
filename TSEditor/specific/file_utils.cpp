@@ -115,3 +115,88 @@ bool CMemoryFileReader::LoadFile(void* data, size_t size)
 	}
 	return true;
 }
+
+IFileWriter::~IFileWriter()
+{
+	Release();
+}
+
+void IFileWriter::Release()
+{
+	if (m_file)
+	{
+		SDL_RWclose(m_file);
+		m_file = NULL;
+	}
+}
+
+void IFileWriter::WriteChar(char value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteUChar(unsigned char value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteShort(short value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteUShort(unsigned short value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteInt(int value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteUInt(unsigned int value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteLong(long value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteULong(unsigned long value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteUULong(unsigned long long value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteFloat(float value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteDouble(double value)
+{
+	_Write(value);
+}
+
+void IFileWriter::WriteBytes(void* data, size_t size)
+{
+	SDL_RWwrite(m_file, data, sizeof(char), size);
+}
+
+bool CFileWriter::OpenOrCreateFile(LPCSTR filePath)
+{
+	m_file = SDL_RWFromFile(filePath, "wb");
+	if (m_file == NULL)
+	{
+		Log("Failed to create or open file from filePath: %s", filePath);
+		return false;
+	}
+	return true;
+}

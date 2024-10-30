@@ -821,7 +821,7 @@ void DrawRooms(short current_room)
 
 			phd_PushMatrix();
 
-			if (Lara.right_arm.flash_gun)
+			if (Lara.rightArm.flash_gun)
 			{
 				aMXPtr->m00 = lara_matrices[LMX_HAND_R * indices_count + M00];
 				aMXPtr->m01 = lara_matrices[LMX_HAND_R * indices_count + M01];
@@ -835,10 +835,10 @@ void DrawRooms(short current_room)
 				aMXPtr->m21 = lara_matrices[LMX_HAND_R * indices_count + M21];
 				aMXPtr->m22 = lara_matrices[LMX_HAND_R * indices_count + M22];
 				aMXPtr->m23 = lara_matrices[LMX_HAND_R * indices_count + M23];
-				SetGunFlash(Lara.gun_type);
+				SetGunFlash(Lara.gunType);
 			}
 
-			if (Lara.left_arm.flash_gun)
+			if (Lara.leftArm.flash_gun)
 			{
 				aMXPtr->m00 = lara_matrices[LMX_HAND_L * indices_count + M00];
 				aMXPtr->m01 = lara_matrices[LMX_HAND_L * indices_count + M01];
@@ -852,7 +852,7 @@ void DrawRooms(short current_room)
 				aMXPtr->m21 = lara_matrices[LMX_HAND_L * indices_count + M21];
 				aMXPtr->m22 = lara_matrices[LMX_HAND_L * indices_count + M22];
 				aMXPtr->m23 = lara_matrices[LMX_HAND_L * indices_count + M23];
-				SetGunFlash(Lara.gun_type);
+				SetGunFlash(Lara.gunType);
 			}
 
 			phd_PopMatrix();
@@ -1015,45 +1015,45 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate)
 
 void SetupSkelebobMeshswaps()
 {
-	Lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_HEAD];
-	Lara.mesh_ptrs[LM_TORSO] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_TORSO];
-	skelly_backgunbak = Lara.back_gun;
-	skelly_rhandbak = Lara.mesh_ptrs[LM_RHAND];
-	skelly_lhandbak = Lara.mesh_ptrs[LM_LHAND];
+	Lara.meshPtrs[LM_HEAD] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_HEAD];
+	Lara.meshPtrs[LM_TORSO] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_TORSO];
+	skelly_backgunbak = Lara.weaponBackItem;
+	skelly_rhandbak = Lara.meshPtrs[LM_RHAND];
+	skelly_lhandbak = Lara.meshPtrs[LM_LHAND];
 
-	if (Lara.back_gun)
+	if (Lara.weaponBackItem)
 	{
-		if (Lara.back_gun == CROSSBOW_ANIM)
-			Lara.back_gun = UZI_ANIM;
-		else if (Lara.back_gun == HK_ANIM)
-			Lara.back_gun = PISTOLS_ANIM;
+		if (Lara.weaponBackItem == CROSSBOW_ANIM)
+			Lara.weaponBackItem = UZI_ANIM;
+		else if (Lara.weaponBackItem == HK_ANIM)
+			Lara.weaponBackItem = PISTOLS_ANIM;
 	}
 
-	if (Lara.gun_type == WEAPON_CROSSBOW)
+	if (Lara.gunType == WEAPON_CROSSBOW)
 	{
-		if (Lara.mesh_ptrs[LM_RHAND] == meshes[objects[CROSSBOW_ANIM].mesh_index + 2 * LM_RHAND])
-			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[UZI_ANIM].mesh_index + 2 * LM_RHAND];
+		if (Lara.meshPtrs[LM_RHAND] == meshes[objects[CROSSBOW_ANIM].mesh_index + 2 * LM_RHAND])
+			Lara.meshPtrs[LM_RHAND] = meshes[objects[UZI_ANIM].mesh_index + 2 * LM_RHAND];
 		else
-			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
+			Lara.meshPtrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
 	}
-	else if (Lara.gun_type == WEAPON_HK)
+	else if (Lara.gunType == WEAPON_HK)
 	{
-		if (Lara.mesh_ptrs[LM_RHAND] == meshes[objects[HK_ANIM].mesh_index + 20])
-			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[PISTOLS_ANIM].mesh_index + 2 * LM_RHAND];
+		if (Lara.meshPtrs[LM_RHAND] == meshes[objects[HK_ANIM].mesh_index + 20])
+			Lara.meshPtrs[LM_RHAND] = meshes[objects[PISTOLS_ANIM].mesh_index + 2 * LM_RHAND];
 		else
-			Lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
+			Lara.meshPtrs[LM_RHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_RHAND];
 	}
 	
-	Lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_LHAND];
+	Lara.meshPtrs[LM_LHAND] = meshes[objects[LARA_EXTRA_MESH2].mesh_index + 2 * LM_LHAND];
 }
 
 void RestoreLaraMeshswaps()
 {
-	Lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA].mesh_index + 2 * LM_HEAD];
-	Lara.mesh_ptrs[LM_TORSO] = meshes[objects[LARA].mesh_index + 2 * LM_TORSO];
-	Lara.back_gun = skelly_backgunbak;
-	Lara.mesh_ptrs[LM_RHAND] = skelly_rhandbak;
-	Lara.mesh_ptrs[LM_LHAND] = skelly_lhandbak;
+	Lara.meshPtrs[LM_HEAD] = meshes[objects[LARA].mesh_index + 2 * LM_HEAD];
+	Lara.meshPtrs[LM_TORSO] = meshes[objects[LARA].mesh_index + 2 * LM_TORSO];
+	Lara.weaponBackItem = skelly_backgunbak;
+	Lara.meshPtrs[LM_RHAND] = skelly_rhandbak;
+	Lara.meshPtrs[LM_LHAND] = skelly_lhandbak;
 }
 
 void RenderIt(short current_room)
