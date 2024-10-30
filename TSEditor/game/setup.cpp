@@ -1912,13 +1912,13 @@ void InitialiseObjects()
 		objects[2 * (gfMips[lp] & 0xF) + ANIMATING1].object_mip = 64 * (gfMips[lp] & 0xF0);
 
 	if (objects[RAT].loaded)
-		Rats = (RAT_STRUCT*)game_malloc(832);
+		Rats = (RAT_STRUCT*)MALLOC_AllocateMemory(832);
 
 	if (objects[BAT].loaded)
-		Bats = (BAT_STRUCT*)game_malloc(1920);
+		Bats = (BAT_STRUCT*)MALLOC_AllocateMemory(1920);
 
 	if (objects[SPIDER].loaded)
-		Spiders = (SPIDER_STRUCT*)game_malloc(1664);
+		Spiders = (SPIDER_STRUCT*)MALLOC_AllocateMemory(1664);
 }
 
 void GetCarriedItems()
@@ -2036,8 +2036,8 @@ void BuildOutsideTable()
 	char flipped[256];
 
 	max_slots = 0;
-	OutsideRoomOffsets = (short*)game_malloc(0x5B2);
-	OutsideRoomTable = (char*)game_malloc(0xB640);
+	OutsideRoomOffsets = (short*)MALLOC_AllocateMemory(0x5B2);
+	OutsideRoomTable = (char*)MALLOC_AllocateMemory(0xB640);
 	memset(OutsideRoomTable, 0xFF, 0xB640);
 	memset(flipped, 0, 255);
 

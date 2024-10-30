@@ -163,7 +163,7 @@ bool GameInitialise()
 {
 	Log(__FUNCTION__);
 
-	init_game_malloc();
+	MALLOC_InitializeMemory();
 	clipflags = (short*)malloc(0x8000); // NOTE: There is malloc for clipflags.
 	init_water_table();
 	aInitFX();
@@ -208,10 +208,10 @@ void GameClose()
 	ACMClose();
 	FreeLevel();
 
+	MALLOC_ReleaseMemory();
 	SafeFree(clipflags);
 	SafeFree(wav_file_buffer);
 	SafeFree(ADPCMBuffer);
-	SafeFree(malloc_buffer);
 	SafeFree(gfScriptFile);
 	SafeFree(gfLanguageFile);
 }

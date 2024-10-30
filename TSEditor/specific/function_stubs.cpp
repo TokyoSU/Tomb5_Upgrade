@@ -15,16 +15,25 @@ static long malloc_used;
 static long rand_1 = 0xD371F947;
 static long rand_2 = 0xD371F947;
 
-void init_game_malloc()
+void MALLOC_InitializeMemory()
 {
-	malloc_buffer = (char*)malloc(MALLOC_SIZE); // NOTE: There is where malloc allocate for game_malloc().
+	malloc_buffer = (char*)SDL_malloc(MALLOC_SIZE); // NOTE: There is where malloc allocate for game_malloc().
 	malloc_size = MALLOC_SIZE;
 	malloc_ptr = malloc_buffer;
 	malloc_free = MALLOC_SIZE;
 	malloc_used = 0;
 }
 
-void* game_malloc(long size)
+void MALLOC_ReleaseMemory()
+{
+	SafeFree(malloc_buffer);
+	malloc_size = MALLOC_SIZE;
+	malloc_ptr = NULL;
+	malloc_free = MALLOC_SIZE;
+	malloc_used = 0;
+}
+
+void* MALLOC_AllocateMemory(int size)
 {
 	char* ptr;
 
@@ -39,7 +48,7 @@ void* game_malloc(long size)
 	malloc_free -= size;
 	malloc_used += size;
 	malloc_ptr += size;
-	memset(ptr, 0, size);
+	SDL_memset(ptr, 0, size);
 	return ptr;
 }
 

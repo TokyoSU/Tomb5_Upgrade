@@ -1,8 +1,9 @@
 #pragma once
 #include "../global/types.h"
 
-void init_game_malloc();
-void* game_malloc(long size);
+void MALLOC_InitializeMemory();
+void MALLOC_ReleaseMemory();
+void* MALLOC_AllocateMemory(int size);
 long GetRandomControl();
 void SeedRandomControl(long seed);
 long GetRandomDraw();

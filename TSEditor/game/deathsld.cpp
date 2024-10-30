@@ -15,28 +15,26 @@
 static short DeathSlideBounds[] = {-256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0};
 static PHD_VECTOR DeathSlidePosition = {0, 0, 371};
 
+static GAME_VECTOR* GetDeathSlidePrevPosition(ITEM_INFO* item) {
+	return static_cast<GAME_VECTOR*>(item->data);
+}
+
 void InitialiseDeathSlide(short item_number)
 {
-	ITEM_INFO* item;
-	GAME_VECTOR* old;
-
-	item = &items[item_number];
-	old = (GAME_VECTOR*)game_malloc(sizeof(GAME_VECTOR));
-	item->data = old;
-	old->x = item->pos.x_pos;
-	old->y = item->pos.y_pos;
-	old->z = item->pos.z_pos;
-	old->room_number = item->room_number;
+	auto* item = &items[item_number];
+	auto* prevPos = (GAME_VECTOR*)MALLOC_AllocateMemory(sizeof(GAME_VECTOR));
+	item->data = prevPos;
+	prevPos->x = item->pos.x_pos;
+	prevPos->y = item->pos.y_pos;
+	prevPos->z = item->pos.z_pos;
+	prevPos->room_number = item->room_number;
 }
 
 void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-
 	if (KeyInput & IN_ACTION && !l->gravity_status && Lara.gunStatus == LG_NO_ARMS && l->current_anim_state == AS_STOP)
 	{
-		item = &items[item_number];
-
+		auto* item = &items[item_number];
 		if (item->status == ITEM_INACTIVE && TestLaraPosition(DeathSlideBounds, item, l))
 		{
 			AlignLaraPosition(&DeathSlidePosition, item, l);
@@ -56,14 +54,7 @@ void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void ControlDeathSlide(short item_number)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
-	GAME_VECTOR* old;
-	long x, y, z;
-	short room_number;
-
-	item = &items[item_number];
-
+	auto* item = &items[item_number];
 	if (item->status != ITEM_ACTIVE)
 		return;
 
@@ -83,7 +74,7 @@ void ControlDeathSlide(short item_number)
 		item->pos.x_pos += item->fallspeed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 		item->pos.y_pos += item->fallspeed >> 2;
 		item->pos.z_pos += item->fallspeed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
-		room_number = item->room_number;
+		auto room_number = item->room_number;
 		GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
 		if (item->room_number != room_number)
@@ -96,10 +87,10 @@ void ControlDeathSlide(short item_number)
 			LaraItem->pos.z_pos = item->pos.z_pos;
 		}
 
-		x = item->pos.x_pos + (1024 * phd_sin(item->pos.y_rot) >> W2V_SHIFT);
-		y = item->pos.y_pos + 64;
-		z = item->pos.z_pos + (1024 * phd_cos(item->pos.y_rot) >> W2V_SHIFT);
-		floor = GetFloor(x, y, z, &room_number);
+		auto x = item->pos.x_pos + (1024 * phd_sin(item->pos.y_rot) >> W2V_SHIFT);
+		auto y = item->pos.y_pos + 64;
+		auto z = item->pos.z_pos + (1024 * phd_cos(item->pos.y_rot) >> W2V_SHIFT);
+		auto* floor = GetFloor(x, y, z, &room_number);
 
 		if (GetHeight(floor, x, y, z) <= y + 256 || GetCeiling(floor, x, y, z) >= y - 256)
 		{
@@ -122,7 +113,7 @@ void ControlDeathSlide(short item_number)
 	}
 	else
 	{
-		old = (GAME_VECTOR*)item->data;
+		auto* old = GetDeathSlidePrevPosition(item);
 		item->pos.x_pos = old->x;
 		item->pos.y_pos = old->y;
 		item->pos.z_pos = old->z;

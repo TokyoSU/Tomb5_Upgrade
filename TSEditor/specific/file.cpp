@@ -606,14 +606,14 @@ static void aLoadRoomStream()
 
 	levelUncompressed.ReadLong();	//skip unused space
 	num = levelUncompressed.ReadLong();
-	room = (ROOM_INFO*)game_malloc(num * sizeof(ROOM_INFO));
+	room = (ROOM_INFO*)MALLOC_AllocateMemory(num * sizeof(ROOM_INFO));
 
 	for (int i = 0; i < num; i++)
 	{
 		r = &room[i];
 		levelUncompressed.ReadLong();		//X E L A
 		size = levelUncompressed.ReadLong();
-		data = (char*)game_malloc(size);
+		data = (char*)MALLOC_AllocateMemory(size);
 		levelUncompressed.ReadBytes(data, size);
 		aFixUpRoom(r, data);
 	}
@@ -632,7 +632,7 @@ bool LoadRooms()
 	BuildOutsideTable();
 
 	size = levelUncompressed.ReadLong();
-	floor_data = (short*)game_malloc(size * sizeof(short));
+	floor_data = (short*)MALLOC_AllocateMemory(size * sizeof(short));
 	levelUncompressed.ReadBytes(floor_data, sizeof(short) * size);
 
 	Log("Floor Data Size %d @ %x", size, floor_data);
@@ -653,11 +653,11 @@ bool LoadObjects()
 
 	//meshes
 	num = levelUncompressed.ReadLong();
-	mesh_base = (short*)game_malloc(num * 2);
+	mesh_base = (short*)MALLOC_AllocateMemory(num * 2);
 	levelUncompressed.ReadBytes(mesh_base, num * sizeof(short));
 
 	num = levelUncompressed.ReadLong();
-	meshes = (short**)game_malloc(num * sizeof(long) * 2);	//*2 for meshswaps
+	meshes = (short**)MALLOC_AllocateMemory(num * sizeof(long) * 2);	//*2 for meshswaps
 	levelUncompressed.ReadBytes(meshes, num * sizeof(long));
 
 	for (lp = 0; lp < num; lp++)
@@ -667,32 +667,32 @@ bool LoadObjects()
 
 	//anims
 	num_anims = levelUncompressed.ReadLong();
-	anims = (ANIM_STRUCT*)game_malloc(num_anims * sizeof(ANIM_STRUCT));
+	anims = (ANIM_STRUCT*)MALLOC_AllocateMemory(num_anims * sizeof(ANIM_STRUCT));
 	levelUncompressed.ReadBytes(anims, num_anims * sizeof(ANIM_STRUCT));
 
 	//changes
 	num = levelUncompressed.ReadLong();
-	changes = (CHANGE_STRUCT*)game_malloc(num * sizeof(CHANGE_STRUCT));
+	changes = (CHANGE_STRUCT*)MALLOC_AllocateMemory(num * sizeof(CHANGE_STRUCT));
 	levelUncompressed.ReadBytes(changes, num * sizeof(CHANGE_STRUCT));
 
 	//ranges
 	num = levelUncompressed.ReadLong();
-	ranges = (RANGE_STRUCT*)game_malloc(num * sizeof(RANGE_STRUCT));
+	ranges = (RANGE_STRUCT*)MALLOC_AllocateMemory(num * sizeof(RANGE_STRUCT));
 	levelUncompressed.ReadBytes(ranges, num * sizeof(RANGE_STRUCT));
 
 	//anim commands
 	num = levelUncompressed.ReadLong();
-	commands = (short*)game_malloc(num * sizeof(short));
+	commands = (short*)MALLOC_AllocateMemory(num * sizeof(short));
 	levelUncompressed.ReadBytes(commands, num * sizeof(short));
 
 	//bones
 	num = levelUncompressed.ReadLong();
-	bones = (long*)game_malloc(num * sizeof(long));
+	bones = (long*)MALLOC_AllocateMemory(num * sizeof(long));
 	levelUncompressed.ReadBytes(bones, num * sizeof(long));
 
 	//frames
 	num = levelUncompressed.ReadLong();
-	frames = (short*)game_malloc(num * sizeof(short));
+	frames = (short*)MALLOC_AllocateMemory(num * sizeof(short));
 	levelUncompressed.ReadBytes(frames, num * sizeof(short));
 
 	for (lp = 0; lp < num_anims; lp++)
@@ -771,7 +771,7 @@ bool LoadSprites()
 	levelUncompressed.ReadLong();			//SPR 0 marker
 
 	num_sprites = levelUncompressed.ReadLong();
-	spriteinfo = (SPRITESTRUCT*)game_malloc(sizeof(SPRITESTRUCT) * num_sprites);
+	spriteinfo = (SPRITESTRUCT*)MALLOC_AllocateMemory(sizeof(SPRITESTRUCT) * num_sprites);
 
 	for (int i = 0; i < num_sprites; i++)
 	{
@@ -825,7 +825,7 @@ bool LoadCameras()
 
 	if (number_cameras)
 	{
-		camera.fixed = (OBJECT_VECTOR*)game_malloc(number_cameras * sizeof(OBJECT_VECTOR));
+		camera.fixed = (OBJECT_VECTOR*)MALLOC_AllocateMemory(number_cameras * sizeof(OBJECT_VECTOR));
 		levelUncompressed.ReadBytes(camera.fixed, number_cameras * sizeof(OBJECT_VECTOR));
 	}
 
@@ -844,7 +844,7 @@ bool LoadSoundEffects()
 
 	if (number_sound_effects)
 	{
-		sound_effects = (OBJECT_VECTOR*)game_malloc(number_sound_effects * sizeof(OBJECT_VECTOR));
+		sound_effects = (OBJECT_VECTOR*)MALLOC_AllocateMemory(number_sound_effects * sizeof(OBJECT_VECTOR));
 		levelUncompressed.ReadBytes(sound_effects, number_sound_effects * sizeof(OBJECT_VECTOR));
 	}
 
@@ -859,22 +859,22 @@ bool LoadBoxes()
 	Log(__FUNCTION__);
 	num_boxes = levelUncompressed.ReadLong();
 
-	boxes = (BOX_INFO*)game_malloc(num_boxes * sizeof(BOX_INFO));
+	boxes = (BOX_INFO*)MALLOC_AllocateMemory(num_boxes * sizeof(BOX_INFO));
 	levelUncompressed.ReadBytes(boxes, num_boxes * sizeof(BOX_INFO));
 
 	size = levelUncompressed.ReadLong();
-	overlap = (ushort*)game_malloc(size * sizeof(ushort));
+	overlap = (ushort*)MALLOC_AllocateMemory(size * sizeof(ushort));
 	levelUncompressed.ReadBytes(overlap, size * sizeof(ushort));
 
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			ground_zone[j][i] = (short*)game_malloc(num_boxes * sizeof(short));
+			ground_zone[j][i] = (short*)MALLOC_AllocateMemory(num_boxes * sizeof(short));
 			levelUncompressed.ReadBytes(ground_zone[j][i], num_boxes * sizeof(short));
 		}
 
-		ground_zone[4][i] = (short*)game_malloc(num_boxes * sizeof(short));
+		ground_zone[4][i] = (short*)MALLOC_AllocateMemory(num_boxes * sizeof(short));
 		levelUncompressed.ReadBytes(ground_zone[4][i], num_boxes * sizeof(short));
 	}
 
@@ -895,7 +895,7 @@ bool LoadAnimatedTextures()
 	Log(__FUNCTION__);
 	num_anim_ranges = levelUncompressed.ReadLong();
 
-	aranges = (short*)game_malloc(num_anim_ranges * 2);
+	aranges = (short*)MALLOC_AllocateMemory(num_anim_ranges * 2);
 	levelUncompressed.ReadBytes(aranges, num_anim_ranges * sizeof(short));
 
 	if (gfCurrentLevel == LVL5_ESCAPE_WITH_THE_IRIS)
@@ -953,7 +953,7 @@ bool LoadTextureInfos()
 	levelUncompressed.ReadLong();			//TEX 0 marker
 	nTInfos = levelUncompressed.ReadLong();
 	Log("Texture Infos : %d", nTInfos);
-	textinfo = (TEXTURESTRUCT*)game_malloc(nTInfos * sizeof(TEXTURESTRUCT));
+	textinfo = (TEXTURESTRUCT*)MALLOC_AllocateMemory(nTInfos * sizeof(TEXTURESTRUCT));
 
 	for (int i = 0; i < nTInfos; i++)
 	{
@@ -1001,7 +1001,7 @@ bool LoadItems()
 	if (!num_items)
 		return 1;
 
-	items = (ITEM_INFO*)game_malloc(MAX_ITEMS * sizeof(ITEM_INFO));
+	items = (ITEM_INFO*)MALLOC_AllocateMemory(MAX_ITEMS * sizeof(ITEM_INFO));
 	level_items = num_items;
 	InitialiseClosedDoors();
 	InitialiseItemArray(MAX_ITEMS);
@@ -1063,7 +1063,7 @@ bool LoadAIInfo()
 	if (num <= 0)
 		return 1;
 	nAIObjects = (short)num;
-	AIObjects = (AIOBJECT*)game_malloc(num * sizeof(AIOBJECT));
+	AIObjects = (AIOBJECT*)MALLOC_AllocateMemory(num * sizeof(AIOBJECT));
 	levelUncompressed.ReadBytes(AIObjects, num * sizeof(AIOBJECT));
 	return 1;
 }
@@ -1080,7 +1080,7 @@ bool LoadSamples()
 	long num_infos, num_samples, uncomp_size, comp_size;
 
 	Log(__FUNCTION__);
-	sample_lut = (short*)game_malloc(MAX_SAMPLES * sizeof(short));
+	sample_lut = (short*)MALLOC_AllocateMemory(MAX_SAMPLES * sizeof(short));
 	levelUncompressed.ReadBytes(sample_lut, MAX_SAMPLES * sizeof(short));
 
 	num_infos = levelUncompressed.ReadLong(); Log("Number Of Sample Infos %d", num_infos);
@@ -1090,7 +1090,7 @@ bool LoadSamples()
 		return 0;
 	}
 
-	sample_infos = (SAMPLE_INFO*)game_malloc(num_infos * sizeof(SAMPLE_INFO));
+	sample_infos = (SAMPLE_INFO*)MALLOC_AllocateMemory(num_infos * sizeof(SAMPLE_INFO));
 	levelUncompressed.ReadBytes(sample_infos, num_infos * sizeof(SAMPLE_INFO));
 
 	num_samples = levelUncompressed.ReadLong();
