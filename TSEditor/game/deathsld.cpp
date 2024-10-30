@@ -22,7 +22,7 @@ static GAME_VECTOR* GetDeathSlidePrevPosition(ITEM_INFO* item) {
 void InitialiseDeathSlide(short item_number)
 {
 	auto* item = &items[item_number];
-	auto* prevPos = (GAME_VECTOR*)MALLOC_AllocateMemory(sizeof(GAME_VECTOR));
+	auto* prevPos = (GAME_VECTOR*)MEM_Allocate(sizeof(GAME_VECTOR));
 	item->data = prevPos;
 	prevPos->x = item->pos.x_pos;
 	prevPos->y = item->pos.y_pos;

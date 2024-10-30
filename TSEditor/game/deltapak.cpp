@@ -3506,7 +3506,7 @@ void init_cutseq_actors(char* data, long resident)
 			resident_addr += sizeof(PACKNODE) * (pda_nodes + 1);
 		}
 		else
-			actor_pnodes[i] = (PACKNODE*)MALLOC_AllocateMemory(sizeof(PACKNODE) * (pda_nodes + 1));
+			actor_pnodes[i] = (PACKNODE*)MEM_Allocate(sizeof(PACKNODE) * (pda_nodes + 1));
 
 		if (!i)
 		{
@@ -3545,7 +3545,7 @@ void init_cutseq_actors(char* data, long resident)
 		resident_addr += sizeof(PACKNODE) * (pda_nodes + 1);
 	}
 	else
-		camera_pnodes = (PACKNODE*)MALLOC_AllocateMemory(sizeof(PACKNODE) * (pda_nodes + 1));
+		camera_pnodes = (PACKNODE*)MEM_Allocate(sizeof(PACKNODE) * (pda_nodes + 1));
 
 	InitPackNodes(nlheader, camera_pnodes, packed, pda_nodes + 1);
 	GLOBAL_playing_cutseq = 1;

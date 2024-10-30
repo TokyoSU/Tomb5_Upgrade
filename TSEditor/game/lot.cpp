@@ -16,7 +16,7 @@ void InitialiseLOTarray(long allocmem)
 	CREATURE_INFO* creature;
 
 	if (allocmem)
-		baddie_slots = (CREATURE_INFO*)MALLOC_AllocateMemory(sizeof(CREATURE_INFO) * MAX_LOT);
+		baddie_slots = (CREATURE_INFO*)MEM_Allocate(sizeof(CREATURE_INFO) * MAX_LOT);
 
 	for (int i = 0; i < MAX_LOT; i++)
 	{
@@ -24,7 +24,7 @@ void InitialiseLOTarray(long allocmem)
 		creature->item_num = NO_ITEM;
 
 		if (allocmem)
-			creature->LOT.node = (BOX_NODE*)MALLOC_AllocateMemory(sizeof(BOX_NODE) * num_boxes);
+			creature->LOT.node = (BOX_NODE*)MEM_Allocate(sizeof(BOX_NODE) * num_boxes);
 	}
 
 	slots_used = 0;

@@ -739,7 +739,7 @@ void ProcessMeshData(long num_meshes)
 
 	Log(__FUNCTION__ " %d", num_meshes);
 	num_level_meshes = num_meshes;
-	mesh_vtxbuf = (MESH_DATA**)MALLOC_AllocateMemory(4 * num_meshes);
+	mesh_vtxbuf = (MESH_DATA**)MEM_Allocate(4 * num_meshes);
 	mesh_base = (short*)malloc_ptr;
 	last_mesh_ptr = 0;
 	data = 0;
@@ -763,7 +763,7 @@ void ProcessMeshData(long num_meshes)
 		maxx = -20000.0F;
 		maxy = -20000.0F;
 		maxz = -20000.0F;
-		data = (MESH_DATA*)MALLOC_AllocateMemory(sizeof(MESH_DATA));
+		data = (MESH_DATA*)MEM_Allocate(sizeof(MESH_DATA));
 		memset(data, 0, sizeof(MESH_DATA));
 		meshes[i] = (short*)data;
 		mesh_vtxbuf[i] = data;
@@ -778,7 +778,7 @@ void ProcessMeshData(long num_meshes)
 			num = *mesh_ptr >> 8;
 
 		mesh_ptr++;
-		data->aVtx = (ACMESHVERTEX*)MALLOC_AllocateMemory(sizeof(ACMESHVERTEX) * data->nVerts);
+		data->aVtx = (ACMESHVERTEX*)MEM_Allocate(sizeof(ACMESHVERTEX) * data->nVerts);
 
 		if (data->nVerts)
 		{
@@ -824,7 +824,7 @@ void ProcessMeshData(long num_meshes)
 			if (data->nNorms <= 0)
 			{
 				data->Normals = 0;
-				data->prelight = (long*)MALLOC_AllocateMemory(4 * data->nVerts);
+				data->prelight = (long*)MEM_Allocate(4 * data->nVerts);
 
 				for (int j = 0; j < data->nVerts; j++)
 				{
@@ -837,7 +837,7 @@ void ProcessMeshData(long num_meshes)
 			}
 			else
 			{
-				data->Normals = (D3DVECTOR*)MALLOC_AllocateMemory(sizeof(D3DVECTOR) * data->nNorms);
+				data->Normals = (D3DVECTOR*)MEM_Allocate(sizeof(D3DVECTOR) * data->nNorms);
 
 				for (int j = 0; j < data->nVerts; j++)
 				{
@@ -860,7 +860,7 @@ void ProcessMeshData(long num_meshes)
 
 		if (data->ngt4)
 		{
-			data->gt4 = (short*)MALLOC_AllocateMemory(12 * data->ngt4);
+			data->gt4 = (short*)MEM_Allocate(12 * data->ngt4);
 			memcpy(data->gt4, mesh_ptr, 12 * data->ngt4);
 			mesh_ptr += 6 * data->ngt4;
 			gtx = data->gt4 + 5;
@@ -879,7 +879,7 @@ void ProcessMeshData(long num_meshes)
 
 		if (data->ngt3)
 		{
-			data->gt3 = (short*)MALLOC_AllocateMemory(10 * data->ngt3);
+			data->gt3 = (short*)MEM_Allocate(10 * data->ngt3);
 			memcpy(data->gt3, mesh_ptr, 10 * data->ngt3);
 
 			if (hand)

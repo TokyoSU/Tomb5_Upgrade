@@ -6,16 +6,16 @@
 #include <spdlog/sinks/basic_file_sink.h>
 
 static std::shared_ptr<spdlog::logger> m_log = spdlog::basic_logger_mt("global", "logs/debug.txt", true);
-char* malloc_buffer;
-char* malloc_ptr;
-long malloc_size;
-long malloc_free;
+char* malloc_buffer = NULL;
+char* malloc_ptr = NULL;
+long malloc_size = 0;
+long malloc_free = 0;
 long nPolyType;
-static long malloc_used;
+static long malloc_used = 0;
 static long rand_1 = 0xD371F947;
 static long rand_2 = 0xD371F947;
 
-void MALLOC_InitializeMemory()
+void MEM_Initialize()
 {
 	malloc_buffer = (char*)SDL_malloc(MALLOC_SIZE); // NOTE: There is where malloc allocate for game_malloc().
 	malloc_size = MALLOC_SIZE;
@@ -24,7 +24,7 @@ void MALLOC_InitializeMemory()
 	malloc_used = 0;
 }
 
-void MALLOC_ReleaseMemory()
+void MEM_Release()
 {
 	SafeFree(malloc_buffer);
 	malloc_size = MALLOC_SIZE;
@@ -33,14 +33,14 @@ void MALLOC_ReleaseMemory()
 	malloc_used = 0;
 }
 
-void* MALLOC_AllocateMemory(int size)
+void* MEM_Allocate(int size)
 {
 	char* ptr;
 
 	size = (size + 3) & -4;
 	if (size > malloc_free)
 	{
-		Log("OUT OF MEMORY");
+		Log("MEM_Allocate(): Failed to allocate memory, out of memory");
 		return 0;
 	}
 

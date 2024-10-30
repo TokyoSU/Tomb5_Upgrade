@@ -40,7 +40,7 @@ void InitialiseGuardian(short item_number)
 	short angle;
 
 	item = &items[item_number];
-	item->data = MALLOC_AllocateMemory(20);
+	item->data = MEM_Allocate(20);
 	aptr = (short*)item->data;
 
 	for (int i = 0; i < level_items; i++)

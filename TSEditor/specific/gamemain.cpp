@@ -163,7 +163,7 @@ bool GameInitialise()
 {
 	Log(__FUNCTION__);
 
-	MALLOC_InitializeMemory();
+	MEM_Initialize();
 	clipflags = (short*)malloc(0x8000); // NOTE: There is malloc for clipflags.
 	init_water_table();
 	aInitFX();
@@ -208,7 +208,7 @@ void GameClose()
 	ACMClose();
 	FreeLevel();
 
-	MALLOC_ReleaseMemory();
+	MEM_Release();
 	SafeFree(clipflags);
 	SafeFree(wav_file_buffer);
 	SafeFree(ADPCMBuffer);

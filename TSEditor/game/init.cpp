@@ -287,7 +287,7 @@ void InitialiseDoor(short item_number)
 	if (item->object_number >= LIFT_DOORS1 && item->object_number <= LIFT_DOORS2)
 		item->item_flags[0] = 4096;
 
-	door = (DOOR_DATA*)MALLOC_AllocateMemory(sizeof(DOOR_DATA));
+	door = (DOOR_DATA*)MEM_Allocate(sizeof(DOOR_DATA));
 	item->data = door;
 	door->Opened = 0;
 	door->dptr1 = 0;
@@ -583,7 +583,7 @@ void InitialiseLasers(short item_number)
 	short room_num;
 
 	item = &items[item_number];
-	item->data = (LASER_STRUCT*)MALLOC_AllocateMemory(sizeof(LASER_STRUCT));
+	item->data = (LASER_STRUCT*)MEM_Allocate(sizeof(LASER_STRUCT));
 	width = (item->trigger_flags & 0xFF) << 10;
 
 	if (!(item->trigger_flags & 1))
@@ -640,7 +640,7 @@ void InitialiseSteamLasers(short item_number)
 	short room_num;
 
 	item = &items[item_number];
-	item->data = (STEAMLASER_STRUCT*)MALLOC_AllocateMemory(sizeof(STEAMLASER_STRUCT));
+	item->data = (STEAMLASER_STRUCT*)MEM_Allocate(sizeof(STEAMLASER_STRUCT));
 	height = 1536;
 	width = 2048;
 	Xadd = (width / 2) - 512;
@@ -683,7 +683,7 @@ void InitialiseFloorLasers(short item_number)
 	long width, height;
 
 	item = &items[item_number];
-	item->data = (FLOORLASER_STRUCT*)MALLOC_AllocateMemory(sizeof(FLOORLASER_STRUCT));
+	item->data = (FLOORLASER_STRUCT*)MEM_Allocate(sizeof(FLOORLASER_STRUCT));
 	ls = (FLOORLASER_STRUCT*)item->data;
 
 	width = item->trigger_flags % 10;
@@ -1064,7 +1064,7 @@ void InitialiseAutogun(short item_number)
 
 	item = &items[item_number];
 	item->mesh_bits = 1024;
-	item->data = MALLOC_AllocateMemory(sizeof(CREATURE_INFO));
+	item->data = MEM_Allocate(sizeof(CREATURE_INFO));
 }
 
 void InitialiseKeyhole(short item_number)
@@ -1105,7 +1105,7 @@ void InitialisePortalDoor(short item_number)
 	PORTAL_STRUCT* portal;
 
 	item = &items[item_number];
-	portal = (PORTAL_STRUCT*)MALLOC_AllocateMemory(sizeof(PORTAL_STRUCT));
+	portal = (PORTAL_STRUCT*)MEM_Allocate(sizeof(PORTAL_STRUCT));
 	item->pos.x_pos -= 512;
 	item->data = portal;
 
@@ -1230,7 +1230,7 @@ void InitialiseGasCloud(short item_number)
 		return;
 	}
 
-	cloud = (GAS_CLOUD*)MALLOC_AllocateMemory(sizeof(GAS_CLOUD) * 8);
+	cloud = (GAS_CLOUD*)MEM_Allocate(sizeof(GAS_CLOUD) * 8);
 	item->data = cloud;
 	memset(clouds, NO_ITEM, sizeof(clouds));
 
@@ -1324,7 +1324,7 @@ void InitialiseAnimatingSlots(short item_number)
 
 	if (item->trigger_flags == 666 || item->trigger_flags == 667)
 	{
-		c = (CREATURE_INFO*)MALLOC_AllocateMemory(sizeof(CREATURE_INFO));
+		c = (CREATURE_INFO*)MEM_Allocate(sizeof(CREATURE_INFO));
 		item->data = c;
 		c->joint_rotation[0] = 0;
 		c->joint_rotation[1] = 0;
