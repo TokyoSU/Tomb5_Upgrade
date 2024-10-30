@@ -1,3 +1,4 @@
+#pragma warning(push, 0)
 /*
 PL_MPEG - MPEG1 Video decoder, MP2 Audio decoder, MPEG-PS demuxer
 SPDX-License-Identifier: MIT
@@ -4351,3 +4352,4 @@ void plm_audio_idct36(int s[32][3], int ss, float *d, int dp) {
 
 
 #endif // PL_MPEG_IMPLEMENTATION
+#pragma warning(pop)
