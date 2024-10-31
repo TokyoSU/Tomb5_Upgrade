@@ -98,31 +98,24 @@ long S_SaveGame(long slot_num)
 {
 	HANDLE file;
 	ulong bytes;
-	long days, hours, minutes, seconds;
-	char buffer[80], counter[16];
+	ulong days, hours, minutes, seconds;
+	std::string str = std::string("savegame." + std::to_string(slot_num));
+	char counter[16];
 
-	for (int i = 0; i < 20; i++)
-		buffer[i] = '\0';
-
-	wsprintf(buffer, "savegame.%d", slot_num);
-	file = CreateFile(buffer, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-
+	file = CreateFile(str.c_str(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (file != INVALID_HANDLE_VALUE)
 	{
-		for (int i = 0; i < 20; i++)
-			buffer[i] = '\0';
-
-		wsprintf(buffer, "%s", SCRIPT_TEXT(gfLevelNames[gfCurrentLevel]));
-		WriteFile(file, buffer, 75, &bytes, 0);
+		str = std::string(SCRIPT_TEXT(gfLevelNames[gfCurrentLevel]));
+		WriteFile(file, str.c_str(), 80, &bytes, 0);
 		WriteFile(file, &SaveCounter, sizeof(long), &bytes, 0);
 		days = savegame.Game.Timer / 30 / 86400;
 		hours = savegame.Game.Timer / 30 % 86400 / 3600;
 		minutes = savegame.Game.Timer / 30 / 60 % 60;
 		seconds = savegame.Game.Timer / 30 % 60;
-		WriteFile(file, &days, 2, &bytes, 0);
-		WriteFile(file, &hours, 2, &bytes, 0);
-		WriteFile(file, &minutes, 2, &bytes, 0);
-		WriteFile(file, &seconds, 2, &bytes, 0);
+		WriteFile(file, &days, sizeof(short), &bytes, 0);
+		WriteFile(file, &hours, sizeof(short), &bytes, 0);
+		WriteFile(file, &minutes, sizeof(short), &bytes, 0);
+		WriteFile(file, &seconds, sizeof(short), &bytes, 0);
 		WriteFile(file, &savegame, sizeof(SAVEGAME_INFO), &bytes, 0);
 		WriteFile(file, &tomb5_save, sizeof(tomb5_save_info), &bytes, 0);
 		CloseHandle(file);
@@ -136,20 +129,21 @@ long S_SaveGame(long slot_num)
 
 long S_LoadGame(long slot_num)
 {
-	HANDLE file;
-	ulong bytes;
-	long value;
-	char buffer[80];
+	HANDLE file = NULL;
+	ulong bytes = 0;
+	std::string str = std::string("savegame." + std::to_string(slot_num));
+	long value = 0;
+	char buffer[80] = {};
 
-	wsprintf(buffer, "savegame.%d", slot_num);
-	file = CreateFile(buffer, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-
+	file = CreateFile(str.c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (file != INVALID_HANDLE_VALUE)
 	{
-		ReadFile(file, buffer, 75, &bytes, 0);
+		ReadFile(file, buffer, 80, &bytes, 0);
 		ReadFile(file, &value, sizeof(long), &bytes, 0);
-		ReadFile(file, &value, sizeof(long), &bytes, 0);
-		ReadFile(file, &value, sizeof(long), &bytes, 0);
+		ReadFile(file, &value, sizeof(short), &bytes, 0);
+		ReadFile(file, &value, sizeof(short), &bytes, 0);
+		ReadFile(file, &value, sizeof(short), &bytes, 0);
+		ReadFile(file, &value, sizeof(short), &bytes, 0);
 		ReadFile(file, &savegame, sizeof(SAVEGAME_INFO), &bytes, 0);
 		ReadFile(file, &tomb5_save, sizeof(tomb5_save_info), &tomb5_save_size, 0);
 		CloseHandle(file);
@@ -179,7 +173,7 @@ INT GameMain(LPVOID ptr)
 	{
 		InitialiseFunctionTable();
 		HWInitialise();
-		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
+		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, DEFAULT_ZNEAR, DEFAULT_ZFAR, DEFAULT_FOV, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 		InitFont();
 		TIME_Init();
 

@@ -5,6 +5,10 @@
 
 // Macros
 
+constexpr auto ONE_DEGREE = 182;
+
+#define SCRIPT_TEXT(num) (&gfStringWad[gfStringOffset[num]])
+#define ANGLE(x) ((x) * ONE_DEGREE)
 #define SQUARE(x) ((x)*(x))
 #define	TRIGMULT2(a,b)		(((a) * (b)) >> 14)
 #define	TRIGMULT3(a,b,c)	(TRIGMULT2((TRIGMULT2(a, b)), c))
@@ -20,14 +24,16 @@
 
 // Misc
 
-#define SCRIPT_TEXT(num)		(&gfStringWad[gfStringOffset[num]])
-#define NO_HEIGHT -32512
-#define	NO_ITEM	-1
-#define NO_ROOM	255
-#define FVF (D3DFVF_TEX2 | D3DFVF_SPECULAR | D3DFVF_DIFFUSE | D3DFVF_XYZRHW)
-#define MALLOC_SIZE	15000000	//15MB
-#define GAME_FOV	(80 * 182)
-#define W2V_SHIFT	14
+constexpr auto NO_HEIGHT = -32512;
+constexpr auto NO_ITEM = -1;
+constexpr auto NO_ROOM = 255;
+constexpr auto FVF = D3DFVF_TEX2 | D3DFVF_SPECULAR | D3DFVF_DIFFUSE | D3DFVF_XYZRHW;
+constexpr auto MALLOC_SIZE = 15000000;	//15MB
+constexpr auto WALL_SHIFT = 10;
+constexpr auto W2V_SHIFT = 14;
+constexpr auto DEFAULT_ZNEAR = 20;
+constexpr auto DEFAULT_ZFAR = DEFAULT_ZNEAR << WALL_SHIFT;
+constexpr auto DEFAULT_FOV = ANGLE(80);
 
 // Max values
 

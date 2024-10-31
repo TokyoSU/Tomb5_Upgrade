@@ -30,7 +30,7 @@
 
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
 long SoundQuality = 1;
-long MusicVolume = 40;
+long MusicVolume = 80;
 long SFXVolume = 80;
 ControlMethodType ControlMethod;
 
@@ -909,64 +909,52 @@ static void CustomBlt(DDSURFACEDESC2* dst, ulong dstX, ulong dstY, DDSURFACEDESC
 	}
 }
 
-void ConvertSurfaceToTextures(LPDIRECTDRAWSURFACE4 surface)
+void ConvertSurfaceToTextures(LPDIRECTDRAWSURFACE4 from)
 {
 	DDSURFACEDESC2 tSurf;
 	DDSURFACEDESC2 uSurf;
-	RECT r;
-	ushort* pTexture;
-	ushort* pSrc;
+	ushort* pTexture = NULL;
+	ushort* pSrc = NULL;
 
 	memset(&tSurf, 0, sizeof(tSurf));
 	tSurf.dwSize = sizeof(DDSURFACEDESC2);
-	surface->Lock(0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
-	pSrc = (ushort*)tSurf.lpSurface;
-	MonoScreen.surface = CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, 0, NULL, RGBM_Mono, -1);
+	if SUCCEEDED(from->Lock(0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0))
+	{
+		pSrc = (ushort*)tSurf.lpSurface;
+		MonoScreen.surface = CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, 0, NULL, RGBM_Mono, -1);
 
-	memset(&uSurf, 0, sizeof(uSurf));
-	uSurf.dwSize = sizeof(DDSURFACEDESC2);
-	MonoScreen.surface->Lock(0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
-	pTexture = (ushort*)uSurf.lpSurface;
+		memset(&uSurf, 0, sizeof(uSurf));
+		uSurf.dwSize = sizeof(DDSURFACEDESC2);
+		MonoScreen.surface->Lock(0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
+		pTexture = (ushort*)uSurf.lpSurface;
 
-	r.left = 0;
-	r.top = 0;
-	r.right = tSurf.dwWidth;
-	r.bottom = tSurf.dwHeight;
-	CustomBlt(&uSurf, 0, 0, &tSurf, &r);
+		RECT r;
+		r.left = 0;
+		r.top = 0;
+		r.right = tSurf.dwWidth;
+		r.bottom = tSurf.dwHeight;
+		CustomBlt(&uSurf, 0, 0, &tSurf, &r);
 
-	MonoScreen.surface->Unlock(0);
-	DXAttempt(MonoScreen.surface->QueryInterface(IID_IDirect3DTexture2, (void**)&MonoScreen.tex));
-	surface->Unlock(0);
+		MonoScreen.surface->Unlock(0);
+		DXAttempt(MonoScreen.surface->QueryInterface(IID_IDirect3DTexture2, (void**)&MonoScreen.tex));
+		from->Unlock(0);
+	}
 }
 
 void FreeMonoScreen()
 {
-	if (MonoScreenOn == 1)
+	if (MonoScreenOn == TRUE)
 	{
-		if (MonoScreen.surface)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Mono Screen Surface", MonoScreen.surface, MonoScreen.surface->Release());
-			MonoScreen.surface = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Mono Screen Surface");
-
-		if (MonoScreen.tex)
-		{
-			Log("Released %s @ %x - RefCnt = %d", "Mono Screen Texture", MonoScreen.tex, MonoScreen.tex->Release());
-			MonoScreen.tex = 0;
-		}
-		else
-			Log("%s Attempt To Release NULL Ptr", "Mono Screen Texture");
+		SafeRelease(MonoScreen.surface, "MonoScreenSurface");
+		SafeRelease(MonoScreen.tex, "MonoScreenTexture");
 	}
-
-	MonoScreenOn = 0;
+	MonoScreenOn = FALSE;
 }
 
-void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long tU, long tV, long tW, long tH, long c0, long c1, long c2, long c3)
+void S_DrawTile(long x, long y, long w, long h, LPDIRECT3DTEXTURE2 t, long tU, long tV, long tW, long tH, long c0, long c1, long c2, long c3)
 {
-	D3DTLBUMPVERTEX v[4];
-	D3DTLBUMPVERTEX tri[3];
+	D3DTLBUMPVERTEX v[4] = {};
+	D3DTLBUMPVERTEX tri[3] = {};
 	float u1, v1, u2, v2;
 
 	u1 = float(tU * (1.0F / 256.0F));
@@ -981,7 +969,7 @@ void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long tU, l
 	v[0].tv = v1;
 	v[0].rhw = 1;
 	v[0].color = c0;
-	v[0].specular = 0xFF000000;
+	v[0].specular = RGBA_MAKE(0, 0, 0, 255);
 
 	v[1].sx = float(w + x);
 	v[1].sy = (float)y;
@@ -990,7 +978,7 @@ void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long tU, l
 	v[1].tv = v1;
 	v[1].rhw = 1;
 	v[1].color = c1;
-	v[1].specular = 0xFF000000;
+	v[1].specular = RGBA_MAKE(0, 0, 0, 255);
 
 	v[2].sx = float(w + x);
 	v[2].sy = float(h + y);
@@ -999,7 +987,7 @@ void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long tU, l
 	v[2].tv = v2;
 	v[2].rhw = 1;
 	v[2].color = c3;
-	v[2].specular = 0xFF000000;
+	v[2].specular = RGBA_MAKE(0, 0, 0, 255);
 
 	v[3].sx = (float)x;
 	v[3].sy = float(h + y);
@@ -1008,7 +996,7 @@ void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long tU, l
 	v[3].tv = v2;
 	v[3].rhw = 1;
 	v[3].color = c2;
-	v[3].specular = 0xFF000000;
+	v[3].specular = RGBA_MAKE(0, 0, 0, 255);
 
 	App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MAGFILTER, D3DTFG_POINT);
 	App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MINFILTER, D3DTFG_POINT);
@@ -1221,7 +1209,7 @@ long GetSaveLoadFiles()
 		}
 
 		Log("Opened OK");
-		fread(&pSave->name, sizeof(char), 75, file);
+		fread(&pSave->name, sizeof(char), sizeof(pSave->name), file);
 		fread(&pSave->num, sizeof(long), 1, file);
 		fread(&pSave->days, sizeof(short), 1, file);
 		fread(&pSave->hours, sizeof(short), 1, file);

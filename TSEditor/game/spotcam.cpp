@@ -118,7 +118,7 @@ void InitialiseSpotCam(short Sequence)
 
 	BinocularRange = 0;
 	LaserSight = 0;
-	AlterFOV(GAME_FOV);
+	AlterFOV(DEFAULT_FOV);
 	LaraItem->mesh_bits = -1;
 	Lara.busy = 0;
 	CameraFade = -1;

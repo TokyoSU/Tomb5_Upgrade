@@ -189,24 +189,24 @@ void LaraCheatyBits()
 #ifndef _DEBUG	//public releases have cheats in inventory, except for DOZY
 	if (keymap[SDL_SCANCODE_D] && keymap[SDL_SCANCODE_O] && keymap[SDL_SCANCODE_Z] && keymap[SDL_SCANCODE_Y])
 	{
-		lara_item->pos.y_pos -= 128;
+		LaraItem->pos.y_pos -= 128;
 
-		if (lara.water_status != LW_FLYCHEAT)
+		if (Lara.waterStatus != LW_FLYCHEAT)
 		{
-			lara_item->anim_number = ANIM_SWIMCHEAT;
-			lara_item->frame_number = anims[ANIM_SWIMCHEAT].frame_base;
-			lara_item->current_anim_state = AS_SWIMCHEAT;
-			lara_item->goal_anim_state = AS_SWIMCHEAT;
-			lara.water_status = LW_FLYCHEAT;
-			lara_item->gravity_status = 0;
-			lara_item->pos.x_rot = 5460;
-			lara_item->fallspeed = 30;
-			lara.air = 1800;
-			lara.death_count = 0;
-			lara.torso_x_rot = 0;
-			lara.torso_y_rot = 0;
-			lara.head_x_rot = 0;
-			lara.head_y_rot = 0;
+			LaraItem->anim_number = ANIM_SWIMCHEAT;
+			LaraItem->frame_number = anims[ANIM_SWIMCHEAT].frame_base;
+			LaraItem->current_anim_state = AS_SWIMCHEAT;
+			LaraItem->goal_anim_state = AS_SWIMCHEAT;
+			Lara.waterStatus = LW_FLYCHEAT;
+			LaraItem->gravity_status = 0;
+			LaraItem->pos.x_rot = 5460;
+			LaraItem->fallspeed = 30;
+			Lara.air = 1800;
+			Lara.deathCount = 0;
+			Lara.torsoRotX = 0;
+			Lara.torsoRotY = 0;
+			Lara.headRotX = 0;
+			Lara.headRotY = 0;
 		}
 	}
 #else

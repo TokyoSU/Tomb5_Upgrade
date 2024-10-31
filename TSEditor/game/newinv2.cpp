@@ -591,7 +591,7 @@ void init_new_inventry()
 {
 	examine_mode = 0;
 	stats_mode = 0;
-	AlterFOV(GAME_FOV);
+	AlterFOV(DEFAULT_FOV);
 	Lara.busy = 0;
 	GLOBAL_inventoryitemchosen = NO_ITEM;
 	left_debounce = 0;

@@ -28,6 +28,7 @@
 #include <mmiscapi.h>
 #include <msacm.h>
 #include <typeinfo>
+#include <string>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>

@@ -78,7 +78,7 @@ void InitialiseCamera()
 	camera.bounce = 0;
 	camera.number = -1;
 	camera.fixed_camera = 0;
-	AlterFOV(GAME_FOV);
+	AlterFOV(DEFAULT_FOV);
 	UseForcedFixedCamera = 0;
 	CalculateCamera();
 }
@@ -1166,7 +1166,7 @@ void BinocularCamera(ITEM_INFO* item)
 		{
 			ExittingBinos = 0;
 			BinocularRange = 0;
-			AlterFOV(GAME_FOV);
+			AlterFOV(DEFAULT_FOV);
 			LaraItem->mesh_bits = -1;
 			Lara.busy = 0;
 			Lara.headRotY = 0;
@@ -1180,7 +1180,7 @@ void BinocularCamera(ITEM_INFO* item)
 	}
 
 	LaraItem->mesh_bits = 0;
-	AlterFOV(short(GAME_FOV - (7 * BinocularRange)));
+	AlterFOV(short(DEFAULT_FOV - (7 * BinocularRange)));
 	hxrot = Lara.headRotX << 1;
 	hyrot = Lara.headRotY;
 
